@@ -1,9 +1,12 @@
 import { TEACHERS } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
+import { Seo } from "@/components/Seo";
+import { SEO } from "@/data/seo";
 
 const Instructors = () => (
   <>
+    <Seo data={SEO.instructors} />
     <section className="pt-40 pb-16 bg-cream">
       <div className="container-edit">
         <SectionHeading
