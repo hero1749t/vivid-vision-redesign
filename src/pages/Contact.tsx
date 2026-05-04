@@ -9,14 +9,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Phone, Mail, MessageCircle } from "lucide-react";
-import { Seo } from "@/components/Seo";
-import { SEO } from "@/data/seo";
 
 const Contact = () => {
   const [data, setData] = useState({ name: "", email: "", course: "", message: "" });
   return (
     <>
-      <Seo data={SEO.contact} />
       <section className="pt-40 pb-16 bg-cream">
         <div className="container-edit">
           <SectionHeading

@@ -4,14 +4,11 @@ import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
-import { Seo } from "@/components/Seo";
-import { SEO } from "@/data/seo";
 
 const Gallery = () => {
   const [active, setActive] = useState<string | null>(null);
   return (
     <>
-      <Seo data={SEO.gallery} />
       <section className="pt-40 pb-12 bg-cream">
         <div className="container-edit">
           <SectionHeading

@@ -6,8 +6,6 @@ import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Check, X, CalendarDays, Clock, MapPin, Users, ArrowUpRight, Star } from "lucide-react";
-import { Seo, courseJsonLd } from "@/components/Seo";
-import { SEO } from "@/data/seo";
 
 const includedList = [
   "Yoga Alliance certification on graduation",
@@ -39,10 +37,6 @@ const CoursePage = () => {
 
   return (
     <>
-      <Seo
-        data={(SEO as any)["course" + course.slug.replace("hr", "")] ?? SEO.course200}
-        jsonLd={courseJsonLd(course)}
-      />
       {/* Hero */}
       <section className="relative pt-40 pb-20 md:pt-48 md:pb-28 overflow-hidden bg-warm-dark">
         <div className="absolute inset-0">

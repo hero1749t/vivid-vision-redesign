@@ -1,128 +1,95 @@
 ## Goal
 
-Replace the top navbar with a **collapsible left sidebar** (matches your screenshot — House of Om style), upgrade the **home hero with a cinematic 4K background video** (House of Om style), polish premium feel, and add **SEO + sitemap**. Keep the existing terracotta/sand/sage palette — no color experiments.
+Build a **client-demo-ready** redesign of baliyttc.com that feels **premium, editorial, magazine-style** — like an Aman resort or luxury retreat brand. Real content & photos from the live site, but with a far more refined frontend than both the original site and your previous HTML prototype. Backend not required to be functional — focus is "wow" frontend a client can review.
 
----
+## Design Direction
 
-## 1. Collapsible Left Sidebar (replaces top navbar)
+- **Vibe:** Editorial & Premium — large Playfair Display headings, generous whitespace, asymmetric two-column layouts, subtle scroll-reveal and parallax, sticky section labels, refined micro-interactions.
+- **Palette (kept consistent with current Bali brand):** terracotta `#c2622a`, sand `#f5ede0`, sage `#5a7a5c`, warm dark `#2c1a0e`, gold accents `#d4a847`, cream background `#faf6f0`.
+- **Typography:** Playfair Display (serif headings, italic accents) + DM Sans / Inter (body).
+- **Imagery:** Real photos extracted from baliyttc.com (Ubud setting, ceremonies, classes, instructors, accommodations).
+- **Motion:** Framer Motion — fade-up on scroll, image parallax, stagger reveals, smooth page transitions, hover lifts on cards.
 
-Use shadcn `Sidebar` (`collapsible="icon"`) wrapped in `SidebarProvider` inside `Layout.tsx`.
-
-**Structure** (matches your reference image exactly):
+## Pages (full multi-page demo)
 
 ```text
-┌─────────────────────┐
-│  [B]  Bali YTTC     │   ← Brand block (logo + UBUD, BALI eyebrow)
-│       UBUD, BALI    │
-├─────────────────────┤
-│  COURSES            │   ← Group label
-│  ▸ Home             │   ← active state (terra accent bar)
-│  ▸ 100 Hour YTT     │
-│  ▸ 200 Hour YTT [Popular]
-│  ▸ 300 Hour YTT     │
-│  ▸ Hatha-Vinyasa 50hr
-├─────────────────────┤
-│  SCHOOL             │
-│  ▸ About Us         │
-│  ▸ Instructors      │
-│  ▸ Course Fees      │
-├─────────────────────┤
-│  EXPERIENCE         │
-│  ▸ Gallery          │
-│  ▸ Testimonials     │
-│  ▸ Youtube Videos   │
-├─────────────────────┤
-│  Apply Now (CTA)    │   ← footer pinned button
-│  WhatsApp           │
-└─────────────────────┘
+/                  Home
+/courses/200hr     200-Hour YTT (flagship, deepest content)
+/courses/100hr     100-Hour YTT
+/courses/300hr     300-Hour YTT
+/about             About / Story / Yoga Alliance
+/instructors       Teachers grid + bios
+/gallery           Editorial photo gallery (masonry + lightbox)
+/contact           Contact + map + form
 ```
 
-**Behavior**
-- Desktop: sidebar visible by default at ~280px; collapses to a 64px icon-only rail when toggled. `SidebarTrigger` placed in a slim top bar (only shows logo + trigger + Apply button) so it's always reachable.
-- Mobile: sidebar hidden; hamburger trigger opens it as an offcanvas sheet.
-- Active route highlight: terra-tinted background + 3px terra left border + terra text.
-- Group labels (`COURSES`, `SCHOOL`, `EXPERIENCE`): tiny uppercase tracked, warm-light color.
-- Each item has a `lucide` icon (Home, GraduationCap, Flame, Sparkles, Lotus-style icons available).
-- Sidebar background: warm-dark (#2c1a0e) like the reference; text cream; matches the dark editorial vibe.
-- Top thin bar (over the rest of the page) stays cream/transparent — only contains trigger + tiny breadcrumb + Apply button. The big top navbar is **removed**.
+Shared layout: sticky transparent-to-solid top nav, footer with newsletter, floating WhatsApp + sticky bottom "Apply / Inquire" bar that appears on scroll.
 
-**Files**
-- New `src/components/layout/AppSidebar.tsx` — the sidebar definition.
-- New `src/components/layout/TopBar.tsx` — slim 48px bar with `SidebarTrigger`, breadcrumb, Apply button.
-- Rewrite `src/components/layout/Layout.tsx` to wrap with `SidebarProvider` + flex (sidebar + main).
-- Delete usage of old `Nav.tsx` (file kept but no longer imported).
-- Update `src/data/site.ts` `NAV` array → grouped structure: `COURSES / SCHOOL / EXPERIENCE`.
+## Home page sections
 
----
+1. **Cinematic Hero** — full-bleed image (Ubud yoga ceremony), dark editorial overlay, eyebrow tag "Bali · Ubud · Est. 2018", oversized serif headline with italic accent (e.g. *"Become a certified yoga teacher in the heart of Bali"*), two CTAs (Apply / Watch story), Yoga Alliance badge, scroll cue.
+2. **Trust strip** — Yoga Alliance RYS200 / RYS300, 2,500+ graduates, Google 4.9★, years established, multi-style certification.
+3. **Intro / Manifesto** — asymmetric 2-column: left short paragraph from real site, right portrait image with caption.
+4. **Featured Courses** — 3 large editorial cards (200hr highlighted as flagship): photo, duration, style, dates, "from $X", "Explore →".
+5. **Daily Life in Ubud** — horizontal scroll storyline: morning meditation → asana → philosophy → lunch → workshop → evening kirtan, each with photo + short caption.
+6. **Curriculum pillars** — 6 icon+text tiles (Asana, Pranayama, Anatomy, Philosophy, Teaching Methodology, Adjustments).
+7. **Meet the Teachers** — overlapping editorial portraits with names + lineage, link to /instructors.
+8. **Accommodation & Food** — split layout, Bali villa imagery, sattvic meals.
+9. **Testimonials** — editorial quote layout (large pull-quote + small grid of student photos with star ratings).
+10. **Upcoming Batches** — clean schedule table with "Few seats left" urgency tags.
+11. **Gallery teaser** — 5-image masonry preview → /gallery.
+12. **FAQ** — shadcn Accordion, real questions from site.
+13. **Location** — embedded Google Map of Ubud + address card + "Get directions".
+14. **Final CTA band** — dark terracotta, "Your seat in Bali 2026 awaits", Apply button.
+15. **Footer** — sitemap, contact, socials, newsletter, certifications.
 
-## 2. Cinematic 4K Hero Video (House of Om vibe)
+## Course detail page (200hr — template reused for 100/300)
 
-Replace the static hero image with a full-bleed **muted autoplay looping background video** + dark editorial overlay.
+Hero with course name + dates + price, sticky side rail with "Apply now / Price / Next batch", overview, what you'll learn, **day-in-the-life timeline**, full curriculum accordion, certification info, accommodation tiers with pricing cards, included/not-included two-column, instructors for this batch, dates table, FAQ, application CTA.
 
-**Source strategy** (since we can't host 4K MP4 in repo):
-- Use a free high-quality yoga/Bali nature video from **Pexels/Coverr CDN** (direct mp4, ~1080p–2160p, ~5–8MB). Examples: jungle drone shots, ocean, candle flame, slow yoga pose. I'll embed 2–3 candidate URLs and pick the most cinematic.
-- `<video>` with `autoPlay muted loop playsInline preload="metadata" poster={IMG.heroCeremony}` — poster shows instantly, video swaps in.
-- `object-cover` full-bleed; `filter: brightness(0.55) saturate(1.05)`; soft vignette + warm gradient overlay (terra→warm-dark) to keep brand tone.
-- Subtle Ken Burns scale via Framer Motion scroll parallax (already in current Hero).
-- Respects `prefers-reduced-motion` → falls back to poster image.
+## Other pages
 
-**Hero copy upgrade** (House of Om editorial polish, kept in English):
-- Eyebrow: `BALI · UBUD · EST. 2018`
-- Headline (oversized serif, italic accent): *"A 21-day journey to becoming the teacher you were meant to be."*
-- Sub: 1 line, lighter weight
-- Two CTAs: solid `Apply for 2026` + ghost `Watch the film` (opens YouTube modal — uses an existing baliyttc YouTube link).
-- Floating glass review card (already there) — keep, refined.
-- Bottom edge: thin marquee strip of trust logos (Yoga Alliance, RYS200, Trustpilot 4.9★) on a dark blurred panel.
+- **About:** founder story, lineage, Yoga Alliance, values, timeline since 2018.
+- **Instructors:** grid of teacher cards → modal with bio, lineage, specialties.
+- **Gallery:** filterable masonry (Classes / Ceremonies / Nature / Food / Students) + lightbox.
+- **Contact:** form (name/email/course/message), WhatsApp + phone cards, embedded map, FAQ shortcut.
 
----
+## UX & "client psychology" details
 
-## 3. Premium polish (where it currently feels flat)
+- Sticky bottom action bar appears after hero scroll (Apply + WhatsApp).
+- Floating WhatsApp bubble with subtle pulse.
+- Urgency micro-copy ("Only 4 seats left in Feb 2026 batch") on course cards.
+- Trust signals repeated throughout (Yoga Alliance logo, Google rating, graduate count).
+- All CTAs lead to a single "Apply" modal (multi-step form UI — non-functional submit, just shows toast "Demo: application received").
+- Smooth page transitions, image lazy-loading with blur-up, reduced-motion respected.
+- Fully responsive (mobile-first), hamburger drawer nav on mobile.
 
-Without touching colors:
-- **Typography**: keep Playfair Display for display, swap body to **Inter Tight** (variable, faster, slightly tighter than DM Sans → more "2026 editorial"). Single Google Fonts call, `display=swap`.
-- **Manifesto section**: add a thin vertical "EST. 2018" rotated label + animated underline on the headline.
-- **Featured Courses**: switch to magazine-style overlapping cards with hover image-zoom + subtle tilt; the 200hr "flagship" card gets a gold ribbon.
-- **Daily Life**: convert horizontal scroll into a sticky-scroll "scrollytelling" section (one image fixed left, captions step-fade right as you scroll) — feels House of Om-ish.
-- **Section dividers**: thin hairline + serif Roman numerals (`I. The Practice`, `II. The Place`...) for editorial rhythm.
-- **Image treatment**: all images get a faint warm duotone overlay on hover and rounded-md (not rounded-2xl — more refined).
-- **Micro-interactions**: links underline-grow on hover; buttons get a 1px terra inset on hover instead of color shift.
-- **Performance**: lazy-load all below-fold images (`loading="lazy" decoding="async"`), preconnect to Optimole CDN in `index.html`, prefetch hero video poster.
+## Technical approach
 
----
+- React Router routes for all pages; shared `Layout` with `<Nav/>`, `<Footer/>`, `<StickyBar/>`, `<WhatsAppFab/>`.
+- Tailwind config extended with brand colors as HSL tokens in `index.css` (semantic: `terra`, `sand`, `sage`, `warm`, `gold`) — no hard-coded colors in components.
+- shadcn components: Accordion (FAQ/curriculum), Dialog (Apply modal, gallery lightbox, instructor bios), Sheet (mobile nav), Carousel (testimonials/daily life), Form + Input + Textarea, Toast.
+- Framer Motion: `motion.div` with `whileInView` for scroll reveals, layout animations for tabs, page-transition wrapper.
+- Real photo URLs sourced directly from baliyttc.com (Optimole CDN) — embedded as remote images so we don't bloat the repo. Fallback hero kept locally.
+- Google Maps via standard iframe embed (no API key needed for basic embed).
+- Content extracted from real site: course descriptions, curriculum, FAQs, instructor names, address, contact info.
+- Folder layout:
+  ```text
+  src/
+    pages/        Home, Course200, Course100, Course300, About, Instructors, Gallery, Contact, NotFound
+    components/
+      layout/     Nav, Footer, StickyBar, WhatsAppFab, MobileNav
+      home/       Hero, TrustStrip, Manifesto, FeaturedCourses, DailyLife, Pillars, Teachers, Accommodation, Testimonials, Schedule, GalleryTeaser, FAQ, LocationMap, FinalCTA
+      course/     CourseHero, CourseTimeline, CurriculumAccordion, AccommodationTiers, IncludedList, BatchTable
+      shared/     SectionHeading, EditorialImage, Reveal, ApplyModal, Lightbox
+    data/         courses.ts, instructors.ts, faqs.ts, testimonials.ts, gallery.ts
+    lib/          motion presets, utils
+  ```
 
-## 4. SEO + Sitemap
+## Out of scope for this build
 
-**Per-page SEO** using `react-helmet-async`:
-- Install `react-helmet-async`, wrap `App` with `HelmetProvider`.
-- New `src/components/Seo.tsx` reusable component: title, description, canonical, OG tags, Twitter card, JSON-LD.
-- Each page (`Index`, `About`, `Instructors`, `Gallery`, `Contact`, `CoursePage`) gets tailored `<Seo>` with real keywords from baliyttc.com (e.g. *"200 Hour Yoga Teacher Training in Bali — Yoga Alliance Certified"*).
-- JSON-LD structured data:
-  - Home: `Organization` + `LocalBusiness` (address, geo, rating, phone).
-  - Course pages: `Course` schema (name, provider, duration, price).
-  - About: `Organization`.
-  - Breadcrumbs: `BreadcrumbList`.
+- Working backend / form submission (Apply form shows demo toast).
+- Payments, login, CMS — pure frontend demo.
+- Translations.
 
-**Sitemap + robots**
-- `public/sitemap.xml` static file with all 8 routes + lastmod.
-- Update `public/robots.txt` to allow all + reference sitemap URL.
-- `index.html` upgrades: proper `<title>`, meta description, canonical, OG image (hero photo), favicon hookup, theme-color, viewport-fit, preconnect to fonts + Optimole.
-
-**No admin login panel for now** — you said "dekhne layak chahiye, backend bhale na ho." A SEO admin panel needs Lovable Cloud + auth + DB and would be ~3x this scope. I'll add a `// TODO: admin SEO editor` note and structure `Seo.tsx` so each page reads from a central `src/data/seo.ts` config — making it trivial to swap to a DB-backed admin later. If you want the actual admin login + editable SEO panel, say so and I'll add it as a follow-up (needs Lovable Cloud).
-
----
-
-## Out of scope (this round)
-- Working Apply form backend (still demo toast).
-- Admin login panel for SEO (structured to add later).
-- Color changes (locked per your instruction).
-- Video upload/hosting (using free CDN footage).
-
----
-
-## Tech notes
-- shadcn `sidebar` + `collapsible` already present in repo.
-- `react-helmet-async` is the only new dep.
-- Hero video ~5MB, lazy-mounted after first paint to keep LCP fast (LCP element = poster image).
-- Sitemap is static XML — fine for a marketing site of this size.
-
-After your approval I'll build in this order: (1) Sidebar + Layout rewrite, (2) Hero video + copy, (3) Premium polish passes, (4) SEO + sitemap.
+After approval I'll build it page by page, starting with the design system (tokens + Nav/Footer + Hero) so you can see the vibe land within the first iteration, then layer in remaining sections and pages.

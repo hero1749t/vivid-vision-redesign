@@ -12,12 +12,9 @@ import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { FAQ } from "@/components/home/FAQ";
 import { LocationMap } from "@/components/home/LocationMap";
 import { FinalCTA } from "@/components/home/FinalCTA";
-import { Seo, orgJsonLd } from "@/components/Seo";
-import { SEO } from "@/data/seo";
 
 const Index = () => (
   <>
-    <Seo data={SEO.home} jsonLd={orgJsonLd} />
     <Hero />
     <TrustStrip />
     <Manifesto />

@@ -1,8 +1,6 @@
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { IMG, SITE } from "@/data/site";
-import { Seo, orgJsonLd } from "@/components/Seo";
-import { SEO } from "@/data/seo";
 
 const milestones = [
   { y: 2018, t: "School founded", d: "Bali YTTC opens its doors in Ubud with our first 200-hour cohort." },
@@ -14,7 +12,6 @@ const milestones = [
 
 const About = () => (
   <>
-    <Seo data={SEO.about} jsonLd={orgJsonLd} />
     <section className="pt-40 pb-20 bg-warm-dark text-cream relative overflow-hidden">
       <div className="absolute inset-0">
         <img src={IMG.ceremony200} alt="" className="w-full h-full object-cover opacity-30" />
