@@ -10,9 +10,6 @@ import Instructors from "./pages/Instructors.tsx";
 import Gallery from "./pages/Gallery.tsx";
 import Contact from "./pages/Contact.tsx";
 import CoursePage from "./pages/CoursePage.tsx";
-import Auth from "./pages/Auth.tsx";
-import Admin from "./pages/Admin.tsx";
-import Sitemap from "./pages/Sitemap.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -32,9 +29,6 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/courses/:slug" element={<CoursePage />} />
           </Route>
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/sitemap.xml" element={<Sitemap />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

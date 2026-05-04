@@ -12,8 +12,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ["'Instrument Serif'", "'Cormorant Garamond'", "Georgia", "serif"],
-        sans: ["'Geist'", "system-ui", "-apple-system", "sans-serif"],
+        serif: ["'Playfair Display'", "Georgia", "serif"],
+        sans: ["'DM Sans'", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
