@@ -1,5 +1,4 @@
 // Real-content data sourced from baliyttc.com (publicly available marketing copy)
-// Image URLs are loaded directly from the live site's Optimole CDN.
 
 export const SITE = {
   name: "Bali YTTC",
@@ -69,6 +68,14 @@ export const IMG = {
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:240/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Trip-advisor-logo.png",
   bookRetreat:
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:240/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Book-Yoga-Retreat-logo.png",
+};
+
+// Cinematic hero video (free, hosted by Coverr / Pexels CDN — yoga / nature / Bali vibe)
+export const HERO_VIDEO = {
+  // Drone over rice terraces / lush green — sets the Bali tone
+  src: "https://videos.pexels.com/video-files/3045163/3045163-uhd_3840_2160_24fps.mp4",
+  fallback: "https://videos.pexels.com/video-files/2547269/2547269-uhd_3840_2160_25fps.mp4",
+  poster: IMG.heroCeremony,
 };
 
 export const COURSES = [
@@ -193,34 +200,13 @@ export const TESTIMONIALS = [
 ];
 
 export const FAQS = [
-  {
-    q: "What is Bali Yoga Teacher Training Center?",
-    a: "A Yoga Alliance certified school in Ubud, Bali offering 100-hour, 200-hour and 300-hour Hatha, Ashtanga and Vinyasa Flow trainings, plus retreats and workshops in Sound Healing, Acro Yoga and Arm Balancing.",
-  },
-  {
-    q: "Is the school registered with Yoga Alliance?",
-    a: "Yes — Bali YTTC is a registered RYS school. After graduation you can teach yoga anywhere in the world.",
-  },
-  {
-    q: "What styles can I teach with the 200-hour certificate?",
-    a: "Hatha, Vinyasa flow, Ashtanga, Meditation and Pranayama — all under your Yoga Alliance certification.",
-  },
-  {
-    q: "Why Ubud for a Yoga Teacher Training in Bali?",
-    a: "Ubud is the spiritual and cultural heart of Bali — surrounded by jungle, rice fields and temples. It's one of the world's most respected destinations for yoga immersion.",
-  },
-  {
-    q: "What accommodation is included?",
-    a: "Comfortable shared or private villa options. All rooms include private bathrooms with hot/cold showers, high-speed Wi-Fi, air conditioning, refrigerator, kettle and hair dryer.",
-  },
-  {
-    q: "What visa do I need for Bali?",
-    a: "Most students arrive on a tourist visa. Visa on Arrival covers 30 days (extendable +30). For longer stays, apply for the 60-day tourist visa before arrival.",
-  },
-  {
-    q: "Can I pay by credit card?",
-    a: "Yes — you can pay for the training by credit card on arrival, or via secure online deposit to confirm your seat.",
-  },
+  { q: "What is Bali Yoga Teacher Training Center?", a: "A Yoga Alliance certified school in Ubud, Bali offering 100-hour, 200-hour and 300-hour Hatha, Ashtanga and Vinyasa Flow trainings, plus retreats and workshops in Sound Healing, Acro Yoga and Arm Balancing." },
+  { q: "Is the school registered with Yoga Alliance?", a: "Yes — Bali YTTC is a registered RYS school. After graduation you can teach yoga anywhere in the world." },
+  { q: "What styles can I teach with the 200-hour certificate?", a: "Hatha, Vinyasa flow, Ashtanga, Meditation and Pranayama — all under your Yoga Alliance certification." },
+  { q: "Why Ubud for a Yoga Teacher Training in Bali?", a: "Ubud is the spiritual and cultural heart of Bali — surrounded by jungle, rice fields and temples. It's one of the world's most respected destinations for yoga immersion." },
+  { q: "What accommodation is included?", a: "Comfortable shared or private villa options. All rooms include private bathrooms with hot/cold showers, high-speed Wi-Fi, air conditioning, refrigerator, kettle and hair dryer." },
+  { q: "What visa do I need for Bali?", a: "Most students arrive on a tourist visa. Visa on Arrival covers 30 days (extendable +30). For longer stays, apply for the 60-day tourist visa before arrival." },
+  { q: "Can I pay by credit card?", a: "Yes — you can pay for the training by credit card on arrival, or via secure online deposit to confirm your seat." },
 ];
 
 export const GALLERY = [
@@ -239,16 +225,42 @@ export const BATCHES = [
   { course: "100-Hour YTT", start: "Jun 1, 2026", end: "Jun 11, 2026", price: "$999", status: "Open" },
 ];
 
-export const NAV = [
-  { label: "Home", to: "/" },
+// Sidebar nav (grouped, like reference design)
+export const NAV_GROUPS = [
   {
     label: "Courses",
-    children: [
-      { label: "100-Hour YTT", to: "/courses/100hr" },
-      { label: "200-Hour YTT", to: "/courses/200hr" },
-      { label: "300-Hour YTT", to: "/courses/300hr" },
+    items: [
+      { to: "/", label: "Home", icon: "Home" },
+      { to: "/courses/100hr", label: "100 Hour YTT", icon: "Sprout" },
+      { to: "/courses/200hr", label: "200 Hour YTT", icon: "Flame", badge: "Popular" },
+      { to: "/courses/300hr", label: "300 Hour YTT", icon: "Star" },
     ],
   },
+  {
+    label: "School",
+    items: [
+      { to: "/about", label: "About Us", icon: "BookOpen" },
+      { to: "/instructors", label: "Instructors", icon: "Users" },
+      { to: "/contact", label: "Contact", icon: "Mail" },
+    ],
+  },
+  {
+    label: "Experience",
+    items: [
+      { to: "/gallery", label: "Gallery", icon: "Image" },
+      { to: "/#testimonials", label: "Testimonials", icon: "MessageSquareQuote" },
+    ],
+  },
+];
+
+// Legacy export kept so old Nav.tsx still compiles
+export const NAV = [
+  { label: "Home", to: "/" },
+  { label: "Courses", children: [
+    { label: "100-Hour YTT", to: "/courses/100hr" },
+    { label: "200-Hour YTT", to: "/courses/200hr" },
+    { label: "300-Hour YTT", to: "/courses/300hr" },
+  ]},
   { label: "About", to: "/about" },
   { label: "Teachers", to: "/instructors" },
   { label: "Gallery", to: "/gallery" },
