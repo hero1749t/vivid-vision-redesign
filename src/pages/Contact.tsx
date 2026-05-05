@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { SITE } from "@/data/site";
+import { useEffect, useState } from "react";
+import { SITE as STATIC_SITE } from "@/data/site";
 import { LocationMap } from "@/components/home/LocationMap";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
@@ -8,10 +8,31 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { Phone, Mail, MessageCircle } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
+import { client } from "@/lib/sanity";
 
 const Contact = () => {
   const [data, setData] = useState({ name: "", email: "", course: "", message: "" });
+  const [site, setSite] = useState(STATIC_SITE);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const settingsData = await client.fetch(`*[_type == "settings"][0]`);
+        if (settingsData?.contactInfo) {
+          setSite({
+            ...STATIC_SITE,
+            email: settingsData.contactInfo.email || STATIC_SITE.email,
+            phone: settingsData.contactInfo.phone || STATIC_SITE.phone,
+          });
+        }
+      } catch (err) {
+        console.error("Settings fetch error:", err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   return (
     <>
       <section className="pt-40 pb-16 bg-cream">
@@ -19,7 +40,7 @@ const Contact = () => {
           <SectionHeading
             eyebrow="Get in touch"
             title={<>We'd love to <em className="text-terra">hear from you</em></>}
-            sub="Send a message or chat with us on WhatsApp — our team usually replies within an hour."
+            sub="Send a message to our admissions team. We usually reply within an hour."
           />
         </div>
       </section>
@@ -30,7 +51,7 @@ const Contact = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                toast({ title: "Message sent ✦", description: "Demo: we'll be in touch soon." });
+                toast({ title: "Message sent", description: "Demo: we'll be in touch soon." });
                 setData({ name: "", email: "", course: "", message: "" });
               }}
               className="bg-sand p-8 md:p-10 rounded-lg space-y-5"
@@ -58,19 +79,14 @@ const Contact = () => {
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-5 space-y-4">
-            <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener" className="block bg-sage text-cream rounded-lg p-7 hover:bg-sage-light transition-colors">
-              <MessageCircle className="w-8 h-8 mb-3" />
-              <p className="font-serif text-2xl">WhatsApp</p>
-              <p className="text-cream/80 text-sm mt-1">Fastest reply — usually within an hour.</p>
-            </a>
             <div className="bg-cream border border-warm-dark/10 rounded-lg p-7">
               <Phone className="w-7 h-7 text-terra mb-3" />
-              <p className="font-serif text-xl text-warm-dark">{SITE.phone}</p>
-              <p className="text-ink-soft text-sm mt-1">Mon–Sat · 9am–7pm WITA</p>
+              <p className="font-serif text-xl text-warm-dark">{site.phone}</p>
+              <p className="text-ink-soft text-sm mt-1">Mon-Sat / 9am-7pm WITA</p>
             </div>
             <div className="bg-cream border border-warm-dark/10 rounded-lg p-7">
               <Mail className="w-7 h-7 text-terra mb-3" />
-              <p className="font-serif text-xl text-warm-dark">{SITE.email}</p>
+              <p className="font-serif text-xl text-warm-dark">{site.email}</p>
               <p className="text-ink-soft text-sm mt-1">For applications, partnerships and press.</p>
             </div>
           </Reveal>
@@ -83,3 +99,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

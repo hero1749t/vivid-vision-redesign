@@ -1,18 +1,16 @@
-// Real-content data sourced from baliyttc.com (publicly available marketing copy)
-// Image URLs are loaded directly from the live site's Optimole CDN.
+// Bali YTTC - shared site content and imagery.
 
 export const SITE = {
   name: "Bali YTTC",
   longName: "Bali Yoga Teacher Training Center",
-  tagline: "Yoga Teacher Training in Ubud, Bali — est. 2018",
+  tagline: "Yoga Teacher Training in Ubud, Bali - est. 2018",
   established: 2018,
   graduates: "2,500+",
   location: "Ubud, Gianyar Regency, Bali, Indonesia",
   phone: "+62 819-9933-3327",
   whatsapp: "6281999333327",
   email: "info@baliyttc.com",
-  mapsEmbed:
-    "https://www.google.com/maps?q=Bali+Yoga+Teacher+Training+Center+Ubud&output=embed",
+  mapsEmbed: "https://www.google.com/maps?q=Bali+Yoga+Teacher+Training+Center+Ubud&output=embed",
   mapsLink: "https://maps.app.goo.gl/baliyttc",
 };
 
@@ -78,12 +76,12 @@ export const COURSES = [
     duration: "100 Hours",
     days: "11 Days",
     title: "100-Hour Yoga Teacher Training",
-    style: "Multi-style · Beginner",
+    style: "Multi-style / Beginner",
     summary:
-      "An 11-day Multi-style Yoga Teacher Training course for beginner yogis, accredited by Yoga Alliance. A perfect first immersion into authentic yoga.",
+      "An 11-day multi-style Yoga Teacher Training course for beginner yogis, accredited by Yoga Alliance. A focused first immersion into authentic yoga.",
     priceFrom: 999,
     image: IMG.course100,
-    next: "Feb 5 — Feb 15, 2026",
+    next: "Feb 5 - Feb 15, 2026",
     seats: "6 seats left",
     highlights: ["Foundations of Asana", "Pranayama basics", "Daily meditation", "Ubud immersion"],
   },
@@ -93,17 +91,17 @@ export const COURSES = [
     duration: "200 Hours",
     days: "21 Days",
     title: "200-Hour Yoga Teacher Training",
-    style: "Hatha · Ashtanga · Vinyasa",
+    style: "Hatha / Ashtanga / Vinyasa",
     summary:
-      "Our flagship 21-day immersion for beginner & intermediate yogis. Become a Yoga Alliance certified teacher and teach worldwide.",
+      "Our flagship 21-day immersion for beginner and intermediate yogis. Become a Yoga Alliance certified teacher and teach worldwide.",
     priceFrom: 1499,
     image: IMG.course200,
-    next: "Mar 2 — Mar 22, 2026",
+    next: "Mar 2 - Mar 22, 2026",
     seats: "Only 4 seats left",
     featured: true,
     highlights: [
-      "Hatha, Ashtanga & Vinyasa flow",
-      "Anatomy & alignment",
+      "Hatha, Ashtanga and Vinyasa flow",
+      "Anatomy and alignment",
       "Teaching methodology",
       "Hands-on adjustments",
     ],
@@ -114,19 +112,34 @@ export const COURSES = [
     duration: "300 Hours",
     days: "28 Days",
     title: "300-Hour Advanced Teacher Training",
-    style: "Advanced · RYT-500 path",
+    style: "Advanced / RYT-500 path",
     summary:
-      "For certified 200-hr teachers ready to deepen practice and teaching. Advanced asana, philosophy, and the art of holding space.",
+      "For certified 200-hour teachers ready to deepen practice and teaching through advanced asana, philosophy and mentorship.",
     priceFrom: 1899,
     image: IMG.course300,
-    next: "Apr 6 — May 3, 2026",
+    next: "Apr 6 - May 3, 2026",
     seats: "Enrolment open",
     highlights: ["Advanced asana", "Sequencing mastery", "Yoga therapy", "Mentorship modules"],
+  },
+  {
+    slug: "hatha-vinyasa",
+    href: "/courses/hatha-vinyasa",
+    duration: "50 Hours",
+    days: "6 Days",
+    title: "Hatha - Vinyasa Short Course",
+    style: "Intensive / Foundation",
+    summary:
+      "A 6-day intensive immersion into traditional Hatha and dynamic Vinyasa flow. Perfect for practitioners looking to deepen their physical and spiritual practice.",
+    priceFrom: 599,
+    image: IMG.course100, // Reusing image
+    next: "Flexible Dates",
+    seats: "Enrolment open",
+    highlights: ["Hatha fundamentals", "Vinyasa sequencing", "Breath integration", "Alignment focus"],
   },
 ];
 
 export const PILLARS = [
-  { title: "Asana", desc: "Alignment-based practice across Hatha, Ashtanga & Vinyasa." },
+  { title: "Asana", desc: "Alignment-based practice across Hatha, Ashtanga and Vinyasa." },
   { title: "Pranayama", desc: "Breath techniques to refine energy and awareness." },
   { title: "Anatomy", desc: "Functional anatomy applied to safe, intelligent teaching." },
   { title: "Philosophy", desc: "Yoga Sutras, Bhagavad Gita and the eight limbs." },
@@ -147,7 +160,7 @@ export const EXPERIENCES = [
   { title: "Temple Purification", desc: "A sacred Balinese cleansing ceremony in the first week.", img: IMG.templePurification },
   { title: "Arm Balancing Workshop", desc: "Master the art of arm balancing with guided technique.", img: IMG.armBalance },
   { title: "Sound Healing", desc: "Tibetan bowls and sound therapy for deep integration.", img: IMG.soundHealing },
-  { title: "Acro Yoga", desc: "Partner yoga and flying poses — trust, play and presence.", img: IMG.acroYoga },
+  { title: "Acro Yoga", desc: "Partner yoga and flying poses - trust, play and presence.", img: IMG.acroYoga },
   { title: "Beach Yoga", desc: "Sunrise practice on Bali's quiet eastern coast.", img: IMG.beachYoga },
   { title: "Mandala Painting", desc: "A meditative art practice to realign the mind.", img: IMG.mandala },
 ];
@@ -155,10 +168,10 @@ export const EXPERIENCES = [
 export const TEACHERS = [
   {
     name: "Vivek Kalura",
-    cred: "MSc — Yogic Science",
-    role: "Lead Teacher · Founder",
+    cred: "MSc - Yogic Science",
+    role: "Lead Teacher / Founder",
     img: IMG.vivek,
-    bio: "Vivek leads the school with over a decade of immersive teaching across India and Bali. His method weaves classical Hatha discipline with the fluidity of Vinyasa.",
+    bio: "Vivek leads the school with more than a decade of immersive teaching across India and Bali. His method weaves classical Hatha discipline with the fluidity of Vinyasa.",
     style: ["Hatha", "Philosophy", "Pranayama"],
   },
   {
@@ -166,7 +179,7 @@ export const TEACHERS = [
     cred: "E-RYT 500",
     role: "Senior Teacher",
     img: IMG.sachin,
-    bio: "Sachin's classes are anatomically precise yet deeply intuitive. He specialises in alignment, adjustments and the art of safe, intelligent sequencing.",
+    bio: "Sachin's classes are anatomically precise yet deeply intuitive. He specialises in alignment, adjustments and safe, intelligent sequencing.",
     style: ["Ashtanga", "Alignment", "Adjustments"],
   },
 ];
@@ -176,7 +189,7 @@ export const TESTIMONIALS = [
     name: "Emma",
     course: "100-Hour YTT Graduate",
     quote:
-      "After reading the reviews before I came, my expectations were high — and the centre exceeded them. The course is designed so well; you're taken on a full yoga journey every day from morning to evening.",
+      "After reading the reviews before I came, my expectations were high - and the centre exceeded them. The course is designed so well; you are taken on a full yoga journey every day.",
   },
   {
     name: "Emily",
@@ -188,47 +201,62 @@ export const TESTIMONIALS = [
     name: "Sam Menzies",
     course: "200-Hour YTT Graduate",
     quote:
-      "Vivek was an excellent teacher — his method made the information so easy to digest. The setting of the studio with the river and forest was incredible.",
+      "Vivek was an excellent teacher - his method made the information easy to digest. The setting of the studio with the river and forest was incredible.",
   },
 ];
 
 export const FAQS = [
   {
     q: "What is Bali Yoga Teacher Training Center?",
-    a: "A Yoga Alliance certified school in Ubud, Bali offering 100-hour, 200-hour and 300-hour Hatha, Ashtanga and Vinyasa Flow trainings, plus retreats and workshops in Sound Healing, Acro Yoga and Arm Balancing.",
+    a: "Bali YTTC is a Yoga Alliance certified school in Ubud, Bali offering 100-hour, 200-hour and 300-hour Hatha, Ashtanga and Vinyasa Flow trainings, plus retreats and workshops.",
   },
   {
     q: "Is the school registered with Yoga Alliance?",
-    a: "Yes — Bali YTTC is a registered RYS school. After graduation you can teach yoga anywhere in the world.",
+    a: "Yes - our programs are Yoga Alliance certified (RYS). After completion, you can teach yoga worldwide with internationally recognized credentials.",
   },
   {
     q: "What styles can I teach with the 200-hour certificate?",
-    a: "Hatha, Vinyasa flow, Ashtanga, Meditation and Pranayama — all under your Yoga Alliance certification.",
+    a: "Hatha, Vinyasa Flow, Ashtanga, meditation and pranayama are covered under your Yoga Alliance certification.",
   },
   {
     q: "Why Ubud for a Yoga Teacher Training in Bali?",
-    a: "Ubud is the spiritual and cultural heart of Bali — surrounded by jungle, rice fields and temples. It's one of the world's most respected destinations for yoga immersion.",
+    a: "Ubud is the spiritual and cultural heart of Bali, surrounded by jungle, rice fields and temples. It is one of the world's most respected destinations for yoga immersion.",
   },
   {
     q: "What accommodation is included?",
-    a: "Comfortable shared or private villa options. All rooms include private bathrooms with hot/cold showers, high-speed Wi-Fi, air conditioning, refrigerator, kettle and hair dryer.",
+    a: "Comfortable shared or private villa options. Rooms include private bathrooms with hot/cold showers, high-speed Wi-Fi, air conditioning, refrigerator, kettle and hair dryer.",
   },
   {
     q: "What visa do I need for Bali?",
-    a: "Most students arrive on a tourist visa. Visa on Arrival covers 30 days (extendable +30). For longer stays, apply for the 60-day tourist visa before arrival.",
+    a: "Most international visitors arrive on a tourist visa. Visa on Arrival covers 30 days. For extended stays, apply for a 60-day tourist visa before arrival.",
   },
   {
     q: "Can I pay by credit card?",
-    a: "Yes — you can pay for the training by credit card on arrival, or via secure online deposit to confirm your seat.",
+    a: "Yes - you can pay for the training by credit card on arrival, or via secure online deposit to confirm your seat.",
   },
 ];
 
 export const GALLERY = [
-  IMG.ceremony200, IMG.classMain, IMG.templePurification, IMG.armBalance,
-  IMG.soundHealing, IMG.acroYoga, IMG.beachYoga, IMG.mandala,
-  IMG.vivek, IMG.sachin, IMG.schedule100, IMG.evaReview,
-  IMG.ceremonyAlt, IMG.pranayama, IMG.graduation, IMG.yttBali,
-  IMG.certified, IMG.course100, IMG.course200, IMG.course300,
+  IMG.ceremony200,
+  IMG.classMain,
+  IMG.templePurification,
+  IMG.armBalance,
+  IMG.soundHealing,
+  IMG.acroYoga,
+  IMG.beachYoga,
+  IMG.mandala,
+  IMG.vivek,
+  IMG.sachin,
+  IMG.schedule100,
+  IMG.evaReview,
+  IMG.ceremonyAlt,
+  IMG.pranayama,
+  IMG.graduation,
+  IMG.yttBali,
+  IMG.certified,
+  IMG.course100,
+  IMG.course200,
+  IMG.course300,
 ];
 
 export const BATCHES = [

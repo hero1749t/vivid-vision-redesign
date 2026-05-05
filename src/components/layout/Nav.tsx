@@ -1,141 +1,197 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { NAV } from "@/data/site";
+import { Link, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { X, Menu } from "lucide-react";
 import { ApplyModal } from "@/components/shared/ApplyModal";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, ChevronDown } from "lucide-react";
+import { BalieytcLogo } from "@/components/shared/BalieytcLogo";
 import { Button } from "@/components/ui/button";
+import { SITE } from "@/data/site";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
-export const Nav = () => {
+const menuColumns = [
+  {
+    title: "Trainings",
+    links: [
+      { label: "All Trainings", to: "/#courses", strong: true },
+      { label: "100hr Foundation", to: "/courses/100hr" },
+      { label: "200hr Yoga Teacher Training", to: "/courses/200hr" },
+      { label: "300hr Advanced", to: "/courses/300hr" },
+      { label: "Hatha - Vinyasa Short Course", to: "/courses/hatha-vinyasa" },
+      { label: "Apply for Next Batch", to: "/#courses" },
+    ],
+  },
+  {
+    title: "Experience",
+    links: [
+      { label: "Gallery", to: "/gallery", strong: true },
+      { label: "Activities", to: "/activities" },
+      { label: "Student Stories", to: "/#testimonials" },
+      { label: "Youtube Videos", to: "/#campus-video" },
+      { label: "Blog", to: "/blog" },
+      { label: "Why Ubud", to: "/about" },
+      { label: "FAQ", to: "/#faq" },
+    ],
+  },
+  {
+    title: "School",
+    links: [
+      { label: "About Bali YTTC", to: "/about", strong: true },
+      { label: "Teachers", to: "/instructors" },
+      { label: "Yoga Alliance", to: "/#trust" },
+      { label: "Student Reviews", to: "/#testimonials" },
+      { label: "Terms & Policy", to: "/terms" },
+    ],
+  },
+  {
+    title: "Booking",
+    links: [
+      { label: "Course Fee", to: "/#schedule", strong: true },
+      { label: "Payment", to: "/#schedule" },
+      { label: "Contact Us", to: "/contact" },
+      { label: SITE.email, href: `mailto:${SITE.email}` },
+      { label: SITE.location, to: "/#location" },
+    ],
+  },
+];
+
+const MenuLink = ({
+  label, to, href, strong, onClick,
+}: {
+  label: string; to?: string; href?: string; strong?: boolean; onClick: () => void;
+}) => {
+  const cls = strong
+    ? "block text-sm font-bold text-white hover:text-[#F47348] transition-colors"
+    : "block text-sm text-white/65 hover:text-white transition-colors leading-6";
+  if (href)
+    return <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={onClick} className={cls}>{label}</a>;
+  return <Link to={to ?? "/"} onClick={onClick} className={cls}>{label}</Link>;
+};
+
+export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
-  const onLight = pathname === "/"; // hero is dark on home
+  const onHome = pathname === "/";
+  const NAV_H = 64;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const dark = scrolled || !onLight;
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+  const isLightMode = scrolled || !onHome || menuOpen;
+
+  const textClass = isLightMode ? "text-gray-900" : "text-white";
+  const subTextClass = isLightMode ? "text-gray-500" : "text-white/60";
+  const iconClass = isLightMode ? "text-gray-900 hover:bg-gray-100" : "text-white hover:bg-white/10";
 
   return (
-    <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        dark
-          ? "bg-cream/95 backdrop-blur-md border-b border-warm-dark/10 shadow-elev-sm"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="container-wide flex items-center justify-between h-[72px]">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className={`w-10 h-10 rounded-full grid place-items-center font-serif font-bold transition-colors ${
-            dark ? "bg-terra text-cream" : "bg-cream/90 text-terra-deep"
-          }`}>
-            B
-          </div>
-          <div className="leading-none">
-            <p className={`font-serif text-lg font-bold tracking-tight ${dark ? "text-warm-dark" : "text-cream"}`}>
-              Bali YTTC
-            </p>
-            <p className={`text-[9px] tracking-[0.25em] uppercase mt-1 ${dark ? "text-warm-light" : "text-cream/60"}`}>
-              Ubud · Est 2018
-            </p>
-          </div>
-        </Link>
+    <>
+      <header
+        style={{ top: `${bannerHeight}px` }}
+        className={`fixed inset-x-0 z-50 transition-all duration-300 ${
+          isLightMode ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm" : "bg-transparent"
+        }`}
+      >
+        <div className="container-wide" style={{ height: `${NAV_H}px` }}>
+          <div className="flex h-full items-center justify-between">
 
-        <nav className="hidden lg:flex items-center gap-1">
-          {NAV.map((item) =>
-            item.children ? (
-              <div key={item.label} className="relative group">
-                <button className={`flex items-center gap-1 text-sm px-4 py-2 rounded-md transition-colors ${
-                  dark ? "text-warm-mid hover:text-terra" : "text-cream/90 hover:text-cream"
-                }`}>
-                  {item.label}
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </button>
-                <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                  <div className="bg-cream rounded-lg shadow-elev-lg border border-warm-dark/10 p-1.5 min-w-[200px]">
-                    {item.children.map((c) => (
-                      <Link
-                        key={c.to}
-                        to={c.to}
-                        className="block px-3 py-2 rounded-md text-sm text-warm-mid hover:bg-sand hover:text-terra transition-colors"
-                      >
-                        {c.label}
-                      </Link>
-                    ))}
+            {/* ── Logo ────────────────────────── */}
+            <Link to="/" className="group flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+              <BalieytcLogo className="h-8 w-8 flex-shrink-0" showText={false} />
+              <div className="flex flex-col leading-none">
+                <span className={`font-bold text-sm tracking-[0.04em] transition-colors ${textClass}`}>Bali YTTC</span>
+                <span className={`text-[9px] uppercase tracking-[0.16em] mt-[3px] font-semibold transition-colors ${subTextClass}`}>Yoga Teacher Training</span>
+              </div>
+            </Link>
+
+            {/* ── Actions ─────────────────────── */}
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher isLightMode={isLightMode} />
+              <ApplyModal
+                trigger={
+                  <button className="hidden sm:inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#F04E23] px-4 text-sm font-semibold text-white hover:bg-[#D03D12] transition-colors shadow-sm">
+                    Apply Now <span aria-hidden>→</span>
+                  </button>
+                }
+              />
+              <button
+                type="button"
+                onClick={() => setMenuOpen(o => !o)}
+                className={`h-9 w-9 flex items-center justify-center rounded-md transition-colors ${iconClass}`}
+                aria-label="Menu"
+              >
+                {menuOpen ? <X size={18} /> : <Menu size={18} />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ── Mega-menu dropdown ──────────────── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              top: `${bannerHeight + NAV_H}px`,
+              maxHeight: `calc(100vh - ${bannerHeight + NAV_H}px)`,
+            }}
+            className="fixed inset-x-0 z-40 overflow-y-auto bg-white border-t border-gray-100 shadow-2xl"
+          >
+            <div className="container-wide grid gap-8 py-10 md:grid-cols-4 md:gap-12 md:py-14">
+              {menuColumns.map(col => (
+                <div key={col.title}>
+                  <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400">
+                    {col.title}
+                  </p>
+                  <div className="space-y-3.5">
+                    {col.links.map(link => {
+                      const cls = link.strong
+                        ? "block text-sm font-bold text-gray-900 hover:text-[#F04E23] transition-colors"
+                        : "block text-sm text-gray-600 hover:text-gray-900 hover:pl-1 transition-all leading-6";
+                      if (link.href)
+                        return <a key={link.label} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={() => setMenuOpen(false)} className={cls}>{link.label}</a>;
+                      return <Link key={link.label} to={link.to ?? "/"} onClick={() => setMenuOpen(false)} className={cls}>{link.label}</Link>;
+                    })}
                   </div>
                 </div>
-              </div>
-            ) : (
-              <NavLink
-                key={item.to}
-                to={item.to!}
-                className={({ isActive }) =>
-                  `text-sm px-4 py-2 rounded-md transition-colors ${
-                    dark
-                      ? isActive ? "text-terra bg-terra/10" : "text-warm-mid hover:text-terra"
-                      : isActive ? "text-cream bg-cream/10" : "text-cream/90 hover:text-cream"
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            )
-          )}
-        </nav>
+              ))}
+            </div>
 
-        <div className="hidden lg:flex items-center gap-3">
-          <a
-            href={`https://wa.me/${(import.meta as any).env?.VITE_WA ?? '6281999333327'}`}
-            target="_blank" rel="noopener"
-            className={`text-xs font-medium px-4 py-2 rounded-md border transition-colors ${
-              dark
-                ? "border-sage text-sage hover:bg-sage hover:text-cream"
-                : "border-cream/30 text-cream hover:bg-cream/10"
-            }`}
-          >
-            WhatsApp
-          </a>
-          <ApplyModal
-            trigger={
-              <Button className="bg-terra hover:bg-terra-deep text-cream font-medium shadow-elev-sm">
-                Apply Now
-              </Button>
-            }
-          />
-        </div>
-
-        {/* Mobile */}
-        <div className="lg:hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <button className={`p-2 ${dark ? "text-warm-dark" : "text-cream"}`}>
-                <Menu className="w-6 h-6" />
-              </button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-cream border-warm-dark/10 w-[300px]">
-              <div className="mt-8 space-y-1">
-                {NAV.flatMap((i) =>
-                  i.children
-                    ? [
-                        <p key={i.label} className="px-3 pt-4 pb-1 text-[10px] uppercase tracking-widest text-warm-light">{i.label}</p>,
-                        ...i.children.map((c) => (
-                          <Link key={c.to} to={c.to} className="block px-3 py-2.5 text-warm-mid hover:bg-sand rounded-md">{c.label}</Link>
-                        )),
-                      ]
-                    : [<Link key={i.to} to={i.to!} className="block px-3 py-2.5 text-warm-dark font-medium hover:bg-sand rounded-md">{i.label}</Link>]
-                )}
-                <div className="pt-6">
-                  <ApplyModal trigger={<Button className="w-full bg-terra hover:bg-terra-deep text-cream">Apply Now</Button>} />
-                </div>
+            {/* Bottom bar */}
+            <div className="border-t border-gray-100 bg-gray-50 py-4">
+              <div className="container-wide flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-xs font-medium text-gray-500">
+                  Need help?{" "}
+                  <a href={`tel:${SITE.phone}`} className="text-[#F04E23] hover:text-[#D03D12] transition-colors font-bold">
+                    {SITE.phone}
+                  </a>
+                </p>
+                <ApplyModal
+                  trigger={
+                    <button className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#F04E23] px-5 text-sm font-semibold text-white hover:bg-[#D03D12] transition-colors shadow-sm">
+                      Apply for 2026 Batch →
+                    </button>
+                  }
+                />
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-    </header>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };

@@ -11,6 +11,9 @@ import Gallery from "./pages/Gallery.tsx";
 import Contact from "./pages/Contact.tsx";
 import CoursePage from "./pages/CoursePage.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Activities from "./pages/Activities.tsx";
+import Blog from "./pages/Blog.tsx";
+import Terms from "./pages/Terms.tsx";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +30,9 @@ const App = () => (
             <Route path="/instructors" element={<Instructors />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/activities" element={<Activities />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/courses/:slug" element={<CoursePage />} />
           </Route>
           <Route path="*" element={<NotFound />} />

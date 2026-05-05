@@ -1,54 +1,73 @@
-import { useEffect, useState } from "react";
-import { ApplyModal } from "@/components/shared/ApplyModal";
-import { Button } from "@/components/ui/button";
+import { MessageCircle } from "lucide-react";
 import { SITE } from "@/data/site";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export const StickyBar = () => {
-  const [show, setShow] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [showLabel, setShowLabel] = useState(true);
+
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 800);
+    const onScroll = () => setVisible(window.scrollY > 300);
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  return (
-    <>
-      <AnimatePresence>
-        {show && (
-          <motion.div
-            initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed bottom-0 inset-x-0 z-40 bg-warm-dark/95 backdrop-blur-md border-t border-cream/10"
-          >
-            <div className="container-wide py-3 flex items-center justify-between gap-4">
-              <div className="hidden sm:block">
-                <p className="text-cream font-medium text-sm">Next 200-Hour batch · March 2026</p>
-                <p className="text-cream/60 text-xs mt-0.5">Only 4 seats remaining</p>
-              </div>
-              <div className="flex gap-2 ml-auto">
-                <a
-                  href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener"
-                  className="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm text-cream border border-cream/25 rounded-md hover:bg-cream/10"
-                >
-                  <MessageCircle className="w-4 h-4" /> WhatsApp
-                </a>
-                <ApplyModal trigger={<Button className="bg-gold hover:bg-gold-light text-warm-dark font-semibold">Apply Now</Button>} />
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+  // Hide label after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLabel(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
-      {/* Floating WhatsApp */}
-      <a
-        href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener"
-        aria-label="Chat on WhatsApp"
-        className="fixed bottom-24 right-5 z-30 w-14 h-14 rounded-full bg-sage hover:bg-sage-light text-cream grid place-items-center shadow-elev-lg animate-soft-pulse"
-      >
-        <MessageCircle className="w-6 h-6" />
-      </a>
-    </>
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          exit={{ opacity: 0, scale: 0, x: 20 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3"
+        >
+          {/* Label tooltip */}
+          <AnimatePresence>
+            {showLabel && (
+              <motion.div
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="hidden md:flex flex-col items-end"
+              >
+                <div className="rounded-xl bg-warm-dark px-4 py-2.5 shadow-elev-md">
+                  <p className="text-xs font-semibold text-cream">Chat with us</p>
+                  <p className="text-[10px] text-cream/60 mt-0.5">Reply in minutes</p>
+                </div>
+                <div className="mr-4 h-2 w-2 rotate-45 bg-warm-dark -mt-1" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* WhatsApp button */}
+          <a
+            href={`https://wa.me/${SITE.whatsapp}?text=Hi%20Bali%20YTTC!%20I'm%20interested%20in%20joining%20a%20Yoga%20Teacher%20Training.%20Please%20share%20more%20details.`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat on WhatsApp"
+            onClick={() => setShowLabel(false)}
+          >
+            <motion.div
+              whileHover={{ scale: 1.12 }}
+              whileTap={{ scale: 0.94 }}
+              className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-2xl shadow-green-500/40"
+            >
+              {/* Pulse */}
+              <span className="absolute inline-flex h-full w-full rounded-full bg-[#25D366] opacity-25 animate-ping" />
+              <MessageCircle className="h-7 w-7 fill-white text-white relative z-10" />
+            </motion.div>
+          </a>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };

@@ -83,9 +83,6 @@ const CoursePage = () => {
                 <ApplyModal defaultCourse={course.slug} trigger={
                   <Button className="w-full bg-terra hover:bg-terra-deep text-cream h-12">Apply for this course</Button>
                 } />
-                <a href={`https://wa.me/6281999333327`} target="_blank" rel="noopener" className="block text-center w-full py-3 text-sm text-warm-dark border border-warm-dark/20 rounded-md hover:bg-sand transition-colors">
-                  Chat on WhatsApp
-                </a>
               </div>
             </div>
           </Reveal>
