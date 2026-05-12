@@ -1,7 +1,8 @@
+"use client";
 import { TEACHERS } from "@/data/site";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
-import { Link } from "react-router-dom";
+import { Link } from "@/i18n/routing";
 import { ArrowUpRight, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -30,7 +31,7 @@ export const Teachers = () => (
           />
         </div>
         <div className="lg:col-span-5">
-          <Link to="/instructors" className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-900 font-semibold rounded-lg transition-all duration-300 hover:shadow-lg">
+          <Link href="/instructors" className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-900 font-semibold rounded-lg transition-all duration-300 hover:shadow-lg">
             View All Teachers <ArrowUpRight className="w-5 h-5" />
           </Link>
         </div>

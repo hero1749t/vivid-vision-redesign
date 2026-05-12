@@ -1,7 +1,8 @@
+"use client";
 import { COURSES } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
-import { Link } from "react-router-dom";
+import { Link } from "@/i18n/routing";
 import { ArrowUpRight, CalendarDays, Clock, Users, Flame, Star, CheckCircle2 } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ApplyModal } from "@/components/shared/ApplyModal";
@@ -61,8 +62,7 @@ export const FeaturedCourses = () => (
           }
           sub="Yoga Alliance certified 100, 200 and 300 hour programs. Small cohorts, clear schedules, and a fully residential Bali experience."
         />
-        <Link
-          to="/gallery"
+        <Link href="/gallery"
           className="hidden items-center gap-2 rounded-xl border border-warm-dark/15 bg-white/80 backdrop-blur-sm px-5 py-3 text-sm font-semibold text-warm-dark transition-all duration-300 hover:bg-white hover:shadow-elev-md md:inline-flex"
         >
           See gallery <ArrowUpRight className="h-4 w-4" />
@@ -138,8 +138,7 @@ export const FeaturedCourses = () => (
                       </p>
                       <p className="text-[9px] text-warm-light mt-0.5">All inclusive</p>
                     </div>
-                    <Link
-                      to={course.href}
+                    <Link href={course.href}
                       className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-100 to-orange-100 px-4 py-2.5 text-sm font-bold text-amber-800 transition-all duration-300 group-hover:from-amber-500 group-hover:to-orange-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30"
                     >
                       Explore <ArrowUpRight className="h-4 w-4" />
@@ -171,8 +170,7 @@ export const FeaturedCourses = () => (
       </div>
 
       {/* Mobile CTA */}
-      <Link
-        to="/#courses"
+      <Link href="/#courses"
         className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-warm-dark px-5 py-4 text-sm font-bold text-cream transition-colors hover:bg-terra-deep md:hidden"
       >
         View all programs <ArrowUpRight className="h-4 w-4" />

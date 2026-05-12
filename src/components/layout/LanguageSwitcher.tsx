@@ -1,65 +1,36 @@
-import { useState, useEffect, useCallback } from "react";
+"use client";
+
+import { useState } from "react";
 import { Globe, ChevronDown, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { usePathname, useRouter, Locale } from "@/i18n/routing";
+import { useParams } from "next/navigation";
 
-const LANGUAGES = [
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
+const LANGUAGES: { code: Locale; name: string; flag: string }[] = [
+  { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "en", name: "English", flag: "🇬🇧" },
   { code: "es", name: "Español", flag: "🇪🇸" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "it", name: "Italiano", flag: "🇮🇹" },
-  { code: "ru", name: "Русский", flag: "🇷🇺" },
+  { code: "ko", name: "한국어", flag: "🇰🇷" },
+  { code: "ja", name: "日本語", flag: "🇯🇵" },
+  { code: "zh", name: "中文", flag: "🇨🇳" },
 ];
 
 export const LanguageSwitcher = ({ isLightMode }: { isLightMode: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState(LANGUAGES[0]);
+  const pathname = usePathname();
+  const router = useRouter();
+  const params = useParams();
+  const currentLocale = (params?.locale as Locale) || 'en';
 
-  const triggerTranslation = useCallback((langCode: string) => {
-    const googleCombo = document.querySelector(".goog-te-combo") as HTMLSelectElement;
-    if (googleCombo) {
-      googleCombo.value = langCode;
-      googleCombo.dispatchEvent(new Event("change"));
-      console.log(`Translation triggered for: ${langCode}`);
-      return true;
-    }
-    console.warn("Google Translate combo not found yet...");
-    return false;
-  }, []);
+  const currentLang = LANGUAGES.find(l => l.code === currentLocale) || LANGUAGES[0];
 
-  const handleLangChange = (lang: typeof LANGUAGES[0]) => {
-    setCurrentLang(lang);
+  const handleLangChange = (langCode: Locale) => {
     setIsOpen(false);
-    
-    // Try to trigger immediately
-    if (!triggerTranslation(lang.code)) {
-      // If failed, retry with polling
-      let attempts = 0;
-      const interval = setInterval(() => {
-        attempts++;
-        if (triggerTranslation(lang.code) || attempts > 30) {
-          clearInterval(interval);
-        }
-      }, 500);
-    }
+    // Use the next-intl router to push the new locale
+    router.push(pathname, { locale: langCode });
   };
-
-  // Hide the Google Translate bar and other elements
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.id = "google-translate-custom-styles";
-    style.innerHTML = `
-      .goog-te-banner-frame, .goog-te-balloon-frame, .skiptranslate, .goog-te-gadget-icon, .goog-te-menu-value { display: none !important; }
-      body { top: 0 !important; }
-      .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
-      #google_translate_element { height: 0; overflow: hidden; position: absolute; }
-    `;
-    document.head.appendChild(style);
-    return () => {
-      const existing = document.getElementById("google-translate-custom-styles");
-      if (existing) existing.remove();
-    };
-  }, []);
 
   return (
     <div className="relative">
@@ -93,9 +64,9 @@ export const LanguageSwitcher = ({ isLightMode }: { isLightMode: boolean }) => {
               {LANGUAGES.map((lang) => (
                 <button
                   key={lang.code}
-                  onClick={() => handleLangChange(lang)}
+                  onClick={() => handleLangChange(lang.code)}
                   className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
-                    currentLang.code === lang.code 
+                    currentLocale === lang.code 
                       ? "bg-orange-50 text-[#F04E23] font-bold" 
                       : "text-gray-600 hover:bg-gray-50"
                   }`}
@@ -104,7 +75,7 @@ export const LanguageSwitcher = ({ isLightMode }: { isLightMode: boolean }) => {
                     <span className="text-lg">{lang.flag}</span>
                     <span>{lang.name}</span>
                   </div>
-                  {currentLang.code === lang.code && <Check size={14} />}
+                  {currentLocale === lang.code && <Check size={14} />}
                 </button>
               ))}
             </motion.div>

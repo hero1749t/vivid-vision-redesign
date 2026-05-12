@@ -1,0 +1,25 @@
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+exports.id = "_rsc_messages_en_json";
+exports.ids = ["_rsc_messages_en_json"];
+exports.modules = {
+
+/***/ "(rsc)/./messages/en.json":
+/*!**************************!*\
+  !*** ./messages/en.json ***!
+  \**************************/
+/***/ ((module) => {
+
+module.exports = /*#__PURE__*/JSON.parse('{"Navigation":{"home":"Home","courses":"Courses","about":"About","teachers":"Teachers","gallery":"Gallery","contact":"Contact","applyNow":"Apply Now","course100":"100-Hour YTT","course200":"200-Hour YTT","course300":"300-Hour YTT"},"Hero":{"title":"Transform Your Life with Yoga in Bali","subtitle":"Yoga Alliance certified teacher training in Ubud, Bali","cta":"Start Your Journey","watchVideo":"Watch Video"},"TrustStrip":{"yogaAlliance":"Yoga Alliance Certified","students":"2,500+ Graduates","rating":"4.9/5 Rating","established":"Est. 2018"},"Courses":{"title":"Yoga Teacher Training Programs","subtitle":"Choose your yoga path","viewDetails":"View Details","applyNow":"Apply Now","seatsLeft":"seats left","enrolmentOpen":"Enrolment Open","popular":"Popular"},"Course100":{"title":"100-Hour Yoga Teacher Training","duration":"100 Hours | 11 Days","summary":"An 11-day multi-style Yoga Teacher Training course for beginner yogis, accredited by Yoga Alliance.","price":"From $999","nextBatch":"Next Batch","highlights":"Highlights"},"Course200":{"title":"200-Hour Yoga Teacher Training","duration":"200 Hours | 21 Days","summary":"Our flagship 21-day immersion for beginner and intermediate yogis. Become a Yoga Alliance certified teacher and teach worldwide.","price":"From $1,499","nextBatch":"Next Batch","highlights":"Highlights","featured":"Flagship Program"},"Course300":{"title":"300-Hour Advanced Teacher Training","duration":"300 Hours | 28 Days","summary":"For certified 200-hour teachers ready to deepen practice and teaching through advanced asana, philosophy and mentorship.","price":"From $1,899","nextBatch":"Next Batch","highlights":"Highlights"},"Manifesto":{"title":"Our Philosophy","quote":"Yoga is for everyone. It is a harmonious blend of Traditional Wisdom and Modern Science."},"Pillars":{"title":"The Six Pillars","subtitle":"The spiritual and practical framework for confident yoga teachers"},"Teachers":{"title":"Our Teachers","subtitle":"Experienced guides ready to mentor you"},"Schedule":{"title":"Daily Schedule","subtitle":"A day in the life during training"},"Experiences":{"title":"Exclusive Experiences","subtitle":"More than just yoga training"},"Gallery":{"title":"Gallery","viewAll":"View All"},"Testimonials":{"title":"What Our Graduates Say","subtitle":"Stories from our alumni"},"FAQ":{"title":"Frequently Asked Questions","subtitle":"Find answers to your questions"},"FinalCTA":{"title":"Ready to Start Your Yoga Journey?","subtitle":"Join 2,500+ graduates from around the world","cta":"Apply Now"},"Apply":{"title":"Begin Your Yoga Journey","step":"Step {current} of {total}","yourInfo":"Your Information","selectProgram":"Select Your Program","finalDetails":"Final Details","fullName":"Full Name","email":"Email","phone":"Phone (with country code)","preferredDate":"Preferred Start Date","message":"Tell Us About You","messagePlaceholder":"Yoga experience, wellness goals, dietary needs...","continue":"Continue","back":"Back","submit":"Complete Application","submitting":"Submitting...","success":"Application Received!","successDesc":"Your application has been submitted successfully. Our team will be in touch within 24 hours.","noPayment":"No payment required now - receive a custom enrolment link after review","reply24h":"Personal reply within 24 hours from our admissions team","freeCancel":"Free cancellation up to 30 days before program start","yogaAlliance":"Yoga Alliance certified program with international recognition"},"Contact":{"title":"Contact Us","subtitle":"We\'re here to help","name":"Name","email":"Email","subject":"Subject","message":"Message","send":"Send Message","sending":"Sending...","success":"Message Sent!","phone":"Phone","whatsapp":"WhatsApp","address":"Address"},"Footer":{"tagline":"Transformation through yoga in the heart of Bali","quickLinks":"Quick Links","programs":"Programs","legal":"Legal","privacy":"Privacy Policy","terms":"Terms & Conditions","contact":"Contact","followUs":"Follow Us","copyright":"© 2024 Bali YTTC. All rights reserved."},"WhatsApp":{"chatWithUs":"Chat with us on WhatsApp","hi":"Hi! I\'d like to know more about Bali YTTC"},"Error":{"required":"This field is required","invalidEmail":"Invalid email address","generic":"An error occurred. Please try again."}}');
+
+/***/ })
+
+};
+;

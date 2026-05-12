@@ -1,0 +1,8 @@
+{
+  "/api/students/route": "app/api/students/route.js",
+  "/api/teacher/dashboard/route": "app/api/teacher/dashboard/route.js",
+  "/api/admin/analytics/route": "app/api/admin/analytics/route.js",
+  "/api/certificates/route": "app/api/certificates/route.js",
+  "/api/admin/courses/route": "app/api/admin/courses/route.js",
+  "/api/admin/batches/route": "app/api/admin/batches/route.js"
+}

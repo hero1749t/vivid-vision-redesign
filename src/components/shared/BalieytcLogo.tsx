@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { client, urlFor } from "@/lib/sanity";
-
+"use client";
 interface BalieytcLogoProps {
   className?: string;
   showText?: boolean;
@@ -12,23 +10,8 @@ export const BalieytcLogo = ({
   showText = true,
   textClassName = "",
 }: BalieytcLogoProps) => {
-  const [logoUrl, setLogoUrl] = useState("/logo-512.png");
-  const [siteName, setSiteName] = useState("Bali YTTC");
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const data = await client.fetch(`*[_type == "settings"][0]{logo, siteName}`);
-        if (data) {
-          if (data.logo) setLogoUrl(urlFor(data.logo).url());
-          if (data.siteName) setSiteName(data.siteName);
-        }
-      } catch (err) {
-        console.error("Logo settings fetch error:", err);
-      }
-    };
-    fetchSettings();
-  }, []);
+  const logoUrl = "/logo-512.png";
+  const siteName = "Bali YTTC";
 
   return (
     <div className="flex items-center gap-3">

@@ -1,5 +1,6 @@
+"use client";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, usePathname as useLocation } from "@/i18n/routing";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Menu } from "lucide-react";
 import { ApplyModal } from "@/components/shared/ApplyModal";
@@ -16,8 +17,8 @@ const menuColumns = [
       { label: "100hr Foundation", to: "/courses/100hr" },
       { label: "200hr Yoga Teacher Training", to: "/courses/200hr" },
       { label: "300hr Advanced", to: "/courses/300hr" },
-      { label: "Hatha - Vinyasa Short Course", to: "/courses/hatha-vinyasa" },
-      { label: "Apply for Next Batch", to: "/#courses" },
+      { label: "Retreats", to: "/retreats", strong: true },
+      { label: "Workshops", to: "/workshops" },
     ],
   },
   {
@@ -29,7 +30,16 @@ const menuColumns = [
       { label: "Youtube Videos", to: "/#campus-video" },
       { label: "Blog", to: "/blog" },
       { label: "Why Ubud", to: "/about" },
+    ],
+  },
+  {
+    title: "Plan Your Trip",
+    links: [
+      { label: "Pricing & Fees", to: "/pricing", strong: true },
+      { label: "Visa Information", to: "/visa" },
       { label: "FAQ", to: "/#faq" },
+      { label: "Contact Us", to: "/contact" },
+      { label: SITE.email, href: `mailto:${SITE.email}` },
     ],
   },
   {
@@ -40,16 +50,6 @@ const menuColumns = [
       { label: "Yoga Alliance", to: "/#trust" },
       { label: "Student Reviews", to: "/#testimonials" },
       { label: "Terms & Policy", to: "/terms" },
-    ],
-  },
-  {
-    title: "Booking",
-    links: [
-      { label: "Course Fee", to: "/#schedule", strong: true },
-      { label: "Payment", to: "/#schedule" },
-      { label: "Contact Us", to: "/contact" },
-      { label: SITE.email, href: `mailto:${SITE.email}` },
-      { label: SITE.location, to: "/#location" },
     ],
   },
 ];
@@ -64,13 +64,13 @@ const MenuLink = ({
     : "block text-sm text-white/65 hover:text-white transition-colors leading-6";
   if (href)
     return <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={onClick} className={cls}>{label}</a>;
-  return <Link to={to ?? "/"} onClick={onClick} className={cls}>{label}</Link>;
+  return <Link href={to ?? "/"} onClick={onClick} className={cls}>{label}</Link>;
 };
 
 export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { pathname } = useLocation();
+  const pathname = useLocation();
   const onHome = pathname === "/";
   const NAV_H = 64;
 
@@ -102,11 +102,23 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
           isLightMode ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm" : "bg-transparent"
         }`}
       >
+        {/* Sticky Urgency Banner - shows when scrolled */}
+        {scrolled && (
+          <div className="bg-gradient-to-r from-[#D03D12] to-[#F04E23] text-white text-center py-1.5 text-xs font-medium">
+            <span className="inline-flex items-center gap-2">
+              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+              Only 4 seats left for March 2026 batch!
+              <a href="/courses/200hr" className="underline font-bold hover:text-amber-200 ml-1">
+                Apply Now
+              </a>
+            </span>
+          </div>
+        )}
         <div className="container-wide" style={{ height: `${NAV_H}px` }}>
           <div className="flex h-full items-center justify-between">
 
             {/* ── Logo ────────────────────────── */}
-            <Link to="/" className="group flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+            <Link href="/" className="group flex items-center gap-2.5 hover:opacity-90 transition-opacity">
               <BalieytcLogo className="h-8 w-8 flex-shrink-0" showText={false} />
               <div className="flex flex-col leading-none">
                 <span className={`font-bold text-sm tracking-[0.04em] transition-colors ${textClass}`}>Bali YTTC</span>
@@ -117,6 +129,16 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
             {/* ── Actions ─────────────────────── */}
             <div className="flex items-center gap-2">
               <LanguageSwitcher isLightMode={isLightMode} />
+              <Link
+                href="/login"
+                className={`hidden sm:inline-flex h-9 items-center gap-1.5 rounded-lg border-2 px-4 text-sm font-semibold transition-colors ${
+                  isLightMode
+                    ? "border-[#F04E23] text-[#F04E23] hover:bg-[#F04E23] hover:text-white"
+                    : "border-white text-white hover:bg-white hover:text-[#F04E23]"
+                }`}
+              >
+                Login
+              </Link>
               <ApplyModal
                 trigger={
                   <button className="hidden sm:inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#F04E23] px-4 text-sm font-semibold text-white hover:bg-[#D03D12] transition-colors shadow-sm">
@@ -164,7 +186,7 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
                         : "block text-sm text-gray-600 hover:text-gray-900 hover:pl-1 transition-all leading-6";
                       if (link.href)
                         return <a key={link.label} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={() => setMenuOpen(false)} className={cls}>{link.label}</a>;
-                      return <Link key={link.label} to={link.to ?? "/"} onClick={() => setMenuOpen(false)} className={cls}>{link.label}</Link>;
+                      return <Link key={link.label} href={link.to ?? "/"} onClick={() => setMenuOpen(false)} className={cls}>{link.label}</Link>;
                     })}
                   </div>
                 </div>

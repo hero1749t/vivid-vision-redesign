@@ -12,6 +12,8 @@ export const SITE = {
   email: "info@baliyttc.com",
   mapsEmbed: "https://www.google.com/maps?q=Bali+Yoga+Teacher+Training+Center+Ubud&output=embed",
   mapsLink: "https://maps.app.goo.gl/baliyttc",
+  philosophy: "Yoga is for everyone. It is a harmonious blend of Traditional Wisdom and Modern Science, designed to empower seekers to become confident and compassionate teachers.",
+  mission: "To empower students from around the world to become confident and compassionate yoga teachers through authentic, lineage-based training in the heart of Bali.",
 };
 
 export const IMG = {
@@ -45,6 +47,8 @@ export const IMG = {
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Vivek-kalura-Yoga-teacher-in-bali.jpg",
   sachin:
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Sachin-Rautela-Yoga-Teacher-in-Bali.jpg",
+  yuli: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Yuli-Yoga-teacher-in-bali.jpg",
+  sandeep: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Sandeep-Yoga-teacher-in-bali.jpg",
   schedule100:
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/100-hour-Yoga-teacher-training-schedule.jpg",
   evaReview:
@@ -84,6 +88,12 @@ export const COURSES = [
     next: "Feb 5 - Feb 15, 2026",
     seats: "6 seats left",
     highlights: ["Foundations of Asana", "Pranayama basics", "Daily meditation", "Ubud immersion"],
+    modules: [
+      { title: "Yoga Philosophy", desc: "Introduction to the 8 limbs of yoga and Patanjali's Sutras." },
+      { title: "Hatha & Vinyasa", desc: "Learning the primary series and foundational alignment." },
+      { title: "Art of Adjustment", desc: "Safely adjusting students in basic poses." },
+      { title: "Anatomy 101", desc: "Understanding the skeletal and muscular system in yoga." }
+    ]
   },
   {
     slug: "200hr",
@@ -105,6 +115,13 @@ export const COURSES = [
       "Teaching methodology",
       "Hands-on adjustments",
     ],
+    modules: [
+      { title: "Asana Practice", desc: "Deep dive into Hatha, Ashtanga Vinyasa, and Yin Yoga styles." },
+      { title: "Teaching Methodology", desc: "Art of sequencing, cueing, and classroom management." },
+      { title: "Applied Anatomy", desc: "Detailed study of physiology as it relates to yoga practice." },
+      { title: "Ayurveda Intro", desc: "Foundations of Ayurvedic nutrition and lifestyle." },
+      { title: "Ethics & Business", desc: "How to launch your career and teach ethically worldwide." }
+    ]
   },
   {
     slug: "300hr",
@@ -120,22 +137,22 @@ export const COURSES = [
     next: "Apr 6 - May 3, 2026",
     seats: "Enrolment open",
     highlights: ["Advanced asana", "Sequencing mastery", "Yoga therapy", "Mentorship modules"],
+    modules: [
+      { title: "Advanced Asana", desc: "Mastering inversions, arm balances, and advanced transitions." },
+      { title: "Yoga Therapy", desc: "Adapting yoga for injuries and specific health conditions." },
+      { title: "Deep Philosophy", desc: "Bhagavad Gita study and advanced yogic psychology." },
+      { title: "Mentorship", desc: "One-on-one guidance to find your unique voice as a senior teacher." }
+    ]
   },
-  {
-    slug: "hatha-vinyasa",
-    href: "/courses/hatha-vinyasa",
-    duration: "50 Hours",
-    days: "6 Days",
-    title: "Hatha - Vinyasa Short Course",
-    style: "Intensive / Foundation",
-    summary:
-      "A 6-day intensive immersion into traditional Hatha and dynamic Vinyasa flow. Perfect for practitioners looking to deepen their physical and spiritual practice.",
-    priceFrom: 599,
-    image: IMG.course100, // Reusing image
-    next: "Flexible Dates",
-    seats: "Enrolment open",
-    highlights: ["Hatha fundamentals", "Vinyasa sequencing", "Breath integration", "Alignment focus"],
-  },
+];
+
+export const DAILY_SCHEDULE = [
+  { time: "06:00 - 09:00", title: "Morning Practice", desc: "Mantra Chanting, Pranayama, Cleansing, and Asana Practice." },
+  { time: "09:00 - 10:15", title: "Breakfast", desc: "Nutritious, plant-based sattvic breakfast." },
+  { time: "10:15 - 13:00", title: "Philosophy & Anatomy", desc: "Theory sessions on Yoga Philosophy and Functional Anatomy." },
+  { time: "13:15 - 14:00", title: "Lunch", desc: "Freshly prepared Balinese vegetarian lunch." },
+  { time: "15:00 - 16:30", title: "Teaching Lab", desc: "Alignment, Adjustment, and Teaching Methodology Practice." },
+  { time: "16:30 - 19:30", title: "Evening Session", desc: "Evening Asana, Meditation, followed by Dinner." }
 ];
 
 export const PILLARS = [
@@ -171,7 +188,7 @@ export const TEACHERS = [
     cred: "MSc - Yogic Science",
     role: "Lead Teacher / Founder",
     img: IMG.vivek,
-    bio: "Vivek leads the school with more than a decade of immersive teaching across India and Bali. His method weaves classical Hatha discipline with the fluidity of Vinyasa.",
+    bio: "Vivek leads the school with more than a decade of immersive teaching across India and Bali. His method weaves classical Hatha discipline with the fluidity of Vinyasa. He holds a Masters in Yogic Science and is dedicated to authentic lineage.",
     style: ["Hatha", "Philosophy", "Pranayama"],
   },
   {
@@ -179,29 +196,43 @@ export const TEACHERS = [
     cred: "E-RYT 500",
     role: "Senior Teacher",
     img: IMG.sachin,
-    bio: "Sachin's classes are anatomically precise yet deeply intuitive. He specialises in alignment, adjustments and safe, intelligent sequencing.",
+    bio: "Sachin's classes are anatomically precise yet deeply intuitive. He specialises in alignment, adjustments and safe, intelligent sequencing. He has over 500 hours of registered training and years of experience in Rishikesh and Bali.",
     style: ["Ashtanga", "Alignment", "Adjustments"],
+  },
+  {
+    name: "Mrs. Yuli",
+    cred: "Senior Instructor",
+    role: "Vinyasa & Sound Specialist",
+    img: IMG.yuli,
+    bio: "A native Balinese teacher, Yuli brings the gentle spirit of the island to her classes. She is an expert in Vinyasa Flow, Yin Yoga, and is our lead Sound Healing therapist.",
+    style: ["Vinyasa", "Yin", "Sound Healing"],
+  },
+  {
+    name: "Sandeep Ji",
+    cred: "Masters in Yoga",
+    role: "Philosophy Master",
+    img: IMG.sandeep,
+    bio: "Sandeep Ji is a profound scholar of Yoga Philosophy and Pranayama. His teachings bridge the gap between ancient texts and modern application, helping students find spiritual depth.",
+    style: ["Philosophy", "Meditation", "Sanskrit"],
   },
 ];
 
 export const TESTIMONIALS = [
   {
-    name: "Emma",
-    course: "100-Hour YTT Graduate",
-    quote:
-      "After reading the reviews before I came, my expectations were high - and the centre exceeded them. The course is designed so well; you are taken on a full yoga journey every day.",
+    name: "Silvia",
+    course: "200-Hour Graduate",
+    quote: "Vivek's knowledge and teaching style are truly exceptional. I felt supported throughout the entire 21 days, and the depth of information was far beyond what I expected from a standard YTT.",
   },
   {
-    name: "Emily",
+    name: "Eva",
     course: "200-Hour YTT Graduate",
-    quote:
-      "An incredible yoga journey. After the course, you will have a much deeper understanding of yoga and more confidence to teach. I highly recommend this school.",
+    quote: "This training was literally life-changing. It gave me the mental peace I was searching for and the physical strength I didn't know I had. I highly recommend Bali YTTC to anyone.",
   },
   {
     name: "Sam Menzies",
     course: "200-Hour YTT Graduate",
     quote:
-      "Vivek was an excellent teacher - his method made the information easy to digest. The setting of the studio with the river and forest was incredible.",
+      "Vivek was an excellent teacher - his method made the information easy to digest. The setting of the studio with the river and forest was incredible. Truly a magical place to learn.",
   },
 ];
 
@@ -211,12 +242,20 @@ export const FAQS = [
     a: "Bali YTTC is a Yoga Alliance certified school in Ubud, Bali offering 100-hour, 200-hour and 300-hour Hatha, Ashtanga and Vinyasa Flow trainings, plus retreats and workshops.",
   },
   {
-    q: "Is the school registered with Yoga Alliance?",
-    a: "Yes - our programs are Yoga Alliance certified (RYS). After completion, you can teach yoga worldwide with internationally recognized credentials.",
+    q: "What visa do I need for Bali?",
+    a: "For most students, a Tourist Visa (VOA) or B211A is recommended. We provide advice on which visa best suits your stay duration.",
   },
   {
-    q: "What styles can I teach with the 200-hour certificate?",
-    a: "Hatha, Vinyasa Flow, Ashtanga, meditation and pranayama are covered under your Yoga Alliance certification.",
+    q: "What should I pack for the training?",
+    a: "We provide mats, but you can bring your own. Pack comfortable yoga clothes, sunscreens, insect repellent, and an open heart for learning.",
+  },
+  {
+    q: "Is there a specific cultural aspect to the training?",
+    a: "Yes! We include traditional Balinese temple purification ceremonies and cultural excursions to help you connect with the local spiritual heritage.",
+  },
+  {
+    q: "Is the school registered with Yoga Alliance?",
+    a: "Yes - our programs are Yoga Alliance certified (RYS). After completion, you can teach yoga worldwide with internationally recognized credentials.",
   },
   {
     q: "Why Ubud for a Yoga Teacher Training in Bali?",
@@ -225,14 +264,6 @@ export const FAQS = [
   {
     q: "What accommodation is included?",
     a: "Comfortable shared or private villa options. Rooms include private bathrooms with hot/cold showers, high-speed Wi-Fi, air conditioning, refrigerator, kettle and hair dryer.",
-  },
-  {
-    q: "What visa do I need for Bali?",
-    a: "Most international visitors arrive on a tourist visa. Visa on Arrival covers 30 days. For extended stays, apply for a 60-day tourist visa before arrival.",
-  },
-  {
-    q: "Can I pay by credit card?",
-    a: "Yes - you can pay for the training by credit card on arrival, or via secure online deposit to confirm your seat.",
   },
 ];
 
@@ -275,10 +306,14 @@ export const NAV = [
       { label: "100-Hour YTT", to: "/courses/100hr" },
       { label: "200-Hour YTT", to: "/courses/200hr" },
       { label: "300-Hour YTT", to: "/courses/300hr" },
+      { label: "Retreats", to: "/retreats" },
+      { label: "Workshops", to: "/workshops" },
     ],
   },
+  { label: "Pricing", to: "/pricing" },
   { label: "About", to: "/about" },
   { label: "Teachers", to: "/instructors" },
   { label: "Gallery", to: "/gallery" },
+  { label: "Visa", to: "/visa" },
   { label: "Contact", to: "/contact" },
 ];

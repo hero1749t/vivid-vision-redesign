@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+"use client";
+import { useState } from "react";
+import { Link } from "@/i18n/routing";
 import { Facebook, Instagram, Mail, MapPin, Phone, Youtube, MessageCircle, ArrowUpRight, Heart } from "lucide-react";
 import { BalieytcLogo } from "@/components/shared/BalieytcLogo";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { IMG, SITE as STATIC_SITE } from "@/data/site";
 import { motion } from "framer-motion";
-import { client } from "@/lib/sanity";
 
 const footerLinks = [
   {
@@ -32,42 +32,12 @@ const footerLinks = [
 
 export const Footer = () => {
   const [email, setEmail] = useState("");
-  const [site, setSite] = useState(STATIC_SITE);
-  const [socials, setSocials] = useState({
+  const site = STATIC_SITE;
+  const socials = {
     instagram: "https://www.instagram.com/baliyttc/",
     facebook: "https://www.facebook.com/baliyttc",
     youtube: "https://www.youtube.com/@baliyttc"
-  });
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const settingsData = await client.fetch(`*[_type == "settings"][0]`);
-        if (settingsData) {
-          if (settingsData.contactInfo) {
-            setSite({
-              ...STATIC_SITE,
-              name: settingsData.siteName || STATIC_SITE.name,
-              email: settingsData.contactInfo.email || STATIC_SITE.email,
-              phone: settingsData.contactInfo.phone || STATIC_SITE.phone,
-              whatsapp: settingsData.contactInfo.whatsapp || STATIC_SITE.whatsapp,
-              location: settingsData.contactInfo.location || STATIC_SITE.location,
-            });
-          }
-          if (settingsData.socialLinks) {
-            setSocials({
-              instagram: settingsData.socialLinks.instagram || socials.instagram,
-              facebook: settingsData.socialLinks.facebook || socials.facebook,
-              youtube: settingsData.socialLinks.youtube || socials.youtube,
-            });
-          }
-        }
-      } catch (err) {
-        console.error("Footer settings fetch error:", err);
-      }
-    };
-    fetchSettings();
-  }, []);
+  };
 
   return (
     <footer className="bg-warm-dark pt-20 pb-8 text-cream/80">
@@ -139,8 +109,7 @@ export const Footer = () => {
               <ul className="space-y-3 text-sm">
                 {col.links.map(link => (
                   <li key={link.label}>
-                    <Link
-                      to={link.to}
+                    <Link href={link.to}
                       className="text-cream/55 transition-colors duration-200 hover:text-amber-300 hover:pl-1"
                     >
                       {link.label}

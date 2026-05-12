@@ -1,6 +1,7 @@
+"use client";
 import { GALLERY } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
-import { Link } from "react-router-dom";
+import { Link } from "@/i18n/routing";
 import { ArrowUpRight, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -32,8 +33,7 @@ export const GalleryTeaser = () => (
             </h2>
           </Reveal>
         </div>
-        <Link 
-          to="/gallery" 
+        <Link href="/gallery" 
           className="hidden md:inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-900 font-semibold rounded-lg transition-all duration-300 hover:shadow-lg"
         >
           View Full Gallery <ArrowUpRight className="w-5 h-5" />
@@ -51,7 +51,7 @@ export const GalleryTeaser = () => (
                   i === 0 || i === 5 ? "md:col-span-1 md:row-span-2 aspect-[3/4]" : "aspect-square"
                 }`}
               >
-                <Link to="/gallery" className="block w-full h-full">
+                <Link href="/gallery" className="block w-full h-full">
                   <img
                     src={src}
                     alt={`Gallery ${i + 1}`}
@@ -82,8 +82,7 @@ export const GalleryTeaser = () => (
 
       {/* Mobile CTA */}
       <div className="mt-10 md:hidden px-4 text-center">
-        <Link 
-          to="/gallery"
+        <Link href="/gallery"
           className="inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg"
         >
           View Full Gallery <ArrowUpRight className="w-5 h-5" />

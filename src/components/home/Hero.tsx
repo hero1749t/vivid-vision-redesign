@@ -1,9 +1,9 @@
+"use client";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { MapPin, ArrowRight, Play, ChevronDown } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { MapPin, ArrowRight, Play, ChevronDown, Clock } from "lucide-react";
 import { ApplyModal } from "@/components/shared/ApplyModal";
-import { Link } from "react-router-dom";
-import { client } from "@/lib/sanity";
+import { Link } from "@/i18n/routing";
 
 const floatingStats = [
   { value: "2,500+", label: "Graduates" },
@@ -11,36 +11,68 @@ const floatingStats = [
   { value: "RYS", label: "Certified" },
 ];
 
-export const Hero = () => {
-  const [content, setContent] = useState({
-    title: "Transform Your Life",
-    subtitle: "with Yoga in Bali",
-    description: "Yoga Alliance certified 100hr, 200hr & 300hr Teacher Training. Small batches, world-class instructors, and lifetime certification."
+// Countdown Timer Component
+function CountdownTimer() {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
   });
 
   useEffect(() => {
-    const fetchHero = async () => {
-      try {
-        const data = await client.fetch(`*[_type == "settings"][0]{
-          heroContent
-        }`);
-        if (data?.heroContent) {
-          // Split title into two parts if possible for the dual-color effect
-          const fullTitle = data.heroContent.title || "Transform Your Life with Yoga in Bali";
-          const parts = fullTitle.split(" with ");
-          
-          setContent({
-            title: parts[0] || "Transform Your Life",
-            subtitle: parts[1] ? `with ${parts[1]}` : "with Yoga in Bali",
-            description: data.heroContent.subtitle || content.description
-          });
-        }
-      } catch (err) {
-        console.error("Hero fetch error:", err);
+    // Set target date to March 2, 2026
+    const targetDate = new Date("2026-03-02T00:00:00").getTime();
+
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000),
+        });
       }
     };
-    fetchHero();
+
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(timer);
   }, []);
+
+  return (
+    <div className="flex items-center gap-3">
+      <Clock className="h-4 w-4 text-amber-400" />
+      <div className="flex gap-2">
+        {[
+          { value: timeLeft.days, label: "DAYS" },
+          { value: timeLeft.hours, label: "HRS" },
+          { value: timeLeft.minutes, label: "MIN" },
+          { value: timeLeft.seconds, label: "SEC" },
+        ].map((item, i) => (
+          <div key={item.label} className="flex items-center gap-1">
+            <div className="flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1 min-w-[40px]">
+              <span className="text-lg font-bold text-white">{String(item.value).padStart(2, "0")}</span>
+              <span className="text-[8px] text-white/60 uppercase">{item.label}</span>
+            </div>
+            {i < 3 && <span className="text-white/60 text-lg font-bold">:</span>}
+          </div>
+        ))}
+      </div>
+      <span className="text-xs text-amber-300 font-medium ml-2">Next batch starts!</span>
+    </div>
+  );
+}
+
+export const Hero = () => {
+  const content = {
+    title: "Transform Your Life",
+    subtitle: "with Yoga in Bali",
+    description: "Yoga Alliance certified 100hr, 200hr & 300hr Teacher Training. Small batches, world-class instructors, and lifetime certification."
+  };
 
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -139,6 +171,16 @@ export const Hero = () => {
           {content.description}
         </motion.p>
 
+        {/* Countdown Timer */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.6 }}
+          className="mt-8"
+        >
+          <CountdownTimer />
+        </motion.div>
+
         {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -163,8 +205,7 @@ export const Hero = () => {
               </motion.button>
             }
           />
-          <Link
-            to="/courses/200hr"
+          <Link href="/courses/200hr"
             className="group inline-flex h-14 items-center gap-2.5 rounded-xl border border-white/25 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-white/50 hover:bg-white/15"
           >
             <Play className="h-4 w-4 fill-white/80 group-hover:fill-white" />

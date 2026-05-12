@@ -1,6 +1,7 @@
+"use client";
 import { Reveal } from "@/components/shared/Reveal";
 import { IMG } from "@/data/site";
-import { Link } from "react-router-dom";
+import { Link } from "@/i18n/routing";
 import { ArrowUpRight, CheckCircle2, Award } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -71,15 +72,13 @@ export const Manifesto = () => (
 
         <Reveal delay={0.2}>
           <div className="mt-9 flex flex-wrap gap-4">
-            <Link
-              to="/about"
+            <Link href="/about"
               className="inline-flex items-center gap-2 rounded-lg bg-warm-dark px-6 py-3 text-sm font-semibold text-cream transition-all duration-300 hover:bg-terra-deep hover:shadow-elev-md"
             >
               Read our story
               <ArrowUpRight className="h-4 w-4" />
             </Link>
-            <Link
-              to="/instructors"
+            <Link href="/instructors"
               className="inline-flex items-center gap-2 rounded-lg border border-warm-dark/15 bg-transparent px-6 py-3 text-sm font-semibold text-warm-dark transition-all duration-300 hover:bg-sand"
             >
               Meet the teachers

@@ -1,3 +1,4 @@
+"use client";
 import { IMG } from "@/data/site";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { Button } from "@/components/ui/button";

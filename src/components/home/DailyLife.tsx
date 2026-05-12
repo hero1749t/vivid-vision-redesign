@@ -1,3 +1,4 @@
+"use client";
 import { DAILY_LIFE } from "@/data/site";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";

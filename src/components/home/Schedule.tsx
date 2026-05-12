@@ -1,54 +1,14 @@
+"use client";
 import { BATCHES as FALLBACK_BATCHES } from "@/data/site";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Reveal } from "@/components/shared/Reveal";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { motion } from "framer-motion";
 import { CalendarDays, ShieldCheck, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { client } from "@/lib/sanity";
 
 export const Schedule = () => {
-  const [batches, setBatches] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBatches = async () => {
-      try {
-        const query = `*[_type == "schedule"] | order(startDate asc) {
-          _id,
-          startDate,
-          endDate,
-          status,
-          price,
-          discountPrice,
-          "course": course->title
-        }`;
-        const sanityBatches = await client.fetch(query);
-        
-        if (sanityBatches && sanityBatches.length > 0) {
-          // Format Sanity data to match UI needs
-          const formatted = sanityBatches.map((b: any) => ({
-            course: b.course,
-            start: new Date(b.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            end: new Date(b.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            price: `$${b.discountPrice || b.price || "1,899"}`,
-            status: b.status,
-            urgent: b.status === "Few Seats Left" || b.status === "Waitlist"
-          }));
-          setBatches(formatted);
-        } else {
-          setBatches(FALLBACK_BATCHES);
-        }
-      } catch (error) {
-        console.error("Sanity fetch error (schedule):", error);
-        setBatches(FALLBACK_BATCHES);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBatches();
-  }, []);
+  const batches = FALLBACK_BATCHES;
+  const loading = false;
 
   return (
     <section id="schedule" className="py-24 md:py-32 bg-[#FAFAFA] border-t border-gray-100">

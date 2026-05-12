@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+"use client";
 import { TESTIMONIALS as STATIC_TESTIMONIALS } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
 import { Star, Quote, ExternalLink, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { Button } from "@/components/ui/button";
-import { client } from "@/lib/sanity";
 
 const avatarColors = [
   "from-amber-400 to-orange-500",
@@ -20,25 +19,7 @@ const platforms = [
 ];
 
 export const Testimonials = () => {
-  const [testimonials, setTestimonials] = useState(STATIC_TESTIMONIALS);
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const data = await client.fetch(`*[_type == "testimonial"] | order(_createdAt desc)`);
-        if (data?.length > 0) {
-          setTestimonials(data.map((t: any) => ({
-            name: t.name,
-            course: t.course,
-            quote: t.quote
-          })));
-        }
-      } catch (err) {
-        console.error("Testimonials fetch error:", err);
-      }
-    };
-    fetchTestimonials();
-  }, []);
+  const testimonials = STATIC_TESTIMONIALS;
 
   return (
     <section id="testimonials" className="relative py-20 md:py-36 bg-warm-dark overflow-hidden">
