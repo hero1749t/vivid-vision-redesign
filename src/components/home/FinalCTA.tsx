@@ -5,7 +5,7 @@ import { ApplyModal } from "@/components/shared/ApplyModal";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/Reveal";
 import { motion } from "framer-motion";
-import { CheckCircle, Heart, Sparkles, Zap, ArrowRight } from "lucide-react";
+import { CheckCircle, Heart, Sparkles, ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export const FinalCTA = () => {
@@ -14,7 +14,7 @@ export const FinalCTA = () => {
 
   const featurePills = [
     { icon: Heart, text: tApply("reply24h") },
-    { icon: Zap, text: tApply("yogaAlliance") },
+    { icon: CheckCircle, text: tApply("yogaAlliance") },
     { icon: CheckCircle, text: tApply("freeCancel") },
   ];
 
@@ -25,18 +25,16 @@ export const FinalCTA = () => {
         <img src={IMG.graduation} alt="Yoga graduation ceremony Bali YTTC" className="h-full w-full object-cover" />
       </div>
 
-      {/* Overlay - Softer gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/55 to-charcoal/80" />
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/70 via-charcoal/60 to-charcoal/80" />
 
-      {/* Decorative glows */}
+      {/* Accent glows */}
       <motion.div
-        animate={{ opacity: [0.15, 0.3, 0.15] }}
-        transition={{ duration: 6, repeat: Infinity }}
-        className="absolute -top-1/2 left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-gradient-to-br from-sage/30 to-brand/20 blur-3xl"
+        animate={{ opacity: [0.2, 0.4, 0.2] }}
+        transition={{ duration: 5, repeat: Infinity }}
+        className="absolute -top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-brand/30 blur-3xl"
       />
-
-      {/* Sage accent */}
-      <div className="absolute right-0 bottom-1/4 h-64 w-64 rounded-full bg-sage/10 blur-3xl" />
+      <div className="absolute right-0 bottom-1/4 h-64 w-64 rounded-full bg-sage/20 blur-3xl" />
 
       <div className="container-edit relative z-10 text-center">
         {/* Badge */}
@@ -44,11 +42,11 @@ export const FinalCTA = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            className="mb-8 inline-flex items-center gap-3 rounded-full border border-sage/30 bg-sage/10 px-6 py-3 backdrop-blur-sm"
+            className="mb-8 inline-flex items-center gap-3 rounded-full border border-brand/50 bg-brand/20 px-8 py-4 backdrop-blur-sm"
           >
-            <Sparkles className="h-5 w-5 text-sage-light" />
-            <p className="text-xs font-semibold uppercase tracking-widest text-white">{t("title")}</p>
-            <Sparkles className="h-5 w-5 text-sage-light" />
+            <Sparkles className="h-5 w-5 text-brand" />
+            <p className="text-sm font-bold uppercase tracking-widest text-white">{t("title")}</p>
+            <Sparkles className="h-5 w-5 text-brand" />
           </motion.div>
         </Reveal>
 
@@ -60,7 +58,7 @@ export const FinalCTA = () => {
           >
             Begin Your Journey at
             <br />
-            <span className="bg-gradient-to-r from-sage-light via-brand-light to-gold bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand via-gold to-brand bg-clip-text text-transparent">
               Bali YTTC
             </span>
           </h2>
@@ -75,13 +73,13 @@ export const FinalCTA = () => {
 
         {/* Feature pills */}
         <Reveal delay={0.15}>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-sm text-white/90 md:gap-5">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-sm text-white/90 md:gap-6">
             {featurePills.map(({ icon: Icon, text }) => (
               <div
                 key={text}
-                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.08] px-5 py-2 backdrop-blur-sm"
+                className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 backdrop-blur-sm"
               >
-                <Icon className="h-4 w-4 shrink-0 text-sage-light" />
+                <Icon className="h-5 w-5 shrink-0 text-brand" />
                 <span>{text}</span>
               </div>
             ))}
@@ -96,14 +94,14 @@ export const FinalCTA = () => {
                 <motion.button
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="group inline-flex h-14 items-center justify-center gap-3 rounded-full bg-brand px-10 text-base font-semibold text-white shadow-xl shadow-brand/30 transition-all duration-300 hover:bg-brand-dark hover:shadow-2xl hover:shadow-brand/40 md:h-16 md:px-14 md:text-lg"
+                  className="group inline-flex h-16 items-center justify-center gap-3 rounded-full bg-brand px-14 text-lg font-bold text-white shadow-brand transition-all duration-300 hover:bg-brand-dark hover:shadow-xl hover:shadow-brand md:text-xl"
                 >
                   {t("cta")}
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
                 </motion.button>
               }
             />
-            <p className="text-sm text-white/50">
+            <p className="text-base text-white/60">
               {tApply("noPayment")} · {tApply("reply24h")}
             </p>
           </div>

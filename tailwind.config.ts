@@ -102,6 +102,14 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        'brand': '0 8px 32px rgba(240, 78, 35, 0.25)',
+        'sage': '0 8px 32px rgba(90, 115, 64, 0.25)',
+        'premium-sm': 'var(--shadow-sm)',
+        'premium-md': 'var(--shadow-md)',
+        'premium-lg': 'var(--shadow-lg)',
+        'premium-xl': 'var(--shadow-xl)',
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0", opacity: "0" },

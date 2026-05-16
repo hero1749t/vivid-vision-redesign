@@ -1,9 +1,8 @@
 "use client";
 import { COURSES } from "@/data/site";
-import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Link } from "@/i18n/routing";
-import { ArrowUpRight, CalendarDays, Clock, Users, Flame, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Clock, Users, Flame, CheckCircle2 } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -45,6 +44,27 @@ const formatBatchDate = (date?: string | null, locale = "en") => {
   return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }).format(parsed);
 };
 
+const updateActiveCard = (
+  node: HTMLDivElement | null,
+  setActiveIndex: (index: number) => void,
+) => {
+  if (!node) return;
+  const cards = Array.from(node.children) as HTMLElement[];
+  if (!cards.length) return;
+
+  const viewportCenter = node.getBoundingClientRect().left + node.clientWidth / 2;
+  const nearest = cards.reduce(
+    (closest, card, index) => {
+      const rect = card.getBoundingClientRect();
+      const distance = Math.abs(rect.left + rect.width / 2 - viewportCenter);
+      return distance < closest.distance ? { index, distance } : closest;
+    },
+    { index: 0, distance: Number.POSITIVE_INFINITY },
+  );
+
+  setActiveIndex(nearest.index);
+};
+
 const normalizeApiCourse = (course: ApiCourse, index: number, locale: string): DisplayCourse => {
   const durationParts = course.duration.split("|").map((part) => part.trim()).filter(Boolean);
   const batch = course.batches?.[0];
@@ -83,8 +103,22 @@ const normalizeStaticCourse = (course: (typeof COURSES)[number]): DisplayCourse 
   featured: course.featured,
 });
 
-// Premium Course Card Component
-const CourseCard = ({ course, index, t }: { course: DisplayCourse; index: number; t: any }) => {
+const getDepth = (offset: number) => Math.max(-2, Math.min(2, offset));
+
+const CourseCard = ({
+  course,
+  index,
+  active,
+  offset,
+  t,
+}: {
+  course: DisplayCourse;
+  index: number;
+  active: boolean;
+  offset: number;
+  t: any;
+}) => {
+  const depth = getDepth(offset);
   const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -100,23 +134,36 @@ const CourseCard = ({ course, index, t }: { course: DisplayCourse; index: number
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      className="group flex h-full flex-col"
+      animate={{
+        rotateY: depth * -8,
+        rotateZ: depth * -0.8,
+        scale: active ? 1 : 0.94,
+        y: active ? 0 : 14,
+        opacity: 1,
+      }}
+      transition={{ type: "spring", stiffness: 120, damping: 24 }}
+      style={{
+        transformStyle: "preserve-3d",
+        transformOrigin: offset < 0 ? "right center" : offset > 0 ? "left center" : "center",
+      }}
+      className="group flex h-full min-w-[84vw] snap-center flex-col will-change-transform sm:min-w-[420px] lg:min-w-[390px] xl:min-w-[420px]"
     >
       {/* Card Container - Cleaner design */}
-      <div className={`relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300 ${course.featured ? 'border-2 border-brand shadow-premium-md' : 'border border-gray-100 shadow-premium-sm'} hover:shadow-premium-xl hover:-translate-y-1`}>
+      <div className={`relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-white transition-all duration-500 ${active ? "shadow-[0_26px_70px_rgba(15,23,42,0.2)]" : "shadow-premium-md"} ${course.featured ? 'border-2 border-brand' : 'border border-gray-100'} hover:shadow-premium-xl`}>
+        <div className="pointer-events-none absolute inset-x-8 top-0 z-20 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
 
         {/* Image Section */}
         <div className="relative overflow-hidden" style={{ height: "280px" }}>
           <img
             src={course.image}
             alt={course.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
             loading="lazy"
             decoding="async"
           />
 
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent" />
 
           {/* Top Badges */}
           <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
@@ -141,7 +188,7 @@ const CourseCard = ({ course, index, t }: { course: DisplayCourse; index: number
           {/* Bottom Info Overlay */}
           <div className="absolute bottom-0 left-0 right-0 p-5">
             <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-sage-light mb-1">{course.style}</p>
-            <h3 className="font-serif text-xl font-bold leading-tight text-white md:text-2xl">{course.title}</h3>
+            <h3 className="font-serif text-2xl font-bold leading-tight text-white">{course.title}</h3>
             <div className="mt-3 flex items-center gap-4 text-white/80 text-xs">
               <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
               <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{course.days}</span>
@@ -153,7 +200,7 @@ const CourseCard = ({ course, index, t }: { course: DisplayCourse; index: number
         {/* Card Body */}
         <div className="flex flex-1 flex-col p-6">
           {/* Summary */}
-          <p className="text-sm leading-6 text-ink-soft line-clamp-2">{course.summary}</p>
+          <p className="line-clamp-2 text-sm leading-6 text-ink-soft">{course.summary}</p>
 
           {/* Highlights */}
           <ul className="mt-4 space-y-2">
@@ -209,6 +256,8 @@ export const FeaturedCourses = () => {
   const locale = useLocale();
   const t = useTranslations("Courses");
   const [apiCourses, setApiCourses] = useState<ApiCourse[] | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -235,15 +284,30 @@ export const FeaturedCourses = () => {
     [apiCourses, locale],
   );
 
+  useEffect(() => {
+    const refresh = () => updateActiveCard(sliderRef.current, setActiveIndex);
+    refresh();
+    window.addEventListener("resize", refresh);
+    return () => window.removeEventListener("resize", refresh);
+  }, [courses.length]);
+
+  const scrollSlider = (direction: "prev" | "next") => {
+    const node = sliderRef.current;
+    if (!node) return;
+    node.scrollBy({
+      left: direction === "next" ? node.clientWidth * 0.85 : -node.clientWidth * 0.85,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <section id="courses" className="relative bg-gradient-to-b from-sand to-cream section-padding overflow-hidden">
       {/* Subtle decorative elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-sage-mist blur-3xl opacity-60" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-brand-muted blur-3xl opacity-40" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-gray-200" />
 
       <div className="container-edit relative z-10">
         {/* Section Header */}
-        <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
           <SectionHeading
             eyebrow={t("title")}
             title={
@@ -255,20 +319,44 @@ export const FeaturedCourses = () => {
             sub={t("enrolmentOpen")}
           />
 
-          <Link href="/courses"
-            className="hidden items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-charcoal transition-all duration-300 hover:border-sage hover:text-sage md:inline-flex shadow-premium-sm"
-          >
-            View All Courses <ArrowUpRight className="h-4 w-4" />
-          </Link>
+          <div className="hidden items-center gap-3 md:flex">
+            <button
+              type="button"
+              onClick={() => scrollSlider("prev")}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-premium-sm transition hover:border-sage hover:text-sage"
+              aria-label="Previous courses"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollSlider("next")}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-premium-sm transition hover:border-sage hover:text-sage"
+              aria-label="Next courses"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <Link
+              href="/courses"
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-charcoal shadow-premium-sm transition-all duration-300 hover:border-sage hover:text-sage"
+            >
+              View All Courses <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
-        {/* Course Cards Grid */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div
+          ref={sliderRef}
+          onScroll={() => updateActiveCard(sliderRef.current, setActiveIndex)}
+          className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-10 pt-4 [perspective:1400px] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-[max(2.5rem,calc((100vw-1180px)/2))] [&::-webkit-scrollbar]:hidden"
+        >
           {courses.map((course, index) => (
             <CourseCard
               key={course.slug}
               course={course}
               index={index}
+              active={index === activeIndex}
+              offset={index - activeIndex}
               t={t}
             />
           ))}

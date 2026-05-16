@@ -16,14 +16,14 @@ export const Hero = () => {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
 
   return (
-    <section ref={ref} className="relative min-h-screen overflow-hidden bg-charcoal">
+    <section ref={ref} className="relative min-h-screen overflow-hidden">
       {/* Video Background */}
       <motion.div
         className="absolute inset-0"
         style={{ y }}
       >
         <video
-          className="h-full w-full object-cover opacity-70"
+          className="h-full w-full object-cover"
           autoPlay
           muted
           loop
@@ -34,46 +34,40 @@ export const Hero = () => {
         </video>
       </motion.div>
 
-      {/* Softer Overlay Gradients - Calm feel */}
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/30 to-charcoal/70" />
+      {/* Vibrant gradient overlays */}
+      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/40 to-charcoal/75" />
       <div className="absolute inset-0 bg-gradient-to-r from-charcoal/50 via-transparent to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 to-transparent" />
 
-      {/* Subtle grain texture for depth */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E")`
-      }} />
-
-      {/* Decorative Sage Green Accent */}
-      <div className="absolute right-0 top-1/4 h-96 w-96 rounded-full bg-sage/10 blur-3xl" />
-      <div className="absolute bottom-1/4 left-1/4 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
+      {/* Accent glows */}
+      <div className="absolute right-1/4 top-1/3 h-80 w-80 rounded-full bg-brand/20 blur-3xl" />
+      <div className="absolute left-1/4 bottom-1/4 h-60 w-60 rounded-full bg-sage/15 blur-3xl" />
 
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
         className="relative z-10 flex min-h-screen flex-col justify-end px-6 pb-12 pt-32 sm:px-8 md:px-12 lg:px-16"
       >
         <div className="mx-auto w-full max-w-7xl">
-          {/* Location Badge - Cleaner design */}
+          {/* Location Badge - Vibrant */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-8"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.08] px-5 py-2.5 text-xs font-medium text-white/90 backdrop-blur-md">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md">
               <span className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-brand-light" />
+                <MapPin className="h-4 w-4 text-brand" />
                 <span>{t("location")}</span>
               </span>
-              <span className="h-px w-4 bg-white/20" />
+              <span className="h-px w-5 bg-white/30" />
               <span className="flex items-center gap-2">
-                <Sparkles className="h-3.5 w-3.5 text-sage-light" />
+                <Sparkles className="h-4 w-4 text-gold" />
                 <span>Yoga Alliance RYS</span>
               </span>
             </div>
           </motion.div>
 
-          {/* Main Heading - Premium Typography */}
+          {/* Main Heading */}
           <div className="max-w-5xl">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
@@ -94,17 +88,17 @@ export const Hero = () => {
               ))}
             </motion.h1>
 
-            {/* Subtitle - Softer, more inviting */}
+            {/* Subtitle */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-6 max-w-2xl text-base leading-7 text-white/80 sm:text-lg md:text-xl"
+              className="mt-6 max-w-2xl text-base leading-7 text-white/90 sm:text-lg md:text-xl"
             >
               {t("description")}
             </motion.p>
 
-            {/* CTA Buttons - Premium styling */}
+            {/* CTA Buttons - Vibrant */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -113,23 +107,23 @@ export const Hero = () => {
             >
               <ApplyModal
                 trigger={
-                  <button className="group inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-brand px-8 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-all duration-300 hover:bg-brand-dark hover:shadow-xl hover:shadow-brand/30 hover:-translate-y-0.5">
+                  <button className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-brand px-10 text-base font-bold text-white shadow-brand transition-all duration-300 hover:bg-brand-dark hover:shadow-xl hover:-translate-y-1">
                     {t("applyBatch")}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </button>
                 }
               />
               <Link
                 href="/courses/200hr"
-                className="group inline-flex h-12 items-center justify-center gap-2.5 rounded-full border border-white/20 bg-white/[0.1] px-8 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/[0.15] hover:border-white/30"
+                className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full border-2 border-white/30 bg-white/10 px-10 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-charcoal"
               >
-                <Play className="h-4 w-4 fill-white/80" />
+                <Play className="h-5 w-5 fill-current" />
                 {t("explorePrograms")}
               </Link>
             </motion.div>
           </div>
 
-          {/* Quick Tags - Clean pill design */}
+          {/* Quick Tags */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -137,14 +131,14 @@ export const Hero = () => {
             className="mt-12 flex flex-wrap gap-3"
           >
             {[
-              { label: "100hr YTT", color: "bg-sage/30" },
-              { label: "200hr YTT", color: "bg-brand/30" },
-              { label: "300hr YTT", color: "bg-gold/30" },
-              { label: "Ubud, Bali", color: "bg-white/10" },
+              { label: "100hr YTT", bg: "bg-brand" },
+              { label: "200hr YTT", bg: "bg-sage" },
+              { label: "300hr YTT", bg: "bg-gold" },
+              { label: "Ubud, Bali", bg: "bg-white/15" },
             ].map((tag) => (
               <span
                 key={tag.label}
-                className={`rounded-full border border-white/10 px-4 py-2 text-xs font-medium text-white/80 backdrop-blur-sm ${tag.color}`}
+                className={`rounded-full ${tag.bg} px-5 py-2.5 text-sm font-semibold text-white shadow-lg`}
               >
                 {tag.label}
               </span>
@@ -153,7 +147,7 @@ export const Hero = () => {
         </div>
       </motion.div>
 
-      {/* Scroll indicator - Subtle and elegant */}
+      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -161,12 +155,12 @@ export const Hero = () => {
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
       >
         <motion.div
-          animate={{ y: [0, 8, 0] }}
+          animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-2"
         >
-          <span className="text-[10px] font-medium uppercase tracking-widest text-white/50">Scroll</span>
-          <div className="h-8 w-px bg-gradient-to-b from-white/50 to-transparent" />
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-white/60">Scroll</span>
+          <div className="h-10 w-px bg-gradient-to-b from-white/60 to-transparent" />
         </motion.div>
       </motion.div>
     </section>
