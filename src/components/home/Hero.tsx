@@ -17,14 +17,14 @@ export const Hero = () => {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
-  // Skip to 5 seconds when video loads
+  // Skip to 7 seconds when video loads
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleLoadedMetadata = () => {
-      if (video.currentTime < 5) {
-        video.currentTime = 5;
+      if (video.currentTime < 7) {
+        video.currentTime = 7;
       }
     };
 
@@ -32,10 +32,10 @@ export const Hero = () => {
 
     // Also try to skip after a short delay
     const timeout = setTimeout(() => {
-      if (video.currentTime < 5) {
-        video.currentTime = 5;
+      if (video.currentTime < 7) {
+        video.currentTime = 7;
       }
-    }, 500);
+    }, 700);
 
     return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -78,7 +78,7 @@ export const Hero = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="mb-6"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm">
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-7 py-2.7 text-sm font-medium text-white backdrop-blur-sm">
               <MapPin className="h-4 w-4 text-brand" />
               <span>{t("location")}</span>
               <span className="h-px w-4 bg-white/30" />
@@ -88,12 +88,12 @@ export const Hero = () => {
           </motion.div>
 
           {/* Main Heading */}
-          <div className="max-w-5xl">
+          <div className="max-w-7xl">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-serif text-[clamp(2.8rem,7vw,5.5rem)] font-bold leading-[1.02] tracking-tight text-white"
+              className="font-serif text-[clamp(2.8rem,7vw,7.7rem)] font-bold leading-[1.02] tracking-tight text-white"
             >
               {t("title").split(" ").map((word, index) => (
                 <motion.span
@@ -117,17 +117,17 @@ export const Hero = () => {
             >
               <ApplyModal
                 trigger={
-                  <button className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full bg-brand px-10 text-base font-bold text-white shadow-brand transition-all duration-300 hover:bg-brand-dark hover:shadow-xl hover:-translate-y-1">
+                  <button className="group inline-flex h-14 items-center justify-center gap-2.7 rounded-full bg-brand px-10 text-base font-bold text-white shadow-brand transition-all duration-300 hover:bg-brand-dark hover:shadow-xl hover:-translate-y-1">
                     {t("applyBatch")}
-                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-7 w-7 transition-transform group-hover:translate-x-1" />
                   </button>
                 }
               />
               <Link
                 href="/courses/200hr"
-                className="group inline-flex h-14 items-center justify-center gap-2.5 rounded-full border-2 border-white/30 bg-white/10 px-10 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-charcoal"
+                className="group inline-flex h-14 items-center justify-center gap-2.7 rounded-full border-2 border-white/30 bg-white/10 px-10 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-charcoal"
               >
-                <Play className="h-5 w-5 fill-current" />
+                <Play className="h-7 w-7 fill-current" />
                 {t("explorePrograms")}
               </Link>
             </motion.div>
@@ -144,11 +144,11 @@ export const Hero = () => {
               { label: "100hr YTT", bg: "bg-brand" },
               { label: "200hr YTT", bg: "bg-sage" },
               { label: "300hr YTT", bg: "bg-gold" },
-              { label: "Ubud, Bali", bg: "bg-white/15" },
+              { label: "Ubud, Bali", bg: "bg-white/17" },
             ].map((tag) => (
               <span
                 key={tag.label}
-                className={`rounded-full ${tag.bg} px-5 py-2.5 text-sm font-semibold text-white shadow-lg`}
+                className={`rounded-full ${tag.bg} px-7 py-2.7 text-sm font-semibold text-white shadow-lg`}
               >
                 {tag.label}
               </span>
