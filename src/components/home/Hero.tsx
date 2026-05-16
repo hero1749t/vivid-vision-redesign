@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { ArrowRight, MapPin, Play, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ApplyModal } from "@/components/shared/ApplyModal";
@@ -11,14 +11,22 @@ export const Hero = () => {
   const t = useTranslations("Hero");
   const ref = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
+  // Skip first 3 seconds of video to avoid watermark text
+  const handleVideoCanPlay = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 3;
+    }
+  };
+
   return (
     <section ref={ref} className="relative min-h-screen overflow-hidden">
-      {/* Video Background - Full screen, clean */}
+      {/* Video Background - Skip watermark */}
       <motion.div className="absolute inset-0" style={{ y }}>
         <video
           ref={videoRef}
@@ -27,6 +35,7 @@ export const Hero = () => {
           muted
           loop
           playsInline
+          onCanPlay={handleVideoCanPlay}
           poster="/bali-hero-bg.png"
         >
           <source src="/hero-yoga-1080.mp4" type="video/mp4" />
@@ -36,7 +45,7 @@ export const Hero = () => {
       {/* Clean gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/60" />
 
-      {/* Video content overlay - fades out on scroll */}
+      {/* Video content overlay - fades on scroll */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
         className="relative z-10 flex min-h-screen flex-col justify-end px-6 pb-12 pt-32 sm:px-8 md:px-12 lg:px-16"
