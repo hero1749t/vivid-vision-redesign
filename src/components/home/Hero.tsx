@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { ArrowRight, MapPin, Play, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ApplyModal } from "@/components/shared/ApplyModal";
@@ -17,16 +17,35 @@ export const Hero = () => {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
-  // Skip first 3 seconds of video to avoid watermark text
-  const handleVideoCanPlay = () => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 3;
-    }
-  };
+  // Skip to 5 seconds when video loads
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleLoadedMetadata = () => {
+      if (video.currentTime < 5) {
+        video.currentTime = 5;
+      }
+    };
+
+    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    // Also try to skip after a short delay
+    const timeout = setTimeout(() => {
+      if (video.currentTime < 5) {
+        video.currentTime = 5;
+      }
+    }, 500);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   return (
     <section ref={ref} className="relative min-h-screen overflow-hidden">
-      {/* Video Background - Skip watermark */}
+      {/* Video Background */}
       <motion.div className="absolute inset-0" style={{ y }}>
         <video
           ref={videoRef}
@@ -35,10 +54,11 @@ export const Hero = () => {
           muted
           loop
           playsInline
-          onCanPlay={handleVideoCanPlay}
+          controls={false}
           poster="/bali-hero-bg.png"
         >
           <source src="/hero-yoga-1080.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
       </motion.div>
 

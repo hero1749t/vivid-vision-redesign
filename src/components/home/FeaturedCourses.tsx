@@ -44,13 +44,12 @@ const formatBatchDate = (date?: string | null, locale = "en") => {
   return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }).format(parsed);
 };
 
-const updateActiveCard = (
+const getActiveCardIndex = (
   node: HTMLDivElement | null,
-  setActiveIndex: (index: number) => void,
-) => {
-  if (!node) return;
+): number | null => {
+  if (!node) return null;
   const cards = Array.from(node.children) as HTMLElement[];
-  if (!cards.length) return;
+  if (!cards.length) return null;
 
   const viewportCenter = node.getBoundingClientRect().left + node.clientWidth / 2;
   const nearest = cards.reduce(
@@ -62,7 +61,15 @@ const updateActiveCard = (
     { index: 0, distance: Number.POSITIVE_INFINITY },
   );
 
-  setActiveIndex(nearest.index);
+  return nearest.index;
+};
+
+const updateActiveCard = (
+  node: HTMLDivElement | null,
+  setActiveIndex: (index: number) => void,
+) => {
+  const index = getActiveCardIndex(node);
+  if (index !== null) setActiveIndex(index);
 };
 
 const normalizeApiCourse = (course: ApiCourse, index: number, locale: string): DisplayCourse => {
@@ -135,21 +142,21 @@ const CourseCard = ({
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
       animate={{
-        rotateY: depth * -8,
-        rotateZ: depth * -0.8,
-        scale: active ? 1 : 0.94,
-        y: active ? 0 : 14,
+        rotateY: depth * -5,
+        z: active ? 28 : 0,
+        scale: active ? 1 : 0.965,
+        y: active ? 0 : 8,
         opacity: 1,
       }}
-      transition={{ type: "spring", stiffness: 120, damping: 24 }}
+      transition={{ type: "spring", stiffness: 150, damping: 30, mass: 0.9 }}
       style={{
         transformStyle: "preserve-3d",
         transformOrigin: offset < 0 ? "right center" : offset > 0 ? "left center" : "center",
       }}
-      className="group flex h-full min-w-[84vw] snap-center flex-col will-change-transform sm:min-w-[420px] lg:min-w-[390px] xl:min-w-[420px]"
+      className="group flex h-full min-w-[86vw] snap-center scroll-mx-6 flex-col will-change-transform sm:min-w-[430px] lg:min-w-[400px] xl:min-w-[410px]"
     >
       {/* Card Container - Cleaner design */}
-      <div className={`relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-white transition-all duration-500 ${active ? "shadow-[0_26px_70px_rgba(15,23,42,0.2)]" : "shadow-premium-md"} ${course.featured ? 'border-2 border-brand' : 'border border-gray-100'} hover:shadow-premium-xl`}>
+      <div className={`relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-white transition-all duration-500 ${active ? "shadow-[0_26px_70px_rgba(15,23,42,0.2)]" : "shadow-[0_14px_40px_rgba(15,23,42,0.1)]"} ${course.featured ? 'border-2 border-brand' : 'border border-gray-100'} hover:shadow-premium-xl`}>
         <div className="pointer-events-none absolute inset-x-8 top-0 z-20 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
 
         {/* Image Section */}
@@ -258,6 +265,7 @@ export const FeaturedCourses = () => {
   const [apiCourses, setApiCourses] = useState<ApiCourse[] | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const sliderRef = useRef<HTMLDivElement>(null);
+  const scrollFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -288,12 +296,35 @@ export const FeaturedCourses = () => {
     const refresh = () => updateActiveCard(sliderRef.current, setActiveIndex);
     refresh();
     window.addEventListener("resize", refresh);
-    return () => window.removeEventListener("resize", refresh);
+    return () => {
+      window.removeEventListener("resize", refresh);
+      if (scrollFrameRef.current !== null) {
+        cancelAnimationFrame(scrollFrameRef.current);
+      }
+    };
   }, [courses.length]);
+
+  const handleSliderScroll = () => {
+    if (scrollFrameRef.current !== null) return;
+    scrollFrameRef.current = requestAnimationFrame(() => {
+      scrollFrameRef.current = null;
+      const nextIndex = getActiveCardIndex(sliderRef.current);
+      if (nextIndex !== null) {
+        setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+      }
+    });
+  };
 
   const scrollSlider = (direction: "prev" | "next") => {
     const node = sliderRef.current;
     if (!node) return;
+    const current = getActiveCardIndex(node) ?? activeIndex;
+    const cards = Array.from(node.children) as HTMLElement[];
+    const target = cards[Math.max(0, Math.min(cards.length - 1, direction === "next" ? current + 1 : current - 1))];
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      return;
+    }
     node.scrollBy({
       left: direction === "next" ? node.clientWidth * 0.85 : -node.clientWidth * 0.85,
       behavior: "smooth",
@@ -347,8 +378,8 @@ export const FeaturedCourses = () => {
 
         <div
           ref={sliderRef}
-          onScroll={() => updateActiveCard(sliderRef.current, setActiveIndex)}
-          className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-10 pt-4 [perspective:1400px] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-[max(2.5rem,calc((100vw-1180px)/2))] [&::-webkit-scrollbar]:hidden"
+          onScroll={handleSliderScroll}
+          className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-10 pt-4 [perspective:1600px] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-[max(2.5rem,calc((100vw-1180px)/2))] [&::-webkit-scrollbar]:hidden"
         >
           {courses.map((course, index) => (
             <CourseCard
