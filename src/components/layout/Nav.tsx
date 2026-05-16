@@ -85,11 +85,11 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
   const textClass = isLightMode ? "text-gray-900" : "text-white";
   const subTextClass = isLightMode ? "text-gray-500" : "text-white/60";
   const iconClass = isLightMode ? "text-gray-900 hover:bg-gray-100" : "text-white hover:bg-white/10";
-  const desktopLinkClass = isLightMode ? "text-gray-700 hover:text-brand" : "text-white/86 hover:text-white";
+  const desktopLinkClass = isLightMode ? "text-gray-700 hover:text-brand" : "text-white/90 hover:text-white";
   const desktopPanelClass = isLightMode
     ? "border-gray-100 bg-white text-gray-900 shadow-premium-lg"
     : "border-white/12 bg-black/78 text-white shadow-premium-xl backdrop-blur-xl";
-  const desktopPanelSubClass = isLightMode ? "text-gray-500" : "text-white/58";
+  const desktopPanelSubClass = isLightMode ? "text-gray-500" : "text-white/60";
   const desktopPanelItemClass = isLightMode
     ? "hover:bg-sage-mist/50 hover:text-sage"
     : "hover:bg-white/10 hover:text-white";

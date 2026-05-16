@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ArrowRight, MapPin, Play, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ApplyModal } from "@/components/shared/ApplyModal";
@@ -10,19 +10,18 @@ import { Link } from "@/i18n/routing";
 export const Hero = () => {
   const t = useTranslations("Hero");
   const ref = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 40]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
   return (
     <section ref={ref} className="relative min-h-screen overflow-hidden">
-      {/* Video Background */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ y }}
-      >
+      {/* Video Background - Full screen, clean */}
+      <motion.div className="absolute inset-0" style={{ y }}>
         <video
+          ref={videoRef}
           className="h-full w-full object-cover"
           autoPlay
           muted
@@ -34,36 +33,28 @@ export const Hero = () => {
         </video>
       </motion.div>
 
-      {/* Vibrant gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/40 to-charcoal/75" />
-      <div className="absolute inset-0 bg-gradient-to-r from-charcoal/50 via-transparent to-transparent" />
+      {/* Clean gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/60" />
 
-      {/* Accent glows */}
-      <div className="absolute right-1/4 top-1/3 h-80 w-80 rounded-full bg-brand/20 blur-3xl" />
-      <div className="absolute left-1/4 bottom-1/4 h-60 w-60 rounded-full bg-sage/15 blur-3xl" />
-
+      {/* Video content overlay - fades out on scroll */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
         className="relative z-10 flex min-h-screen flex-col justify-end px-6 pb-12 pt-32 sm:px-8 md:px-12 lg:px-16"
       >
         <div className="mx-auto w-full max-w-7xl">
-          {/* Location Badge - Vibrant */}
+          {/* Location Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-8"
+            className="mb-6"
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md">
-              <span className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-brand" />
-                <span>{t("location")}</span>
-              </span>
-              <span className="h-px w-5 bg-white/30" />
-              <span className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-gold" />
-                <span>Yoga Alliance RYS</span>
-              </span>
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-medium text-white backdrop-blur-sm">
+              <MapPin className="h-4 w-4 text-brand" />
+              <span>{t("location")}</span>
+              <span className="h-px w-4 bg-white/30" />
+              <Sparkles className="h-4 w-4 text-gold" />
+              <span>Yoga Alliance RYS</span>
             </div>
           </motion.div>
 
@@ -72,7 +63,7 @@ export const Hero = () => {
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.8, delay: 0.2 }}
               className="font-serif text-[clamp(2.8rem,7vw,5.5rem)] font-bold leading-[1.02] tracking-tight text-white"
             >
               {t("title").split(" ").map((word, index) => (
@@ -80,7 +71,7 @@ export const Hero = () => {
                   key={`${word}-${index}`}
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.6, delay: 0.3 + index * 0.06 }}
                   className="mr-[0.2em] inline-block"
                 >
                   {word}
@@ -88,21 +79,11 @@ export const Hero = () => {
               ))}
             </motion.h1>
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-6 max-w-2xl text-base leading-7 text-white/90 sm:text-lg md:text-xl"
-            >
-              {t("description")}
-            </motion.p>
-
-            {/* CTA Buttons - Vibrant */}
+            {/* CTA Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
               className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
             >
               <ApplyModal
@@ -127,8 +108,8 @@ export const Hero = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-12 flex flex-wrap gap-3"
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="mt-10 flex flex-wrap gap-3"
           >
             {[
               { label: "100hr YTT", bg: "bg-brand" },
