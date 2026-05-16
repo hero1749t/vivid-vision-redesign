@@ -65,7 +65,7 @@ const CoursePage = () => {
   const fetchCourse = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/courses?slug=${slug}`);
+      const res = await fetch(`/api/courses?slug=${slug}&locale=${params?.locale || "en"}`);
       const data = await res.json();
       if (data.courses && data.courses.length > 0) {
         setCourse(data.courses[0]);

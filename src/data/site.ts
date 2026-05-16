@@ -75,6 +75,27 @@ export const IMG = {
 
 export const COURSES = [
   {
+    slug: "50hr",
+    href: "/courses/50hr",
+    duration: "50 Hours",
+    days: "6 Days",
+    title: "50-Hour Hatha-Vinyasa Yoga Teacher Training",
+    style: "Hatha / Vinyasa / Short Course",
+    summary:
+      "A focused short course in Bali for students who want a practical foundation in Hatha and Vinyasa without committing to a full 100hr or 200hr training.",
+    priceFrom: 499,
+    image: IMG.course100,
+    next: "Jan 12 - Jan 17, 2026",
+    seats: "Open",
+    highlights: ["Hatha fundamentals", "Vinyasa flow basics", "Breathwork", "Teaching foundations"],
+    modules: [
+      { title: "Hatha Foundations", desc: "Core postures, alignment principles, breath awareness and safe practice." },
+      { title: "Vinyasa Flow", desc: "Linking movement and breath through accessible flow sequencing." },
+      { title: "Pranayama & Meditation", desc: "Daily breathwork, concentration and grounding practices." },
+      { title: "Teaching Basics", desc: "Cueing, class structure and confidence-building practice teaching." }
+    ]
+  },
+  {
     slug: "100hr",
     href: "/courses/100hr",
     duration: "100 Hours",

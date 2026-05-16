@@ -9,18 +9,38 @@
     "applyNow": "Postuler Maintenant",
     "course100": "FORMATION 100h",
     "course200": "FORMATION 200h",
-    "course300": "FORMATION 300h"
+    "course300": "FORMATION 300h",
+    "login": "Connexion",
+    "scarcity": "Plus que 4 places pour la session de mars 2026 !",
+    "needHelp": "Besoin d?aide ?",
+    "applyBatch": "Postuler pour 2026",
+    "onlySeatsLeft": "Plus que 4 places",
+    "marchBatch": "pour la formation YTT 200h de mars 2026.",
+    "reserveSpot": "R?server votre place"
   },
   "Hero": {
-    "title": "Transformez Votre Vie avec le Yoga à Bali",
+    "title": "Formation de Yoga à Bali",
     "subtitle": "Formation de professeur de yoga certifiée Yoga Alliance à Ubud, Bali",
     "cta": "Commencez Votre Voyage",
-    "watchVideo": "Voir la Vidéo"
+    "watchVideo": "Voir la Vidéo",
+    "titleLine1": "Formation de yoga",
+    "titleLine2": "à Bali",
+    "description": "Formations 100h, 200h et 300h certifiées Yoga Alliance à Ubud. Petits groupes, enseignants expérimentés et vraie pratique.",
+    "days": "JOURS",
+    "hrs": "HRS",
+    "min": "MIN",
+    "sec": "SEC",
+    "nextBatchStarts": "La prochaine session commence bientôt",
+    "location": "Ubud, Bali",
+    "applyBatch": "Postuler pour 2026",
+    "explorePrograms": "Découvrir les programmes"
   },
   "TrustStrip": {
+    "recognisedBy": "Reconnu & certifié par",
     "yogaAlliance": "Certifié Yoga Alliance",
     "students": "2 500+ Diplômés",
     "rating": "Note 4.9/5",
+    "certified": "200h & 300h certifié",
     "established": "Fondé en 2018"
   },
   "Courses": {

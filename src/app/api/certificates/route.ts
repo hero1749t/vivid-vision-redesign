@@ -1,13 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { generateCertificatePDF, generateCertificateId } from "@/lib/certificate";
+import { generateCertificateId } from "@/lib/certificate";
+import { getCertificateEligibility } from "@/lib/certificate-eligibility";
+import { getCurrentUser, requirePermission, requireSameOrigin, writeAuditLog } from "@/lib/authz";
+import { jsonWithRequestId, logApiError } from "@/lib/security";
 
 export async function GET(request: NextRequest) {
   try {
+    const currentUser = await getCurrentUser();
+    if (!currentUser) {
+      return jsonWithRequestId({ error: "Unauthorized" }, { status: 401 }, request);
+    }
+
     const { searchParams } = new URL(request.url);
     const studentId = searchParams.get("studentId");
     const studentEmail = searchParams.get("email");
-    const courseSlug = searchParams.get("course");
 
     let student;
 
@@ -30,31 +37,49 @@ export async function GET(request: NextRequest) {
     }
 
     if (!student) {
-      return NextResponse.json({ error: "Student not found" }, { status: 404 });
+      return jsonWithRequestId({ error: "Student not found" }, { status: 404 }, request);
     }
 
-    // Get certificates
+    const isOwner = student.userId === currentUser.id;
+    const isPrivileged = ["ADMIN", "SUPER_ADMIN", "SUPER_ADMIN", "STUDENT_MANAGER"].includes(currentUser.role);
+    if (!isOwner && !isPrivileged) {
+      return jsonWithRequestId({ error: "Forbidden" }, { status: 403 }, request);
+    }
+
     const certificates = await prisma.certificate.findMany({
       where: { studentId: student.id },
       orderBy: { issuedAt: "desc" },
     });
 
-    return NextResponse.json({ certificates });
+    const eligibility = await getCertificateEligibility(student.id);
+
+    return jsonWithRequestId({ certificates, eligibility }, undefined, request);
   } catch (error) {
-    console.error("GET certificates error:", error);
-    return NextResponse.json({ error: "Failed to fetch certificates" }, { status: 500 });
+    logApiError("certificates.list", error, request);
+    return jsonWithRequestId({ error: "Failed to fetch certificates" }, { status: 500 }, request);
   }
 }
 
 export async function POST(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
   try {
+    const { user, response } = await requirePermission("certificates.issue");
+    if (!user || response) {
+      return response;
+    }
+
     const body = await request.json();
     const { studentId, courseSlug } = body;
 
     if (!studentId || !courseSlug) {
-      return NextResponse.json(
+      return jsonWithRequestId(
         { error: "studentId and courseSlug are required" },
-        { status: 400 }
+        { status: 400 },
+        request,
       );
     }
 
@@ -64,7 +89,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!student) {
-      return NextResponse.json({ error: "Student not found" }, { status: 404 });
+      return jsonWithRequestId({ error: "Student not found" }, { status: 404 }, request);
     }
 
     const course = await prisma.course.findUnique({
@@ -72,7 +97,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!course) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+      return jsonWithRequestId({ error: "Course not found" }, { status: 404 }, request);
     }
 
     // Check if certificate already exists
@@ -84,14 +109,24 @@ export async function POST(request: NextRequest) {
     });
 
     if (existing) {
-      return NextResponse.json({ certificate: existing, message: "Certificate already exists" });
+      return jsonWithRequestId({ certificate: existing, message: "Certificate already exists" }, undefined, request);
     }
 
-    // Generate certificate ID
+    const eligibility = await getCertificateEligibility(student.id);
+    if (!eligibility.eligible) {
+      return jsonWithRequestId(
+        {
+          error: "Student is not eligible for certificate issuance",
+          eligibility,
+        },
+        { status: 400 },
+        request,
+      );
+    }
+
     const year = new Date().getFullYear();
     const certificateId = generateCertificateId(courseSlug, year);
 
-    // Create certificate record
     const certificate = await prisma.certificate.create({
       data: {
         studentId: student.id,
@@ -102,7 +137,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Update student progress
     await prisma.student.update({
       where: { id: student.id },
       data: {
@@ -111,12 +145,22 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "certificate.issued",
+      entity: "certificate",
+      entityId: certificate.id,
+      newValue: certificate,
+      request,
+    });
+
+    return jsonWithRequestId({
       success: true,
       certificate,
-    });
+      eligibility,
+    }, undefined, request);
   } catch (error) {
-    console.error("POST certificate error:", error);
-    return NextResponse.json({ error: "Failed to create certificate" }, { status: 500 });
+    logApiError("certificates.create", error, request);
+    return jsonWithRequestId({ error: "Failed to create certificate" }, { status: 500 }, request);
   }
 }

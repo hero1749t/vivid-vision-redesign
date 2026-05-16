@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/shared/SectionHeading";
 import { IMG } from "@/data/site";
 import { motion } from "framer-motion";
 import { Link } from "@/i18n/routing";
+import { useParams } from "next/navigation";
 import { ArrowRight, Calendar, Clock, User, Loader2 } from "lucide-react";
 
 interface BlogPost {
@@ -21,6 +22,7 @@ interface BlogPost {
 }
 
 const Blog = () => {
+  const params = useParams<{ locale: string }>();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,7 @@ const Blog = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch("/api/blog");
+      const res = await fetch(`/api/blog?locale=${params?.locale || "en"}`);
       const data = await res.json();
       setPosts(data.posts || []);
     } catch (err) {

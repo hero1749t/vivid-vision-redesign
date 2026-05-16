@@ -1,7 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAuthenticatedUser } from "@/lib/authz";
+import { jsonWithRequestId, logApiError } from "@/lib/security";
 
-export async function GET() {
+const ALLOWED_TEACHER_DASHBOARD_ROLES = new Set([
+  "TEACHER",
+  "SUPER_ADMIN",
+  "ADMIN",
+  "STUDENT_MANAGER",
+  "COURSE_MANAGER",
+]);
+
+export async function GET(request: NextRequest) {
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!ALLOWED_TEACHER_DASHBOARD_ROLES.has(user.role)) {
+    return jsonWithRequestId({ error: "Forbidden" }, { status: 403 }, request);
+  }
+
   try {
     const today = new Date();
     const startOfWeek = new Date(today);
@@ -61,17 +80,14 @@ export async function GET() {
       }),
     ]);
 
-    return NextResponse.json({
+    return jsonWithRequestId({
       upcomingBatches,
       totalStudents,
       scheduleEntries,
       recentAnnouncements,
-    });
+    }, undefined, request);
   } catch (error) {
-    console.error("Teacher dashboard error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch teacher data" },
-      { status: 500 }
-    );
+    logApiError("teacher.dashboard", error, request);
+    return jsonWithRequestId({ error: "Failed to load teacher dashboard" }, { status: 500 }, request);
   }
 }

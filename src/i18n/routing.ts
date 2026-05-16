@@ -1,19 +1,19 @@
 import { createSharedPathnamesNavigation } from 'next-intl/navigation';
 
-export const locales = ['id', 'en', 'zh', 'es', 'de', 'ko', 'ja', 'fr'] as const;
+export const locales = ['en', 'es', 'de', 'ko', 'zh', 'ja', 'fr', 'ru'] as const;
 export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = 'en';
 
 export const localeNames: Record<Locale, string> = {
-  id: 'Bahasa Indonesia',
   en: 'English',
-  zh: '中文',
-  es: 'Español',
+  es: 'Espanol',
   de: 'Deutsch',
-  ko: '한국어',
-  ja: '日本語',
-  fr: 'Français',
+  ko: 'Korean',
+  zh: 'Chinese',
+  ja: 'Japanese',
+  fr: 'Francais',
+  ru: 'Russian',
 };
 
 export const { Link, redirect, usePathname, useRouter } =

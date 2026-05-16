@@ -265,6 +265,186 @@ async function main() {
   console.log('✅ Accommodation options created');
 
   // ─────────────────────────────────────────────
+  // 6. DEMO ENROLLMENTS
+  // ─────────────────────────────────────────────
+
+  const demoEnrollments = [
+    {
+      name: 'Sarah Johnson',
+      email: 'sarah.j@example.com',
+      phone: '+1 555-0101',
+      courseSlug: '200hr',
+      paymentStatus: 'FULL_PAID',
+      paymentType: 'FULL',
+      amount: 149900,
+      currency: 'USD',
+      accessLevel: 'FULL',
+    },
+    {
+      name: 'Michael Chen',
+      email: 'michael.c@example.com',
+      phone: '+1 555-0102',
+      courseSlug: '200hr',
+      paymentStatus: 'DEPOSIT_PAID',
+      paymentType: 'DEPOSIT',
+      amount: 30000,
+      currency: 'USD',
+      accessLevel: 'PRE_ARRIVAL',
+    },
+    {
+      name: 'Emma Wilson',
+      email: 'emma.w@example.com',
+      phone: '+44 20-7946-0103',
+      courseSlug: '100hr',
+      paymentStatus: 'FULL_PAID',
+      paymentType: 'FULL',
+      amount: 99900,
+      currency: 'USD',
+      accessLevel: 'FULL',
+    },
+    {
+      name: 'James Rodriguez',
+      email: 'james.r@example.com',
+      phone: '+34 91 123 4567',
+      courseSlug: '200hr',
+      paymentStatus: 'PENDING',
+      paymentType: 'DEPOSIT',
+      amount: 149900,
+      currency: 'USD',
+      accessLevel: 'NONE',
+    },
+    {
+      name: 'Priya Sharma',
+      email: 'priya.s@example.com',
+      phone: '+91 98765 43210',
+      courseSlug: '300hr',
+      paymentStatus: 'FULL_PAID',
+      paymentType: 'FULL',
+      amount: 189900,
+      currency: 'USD',
+      accessLevel: 'ALUMNI',
+    },
+    {
+      name: 'David Kim',
+      email: 'david.k@example.com',
+      phone: '+82 10-1234-5678',
+      courseSlug: '200hr',
+      paymentStatus: 'PENDING',
+      paymentType: 'DEPOSIT',
+      amount: 149900,
+      currency: 'USD',
+      accessLevel: 'NONE',
+    },
+    {
+      name: 'Lisa Thompson',
+      email: 'lisa.t@example.com',
+      phone: '+61 2 9876 5432',
+      courseSlug: '100hr',
+      paymentStatus: 'DEPOSIT_PAID',
+      paymentType: 'DEPOSIT',
+      amount: 20000,
+      currency: 'USD',
+      accessLevel: 'PRE_ARRIVAL',
+    },
+    {
+      name: 'Marco Rossi',
+      email: 'marco.r@example.com',
+      phone: '+39 06 1234567',
+      courseSlug: '200hr',
+      paymentStatus: 'FAILED',
+      paymentType: 'FULL',
+      amount: 149900,
+      currency: 'USD',
+      accessLevel: 'NONE',
+    },
+  ];
+
+  for (const enrollment of demoEnrollments) {
+    // Create demo user for enrollment
+    const demoUser = await prisma.user.upsert({
+      where: { email: enrollment.email },
+      update: {},
+      create: {
+        email: enrollment.email,
+        displayName: enrollment.name,
+        uid: `demo-${enrollment.email.split('@')[0]}`,
+        role: 'STUDENT',
+      },
+    });
+
+    // Create enrollment
+    await prisma.enrollment.upsert({
+      where: {
+        id: `enrollment-${enrollment.email.split('@')[0]}`,
+      },
+      update: {},
+      create: {
+        id: `enrollment-${enrollment.email.split('@')[0]}`,
+        userId: demoUser.id,
+        name: enrollment.name,
+        email: enrollment.email,
+        phone: enrollment.phone,
+        courseSlug: enrollment.courseSlug,
+        amount: enrollment.amount,
+        currency: enrollment.currency,
+        paymentType: enrollment.paymentType as PaymentType,
+        paymentStatus: enrollment.paymentStatus as any,
+        batchId: batch200Mar?.id || null,
+      },
+    });
+
+    // Create student record
+    const studentData: Record<string, unknown> = {
+      userId: demoUser.id,
+      paymentStatus: enrollment.paymentStatus,
+      accessLevel: enrollment.accessLevel,
+    };
+
+    if (enrollment.accessLevel === 'FULL' || enrollment.accessLevel === 'ALUMNI') {
+      studentData.completedHours = enrollment.accessLevel === 'ALUMNI' ? 200 : Math.floor(Math.random() * 100) + 50;
+      studentData.totalHours = 200;
+    }
+
+    await prisma.student.upsert({
+      where: { userId: demoUser.id },
+      update: studentData,
+      create: studentData,
+    });
+  }
+
+  console.log('✅ Demo enrollments created');
+
+  // ─────────────────────────────────────────────
+  // 7. DEMO LEADS
+  // ─────────────────────────────────────────────
+
+  const demoLeads = [
+    { id: 'lead-anna', name: 'Anna Mueller', email: 'anna.m@example.com', phone: '+49 30 123456', course: '200hr', status: 'NEW' },
+    { id: 'lead-carlos', name: 'Carlos Garcia', email: 'carlos.g@example.com', phone: '+34 91 234 567', course: '100hr', status: 'CONTACTED' },
+    { id: 'lead-yuki', name: 'Yuki Tanaka', email: 'yuki.t@example.com', phone: '+81 3 1234 5678', course: '300hr', status: 'INTERESTED' },
+    { id: 'lead-sophie', name: 'Sophie Martin', email: 'sophie.m@example.com', phone: '+33 1 23 45 67', course: '200hr', status: 'ENROLLED' },
+  ];
+
+  for (const lead of demoLeads) {
+    await prisma.lead.upsert({
+      where: { id: lead.id },
+      update: {},
+      create: {
+        id: lead.id,
+        email: lead.email,
+        name: lead.name,
+        phone: lead.phone,
+        course: lead.course,
+        status: lead.status as any,
+        source: 'Website Form',
+        message: 'Interested in joining the upcoming batch.',
+      },
+    });
+  }
+
+  console.log('✅ Demo leads created');
+
+  // ─────────────────────────────────────────────
   // 6. TEACHERS
   // ─────────────────────────────────────────────
 
@@ -373,7 +553,7 @@ async function main() {
     },
     {
       question: 'How can I pay?',
-      answer: 'We accept Stripe (credit/debit in EUR or USD), PayPal, and bank transfer. Pay a deposit (from $200) to secure your spot, with the balance due 30 days before arrival.',
+      answer: 'We accept Razorpay (cards, UPI, and supported wallets), PayPal, and bank transfer. Pay a deposit (from $200) to secure your spot, with the balance due 30 days before arrival.',
       category: 'Payment',
       keywords: ['payment', 'pay', 'deposit', 'installment', 'card'],
       locale: 'en',

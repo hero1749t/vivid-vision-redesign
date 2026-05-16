@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requirePermission, requireSameOrigin, writeAuditLog } from "@/lib/authz";
 
 // Re-export leads routes with admin-specific features
 export async function GET(request: NextRequest) {
+  const { response } = await requirePermission("leads.view");
+  if (response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
@@ -26,7 +32,7 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
-    const counts = statusCounts.reduce((acc: any, s) => {
+    const counts = statusCounts.reduce((acc: Record<string, number>, s: { status: string; _count: number }) => {
       acc[s.status] = s._count;
       return acc;
     }, {});
@@ -43,9 +49,27 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requirePermission("leads.edit");
+  if (!user || response) {
+    return response;
+  }
+
   try {
     const body = await request.json();
     const { id, status, notes, assignedTo, followUpAt } = body;
+
+    const existing = await prisma.lead.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Lead not found" }, { status: 404 });
+    }
 
     const lead = await prisma.lead.update({
       where: { id },
@@ -57,6 +81,16 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "lead.updated",
+      entity: "lead",
+      entityId: lead.id,
+      oldValue: existing,
+      newValue: lead,
+      request,
+    });
+
     return NextResponse.json({ success: true, lead });
   } catch (error) {
     console.error("PATCH admin lead error:", error);
@@ -65,12 +99,37 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requirePermission("leads.edit");
+  if (!user || response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "id is required" }, { status: 400 });
 
+    const existing = await prisma.lead.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Lead not found" }, { status: 404 });
+    }
+
     await prisma.lead.delete({ where: { id } });
+
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "lead.deleted",
+      entity: "lead",
+      entityId: id,
+      oldValue: existing,
+      request,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE lead error:", error);

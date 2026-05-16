@@ -1,7 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAdminUser } from "@/lib/authz";
+
+export const dynamic = "force-dynamic";
+
+interface CourseStat {
+  courseSlug: string;
+  _count: number;
+  _sum: { amount: number | null } | null;
+}
+
+interface EnrollmentSource {
+  referralSource: string | null;
+  _count: number;
+}
+
+interface EnrollmentStatus {
+  paymentStatus: string;
+  _count: number;
+}
+
+interface BatchUtilization {
+  name: string;
+  capacity: number;
+  enrolled: number;
+  status: string;
+}
+
+interface TopBatch {
+  name: string;
+  enrolled: number;
+  capacity: number;
+}
+
+interface StatCount {
+  status: string | null;
+  _count: number;
+}
+
+interface MonthlyEnrollment {
+  amount: number;
+  createdAt: Date;
+}
 
 export async function GET(request: NextRequest) {
+  const { response } = await requireAdminUser();
+  if (response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get("period") || "month";
@@ -15,7 +62,6 @@ export async function GET(request: NextRequest) {
     };
     const startDate = ranges[period] || ranges.month;
 
-    // Fetch all data
     const [
       totalEnrollments,
       totalStudents,
@@ -76,14 +122,14 @@ export async function GET(request: NextRequest) {
       prisma.waitlist.groupBy({ by: ["status"], _count: true }),
     ]);
 
-    // Process revenue by month
     const monthlyRevenue: Record<string, number> = {};
     for (let i = 0; i < 12; i++) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
       monthlyRevenue[key] = 0;
     }
-    enrollmentsForMonth.forEach((e) => {
+
+    enrollmentsForMonth.forEach((e: MonthlyEnrollment) => {
       const d = new Date(e.createdAt);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
       if (monthlyRevenue[key] !== undefined) {
@@ -91,7 +137,6 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Calculate period stats
     const periodEnrollments = await prisma.enrollment.count({
       where: { createdAt: { gte: startDate } },
     });
@@ -103,7 +148,22 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    const currentMonthRevenue = await prisma.enrollment.aggregate({
+      _sum: { amount: true },
+      where: {
+        paymentStatus: { in: ["DEPOSIT_PAID", "FULL_PAID"] },
+        createdAt: { gte: new Date(now.getFullYear(), now.getMonth(), 1) },
+      },
+    });
+
     return NextResponse.json({
+      stats: {
+        totalEnrollments,
+        totalStudents,
+        totalRevenue: totalRevenueResult._sum.amount || 0,
+        upcomingBatches: topBatches.length,
+        monthlyRevenue: currentMonthRevenue._sum.amount || 0,
+      },
       overview: {
         totalEnrollments,
         totalStudents,
@@ -113,7 +173,7 @@ export async function GET(request: NextRequest) {
         period,
       },
       recentEnrollments,
-      courses: courseStats.map((c) => ({
+      courses: courseStats.map((c: CourseStat) => ({
         course: c.courseSlug,
         count: c._count,
         revenue: c._sum?.amount || 0,
@@ -122,13 +182,13 @@ export async function GET(request: NextRequest) {
         .map(([month, revenue]) => ({ month, revenue }))
         .reverse(),
       enrollmentBySource: enrollmentBySource
-        .filter((s) => s.referralSource)
-        .map((s) => ({ source: s.referralSource, count: s._count })),
-      enrollmentByStatus: enrollmentByStatus.map((s) => ({
+        .filter((s: EnrollmentSource) => s.referralSource)
+        .map((s: EnrollmentSource) => ({ source: s.referralSource, count: s._count })),
+      enrollmentByStatus: enrollmentByStatus.map((s: EnrollmentStatus) => ({
         status: s.paymentStatus,
         count: s._count,
       })),
-      batchUtilization: batchUtilization.map((b) => ({
+      batchUtilization: batchUtilization.map((b: BatchUtilization) => ({
         name: b.name,
         enrolled: b.enrolled,
         capacity: b.capacity,
@@ -136,8 +196,8 @@ export async function GET(request: NextRequest) {
         status: b.status,
       })),
       topBatches,
-      leads: leadsStats.map((l) => ({ status: l.status, count: l._count })),
-      waitlist: waitlistStats.map((w) => ({ status: w.status, count: w._count })),
+      leads: leadsStats.map((l: StatCount) => ({ status: l.status, count: l._count })),
+      waitlist: waitlistStats.map((w: StatCount) => ({ status: w.status, count: w._count })),
     });
   } catch (error) {
     console.error("Analytics error:", error);

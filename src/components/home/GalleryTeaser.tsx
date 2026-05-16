@@ -4,8 +4,13 @@ import { Reveal } from "@/components/shared/Reveal";
 import { Link } from "@/i18n/routing";
 import { ArrowUpRight, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLocale } from "next-intl";
+import { getHomeCopy } from "@/lib/home-localized";
 
-export const GalleryTeaser = () => (
+export const GalleryTeaser = () => {
+  const copy = getHomeCopy(useLocale());
+
+  return (
   <section className="relative py-20 md:py-36 bg-gradient-to-b from-white via-white to-orange-50/30 overflow-hidden">
     {/* Decorative Background */}
     <div className="absolute -top-20 right-0 w-80 h-80 bg-gradient-to-br from-amber-100/20 to-orange-100/10 rounded-full blur-3xl opacity-40" />
@@ -17,7 +22,7 @@ export const GalleryTeaser = () => (
           <Reveal>
             <div className="inline-flex items-center gap-2 mb-5">
               <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-              <p className="eyebrow text-amber-700 font-semibold">Inside Bali YTTC</p>
+              <p className="eyebrow text-amber-700 font-semibold">{copy.common.galleryEyebrow}</p>
             </div>
           </Reveal>
           <Reveal delay={0.05}>
@@ -25,10 +30,10 @@ export const GalleryTeaser = () => (
               className="font-serif font-bold text-gray-900 leading-[1.1]"
               style={{ fontSize: "clamp(1.8rem, 5vw, 3.4rem)" }}
             >
-              Authentic Moments from
+              {copy.common.galleryTitle}
               <br />
               <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                Ubud
+                {copy.common.galleryAccent}
               </span>
             </h2>
           </Reveal>
@@ -36,7 +41,7 @@ export const GalleryTeaser = () => (
         <Link href="/gallery" 
           className="hidden md:inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-amber-100 to-orange-100 hover:from-amber-200 hover:to-orange-200 text-amber-900 font-semibold rounded-lg transition-all duration-300 hover:shadow-lg"
         >
-          View Full Gallery <ArrowUpRight className="w-5 h-5" />
+          {copy.common.viewGallery} <ArrowUpRight className="w-5 h-5" />
         </Link>
       </div>
 
@@ -85,10 +90,11 @@ export const GalleryTeaser = () => (
         <Link href="/gallery"
           className="inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg"
         >
-          View Full Gallery <ArrowUpRight className="w-5 h-5" />
+          {copy.common.viewGallery} <ArrowUpRight className="w-5 h-5" />
         </Link>
       </div>
     </div>
   </section>
-);
+  );
+};
 

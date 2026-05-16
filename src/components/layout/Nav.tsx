@@ -1,11 +1,12 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { Link, usePathname as useLocation } from "@/i18n/routing";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Menu } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname as useLocation } from "@/i18n/routing";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { BalieytcLogo } from "@/components/shared/BalieytcLogo";
-import { Button } from "@/components/ui/button";
 import { SITE } from "@/data/site";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
@@ -18,7 +19,7 @@ const menuColumns = [
       { label: "200hr Yoga Teacher Training", to: "/courses/200hr" },
       { label: "300hr Advanced", to: "/courses/300hr" },
       { label: "Retreats", to: "/retreats", strong: true },
-      { label: "Workshops", to: "/workshops" },
+      { label: "Short Courses", to: "/workshops" },
     ],
   },
   {
@@ -54,20 +55,8 @@ const menuColumns = [
   },
 ];
 
-const MenuLink = ({
-  label, to, href, strong, onClick,
-}: {
-  label: string; to?: string; href?: string; strong?: boolean; onClick: () => void;
-}) => {
-  const cls = strong
-    ? "block text-sm font-bold text-white hover:text-[#F47348] transition-colors"
-    : "block text-sm text-white/65 hover:text-white transition-colors leading-6";
-  if (href)
-    return <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={onClick} className={cls}>{label}</a>;
-  return <Link href={to ?? "/"} onClick={onClick} className={cls}>{label}</Link>;
-};
-
 export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
+  const t = useTranslations("Navigation");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = useLocation();
@@ -83,73 +72,125 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [menuOpen]);
 
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const isLightMode = scrolled || !onHome || menuOpen;
-
   const textClass = isLightMode ? "text-gray-900" : "text-white";
   const subTextClass = isLightMode ? "text-gray-500" : "text-white/60";
   const iconClass = isLightMode ? "text-gray-900 hover:bg-gray-100" : "text-white hover:bg-white/10";
+  const desktopLinkClass = isLightMode ? "text-gray-700 hover:text-brand" : "text-white/86 hover:text-white";
+  const desktopPanelClass = isLightMode
+    ? "border-gray-100 bg-white text-gray-900 shadow-premium-lg"
+    : "border-white/12 bg-black/78 text-white shadow-premium-xl backdrop-blur-xl";
+  const desktopPanelSubClass = isLightMode ? "text-gray-500" : "text-white/58";
+  const desktopPanelItemClass = isLightMode
+    ? "hover:bg-sage-mist/50 hover:text-sage"
+    : "hover:bg-white/10 hover:text-white";
+
+  const programLinks = [
+    { label: t("course100"), description: "Foundation training", to: "/courses/100hr" },
+    { label: t("course200"), description: "Flagship certification", to: "/courses/200hr" },
+    { label: t("course300"), description: "Advanced teacher path", to: "/courses/300hr" },
+    { label: "50-Hour Hatha-Vinyasa YTT", description: "Short course", to: "/courses/50hr" },
+  ];
 
   return (
     <>
       <header
         style={{ top: `${bannerHeight}px` }}
         className={`fixed inset-x-0 z-50 transition-all duration-300 ${
-          isLightMode ? "bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm" : "bg-transparent"
+          isLightMode ? "border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-md" : "bg-transparent"
         }`}
       >
-        {/* Sticky Urgency Banner - shows when scrolled */}
         {scrolled && (
-          <div className="bg-gradient-to-r from-[#D03D12] to-[#F04E23] text-white text-center py-1.5 text-xs font-medium">
+          <div className="bg-gradient-to-r from-brand-dark to-brand py-1.5 text-center text-xs font-medium text-white">
             <span className="inline-flex items-center gap-2">
-              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-              Only 4 seats left for March 2026 batch!
-              <a href="/courses/200hr" className="underline font-bold hover:text-amber-200 ml-1">
-                Apply Now
+              <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
+              {t("scarcity")}
+              <a href="/courses/200hr" className="ml-1 font-bold underline hover:text-amber-200">
+                {t("applyNow")}
               </a>
             </span>
           </div>
         )}
-        <div className="container-wide" style={{ height: `${NAV_H}px` }}>
-          <div className="flex h-full items-center justify-between">
 
-            {/* ── Logo ────────────────────────── */}
-            <Link href="/" className="group flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+        <div className="container-wide" style={{ height: `${NAV_H}px` }}>
+          <div className="flex h-full items-center justify-between gap-4">
+            <Link href="/" className="group flex shrink-0 items-center gap-2.5 transition-opacity hover:opacity-90">
               <BalieytcLogo className="h-8 w-8 flex-shrink-0" showText={false} />
               <div className="flex flex-col leading-none">
-                <span className={`font-bold text-sm tracking-[0.04em] transition-colors ${textClass}`}>Bali YTTC</span>
-                <span className={`text-[9px] uppercase tracking-[0.16em] mt-[3px] font-semibold transition-colors ${subTextClass}`}>Yoga Teacher Training</span>
+                <span className={`text-sm font-bold tracking-[0.04em] transition-colors ${textClass}`}>Bali YTTC</span>
+                <span className={`mt-[3px] text-[9px] font-semibold uppercase tracking-[0.16em] transition-colors ${subTextClass}`}>
+                  Yoga Teacher Training
+                </span>
               </div>
             </Link>
 
-            {/* ── Actions ─────────────────────── */}
-            <div className="flex items-center gap-2">
+            <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
+              <div className="group relative">
+                <button
+                  type="button"
+                  className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}
+                >
+                  {t("programs")}
+                  <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="invisible absolute left-0 top-full z-50 w-[300px] translate-y-2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className={`rounded-xl border p-2 ${desktopPanelClass}`}>
+                    <div className={`px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] ${desktopPanelSubClass}`}>
+                      {t("trainings")}
+                    </div>
+                    {programLinks.map((item) => (
+                      <Link
+                        key={item.to}
+                        href={item.to}
+                        className={`block rounded-lg px-3 py-2.5 transition-colors ${desktopPanelItemClass}`}
+                      >
+                        <span className="block text-sm font-bold">{item.label}</span>
+                        <span className={`mt-0.5 block text-xs ${desktopPanelSubClass}`}>{item.description}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <Link href="/about" className={`inline-flex h-9 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}>
+                {t("about")}
+              </Link>
+              <Link href="/blog" className={`inline-flex h-9 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}>
+                {t("blog")}
+              </Link>
+            </nav>
+
+            <div className="flex shrink-0 items-center gap-2">
               <LanguageSwitcher isLightMode={isLightMode} />
               <Link
                 href="/login"
-                className={`hidden sm:inline-flex h-9 items-center gap-1.5 rounded-lg border-2 px-4 text-sm font-semibold transition-colors ${
+                className={`hidden h-9 items-center gap-1.5 rounded-full border-2 px-5 text-sm font-semibold transition-all duration-300 sm:inline-flex ${
                   isLightMode
-                    ? "border-[#F04E23] text-[#F04E23] hover:bg-[#F04E23] hover:text-white"
-                    : "border-white text-white hover:bg-white hover:text-[#F04E23]"
+                    ? "border-brand text-brand hover:bg-brand hover:text-white"
+                    : "border-white text-white hover:bg-white hover:text-brand"
                 }`}
               >
-                Login
+                {t("login")}
               </Link>
               <ApplyModal
                 trigger={
-                  <button className="hidden sm:inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#F04E23] px-4 text-sm font-semibold text-white hover:bg-[#D03D12] transition-colors shadow-sm">
-                    Apply Now <span aria-hidden>→</span>
+                  <button className="hidden h-9 items-center gap-1.5 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-brand-dark hover:shadow-md sm:inline-flex">
+                    {t("applyNow")} <span aria-hidden>→</span>
                   </button>
                 }
               />
               <button
                 type="button"
-                onClick={() => setMenuOpen(o => !o)}
-                className={`h-9 w-9 flex items-center justify-center rounded-md transition-colors ${iconClass}`}
+                onClick={() => setMenuOpen((open) => !open)}
+                className={`flex h-9 w-9 items-center justify-center rounded-md transition-colors ${iconClass}`}
                 aria-label="Menu"
               >
                 {menuOpen ? <X size={18} /> : <Menu size={18} />}
@@ -159,7 +200,6 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
         </div>
       </header>
 
-      {/* ── Mega-menu dropdown ──────────────── */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -171,41 +211,56 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
               top: `${bannerHeight + NAV_H}px`,
               maxHeight: `calc(100vh - ${bannerHeight + NAV_H}px)`,
             }}
-            className="fixed inset-x-0 z-40 overflow-y-auto bg-white border-t border-gray-100 shadow-2xl"
+            className="fixed inset-x-0 z-40 overflow-y-auto border-t border-gray-100 bg-white shadow-2xl"
           >
             <div className="container-wide grid gap-8 py-10 md:grid-cols-4 md:gap-12 md:py-14">
-              {menuColumns.map(col => (
-                <div key={col.title}>
+              {menuColumns.map((column) => (
+                <div key={column.title}>
                   <p className="mb-5 text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400">
-                    {col.title}
+                    {column.title}
                   </p>
                   <div className="space-y-3.5">
-                    {col.links.map(link => {
+                    {column.links.map((link) => {
                       const cls = link.strong
-                        ? "block text-sm font-bold text-gray-900 hover:text-[#F04E23] transition-colors"
-                        : "block text-sm text-gray-600 hover:text-gray-900 hover:pl-1 transition-all leading-6";
-                      if (link.href)
-                        return <a key={link.label} href={link.href} target={link.href.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={() => setMenuOpen(false)} className={cls}>{link.label}</a>;
-                      return <Link key={link.label} href={link.to ?? "/"} onClick={() => setMenuOpen(false)} className={cls}>{link.label}</Link>;
+                        ? "block text-sm font-bold text-gray-900 transition-colors hover:text-[#F04E23]"
+                        : "block text-sm leading-6 text-gray-600 transition-all hover:pl-1 hover:text-gray-900";
+                      if (link.href) {
+                        return (
+                          <a
+                            key={link.label}
+                            href={link.href}
+                            target={link.href.startsWith("http") ? "_blank" : undefined}
+                            rel="noopener"
+                            onClick={() => setMenuOpen(false)}
+                            className={cls}
+                          >
+                            {link.label}
+                          </a>
+                        );
+                      }
+                      return (
+                        <Link key={link.label} href={link.to ?? "/"} onClick={() => setMenuOpen(false)} className={cls}>
+                          {link.label}
+                        </Link>
+                      );
                     })}
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Bottom bar */}
             <div className="border-t border-gray-100 bg-gray-50 py-4">
               <div className="container-wide flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-xs font-medium text-gray-500">
-                  Need help?{" "}
-                  <a href={`tel:${SITE.phone}`} className="text-[#F04E23] hover:text-[#D03D12] transition-colors font-bold">
+                  {t("needHelp")}{" "}
+                  <a href={`tel:${SITE.phone}`} className="font-bold text-[#F04E23] transition-colors hover:text-[#D03D12]">
                     {SITE.phone}
                   </a>
                 </p>
                 <ApplyModal
                   trigger={
-                    <button className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#F04E23] px-5 text-sm font-semibold text-white hover:bg-[#D03D12] transition-colors shadow-sm">
-                      Apply for 2026 Batch →
+                    <button className="inline-flex h-10 items-center gap-1.5 rounded-full bg-brand px-6 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-brand-dark hover:shadow-md">
+                      {t("applyBatch")} →
                     </button>
                   }
                 />

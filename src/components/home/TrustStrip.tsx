@@ -2,14 +2,15 @@
 import { IMG } from "@/data/site";
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { Award, Shield, TrendingUp, Users } from "lucide-react";
+import { Award, MapPin, Star, Users, BookOpen, Heart } from "lucide-react";
+import { useLocale } from "next-intl";
+import { getHomeCopy } from "@/lib/home-localized";
 
 const trustIcons = [
   { src: IMG.yogaAlliance, label: "Yoga Alliance RYS" },
   { src: IMG.rys200, label: "RYS 200" },
   { src: IMG.trustpilot, label: "Trustpilot" },
   { src: IMG.tripadvisor, label: "TripAdvisor" },
-  { src: IMG.bookRetreat, label: "Book Yoga Retreats" },
 ];
 
 // Animated counter hook
@@ -21,7 +22,7 @@ function useCounter(end: number, duration = 2000, start = false) {
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(eased * end));
       if (progress < 1) requestAnimationFrame(step);
     };
@@ -30,68 +31,93 @@ function useCounter(end: number, duration = 2000, start = false) {
   return count;
 }
 
-// Colorful theme data for each metric
+// Premium metrics with calm sage/terracotta palette
 const metrics = [
-  { 
-    icon: Users, end: 2500, suffix: "+", label: "Students trained", sub: "worldwide since 2018", 
-    iconBg: "bg-blue-50 group-hover:bg-blue-100", iconColor: "text-blue-500 group-hover:text-blue-600", numColor: "text-blue-600", borderHover: "hover:border-blue-200", line: "bg-blue-500"
+  {
+    icon: Users,
+    end: 2500,
+    suffix: "+",
+    label: "Students Trained",
+    sub: "worldwide since 2018",
+    iconBg: "bg-sage",
+    numberClass: "text-sage",
   },
-  { 
-    icon: Award, end: 49, suffix: "★", label: "Average rating", sub: "verified reviews", divideBy: 10,
-    iconBg: "bg-amber-50 group-hover:bg-amber-100", iconColor: "text-amber-500 group-hover:text-amber-600", numColor: "text-amber-500", borderHover: "hover:border-amber-200", line: "bg-amber-400"
+  {
+    icon: Star,
+    end: 49,
+    suffix: "/5",
+    label: "Average Rating",
+    sub: "verified reviews",
+    divideBy: 10,
+    iconBg: "bg-gold",
+    numberClass: "text-gold",
   },
-  { 
-    icon: Shield, end: 300, suffix: " RYS", label: "Yoga Alliance", sub: "200hr & 300hr certified",
-    iconBg: "bg-emerald-50 group-hover:bg-emerald-100", iconColor: "text-emerald-500 group-hover:text-emerald-600", numColor: "text-emerald-600", borderHover: "hover:border-emerald-200", line: "bg-emerald-500"
+  {
+    icon: Award,
+    end: 300,
+    suffix: "+",
+    label: "Graduates",
+    sub: "this year alone",
+    iconBg: "bg-brand",
+    numberClass: "text-brand",
   },
-  { 
-    icon: TrendingUp, end: 15, suffix: "+", label: "Years experience", sub: "combined faculty",
-    iconBg: "bg-orange-50 group-hover:bg-orange-100", iconColor: "text-[#F04E23]", numColor: "text-[#F04E23]", borderHover: "hover:border-[#F04E23]/30", line: "bg-[#F04E23]"
+  {
+    icon: Heart,
+    end: 98,
+    suffix: "%",
+    label: "Would Recommend",
+    sub: "student satisfaction",
+    iconBg: "bg-sage-light",
+    numberClass: "text-sage-light",
   },
 ];
 
 export const TrustStrip = () => {
+  const copy = getHomeCopy(useLocale());
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const c0 = useCounter(2500, 2200, isInView);
   const c1 = useCounter(49, 1800, isInView);
   const c2 = useCounter(300, 2000, isInView);
-  const c3 = useCounter(15, 1600, isInView);
+  const c3 = useCounter(98, 1600, isInView);
   const counters = [c0, c1, c2, c3];
 
   return (
-    <section id="trust" className="relative bg-[#FAFAFA] overflow-hidden py-16 md:py-24 border-y border-gray-200">
-      <div className="relative z-10">
-        {/* Marquee logo strip - Now colorful and highly visible */}
-        <div className="mb-14 md:mb-20">
-          <p className="text-center text-[12px] font-extrabold uppercase tracking-[0.25em] text-gray-500 mb-8">
-            Recognised & certified by
-          </p>
-          <div className="relative overflow-hidden">
-            <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-[#FAFAFA] to-transparent" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-[#FAFAFA] to-transparent" />
-            <motion.div
-              className="flex gap-16 items-center"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            >
-              {[...trustIcons, ...trustIcons].map((item, index) => (
-                <img
-                  key={index}
-                  src={item.src}
-                  alt={item.label}
-                  // Removed grayscale completely so logos are colorful, clear, and visible
-                  className="h-10 md:h-12 object-contain hover:scale-110 transition-transform duration-300 flex-shrink-0"
-                  loading="lazy"
-                />
-              ))}
-            </motion.div>
-          </div>
-        </div>
+    <section id="trust" className="relative overflow-hidden bg-cream py-20 md:py-28">
+      {/* Subtle decorative elements */}
+      <div className="absolute left-0 top-0 h-64 w-64 rounded-full bg-sage-mist blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-brand-muted blur-3xl" />
 
-        {/* Colorful & Highly Visible Metric Cards */}
-        <div ref={ref} className="container-wide grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <div className="container-wide relative z-10">
+        {/* Section header - Clean and minimal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-12 text-center"
+        >
+          <p className="eyebrow mx-auto mb-4">{copy.trust.recognised}</p>
+          <div className="flex items-center justify-center gap-8 flex-wrap">
+            {trustIcons.map((item, index) => (
+              <motion.img
+                key={index}
+                src={item.src}
+                alt={item.label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.4 }}
+                className="h-8 md:h-10 object-contain hover:scale-110 transition-transform duration-300"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Premium Metric Cards - Softer design */}
+        <div ref={ref} className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {metrics.map((m, i) => {
             const Icon = m.icon;
             const rawVal = counters[i];
@@ -100,28 +126,28 @@ export const TrustStrip = () => {
             return (
               <motion.div
                 key={m.label}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                whileHover={{ y: -4 }}
-                className={`group relative overflow-hidden rounded-2xl bg-white p-6 md:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] ${m.borderHover}`}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative overflow-hidden rounded-2xl bg-white p-6 md:p-8 border border-gray-100 shadow-premium-sm transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1"
               >
-                {/* Colorful Icon Container */}
-                <div className={`mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300 ${m.iconBg} ${m.iconColor}`}>
-                  <Icon className="h-6 w-6" strokeWidth={2.5} />
+                {/* Top accent line */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${m.iconBg === 'bg-sage' ? 'from-sage to-sage-light' : m.iconBg === 'bg-gold' ? 'from-gold to-gold-light' : m.iconBg === 'bg-brand' ? 'from-brand to-brand-light' : 'from-sage-light to-sage-pale'} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+
+                {/* Icon */}
+                <div className={`inline-flex h-14 w-14 items-center justify-center rounded-2xl ${m.iconBg} mb-6 transition-transform duration-300 group-hover:scale-110`}>
+                  <Icon className="h-6 w-6 text-white" strokeWidth={2} />
                 </div>
 
-                {/* Big, bold, colorful numbers */}
-                <p className={`text-3xl md:text-5xl font-extrabold tracking-tight ${m.numColor}`}>
+                {/* Number */}
+                <p className={`text-4xl md:text-5xl font-bold ${m.numberClass} tracking-tight`}>
                   {displayVal}{m.suffix}
                 </p>
 
-                <p className="mt-2 text-base font-bold text-gray-800">{m.label}</p>
-                <p className="mt-1 text-[11px] font-bold text-gray-500 uppercase tracking-wider">{m.sub}</p>
-
-                {/* Solid colored bottom line on hover */}
-                <div className={`absolute bottom-0 left-0 h-1 w-0 transition-all duration-500 ease-out group-hover:w-full ${m.line}`} />
+                {/* Labels */}
+                <p className="mt-3 text-base font-semibold text-ink">{m.label}</p>
+                <p className="mt-1 text-xs font-medium text-ink-muted uppercase tracking-wider">{m.sub}</p>
               </motion.div>
             );
           })}

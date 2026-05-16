@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { assertRuntimeEnv } from "@/lib/env-validation";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -26,6 +27,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  assertRuntimeEnv();
+
   return (
     <html lang="en">
       <head>

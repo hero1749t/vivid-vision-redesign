@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
@@ -159,13 +160,33 @@ const comboPackages = [
   },
 ];
 
-const testimonials = [
+const fallbackTestimonials = [
   { name: "Anna B.", text: "The sound healing with Mrs. Yuli was one of the most profound experiences of my life. I cried, I laughed, I felt completely renewed.", workshop: "Sound Healing", rating: 5 },
   { name: "Chris M.", text: "Never thought I could do arm balances! Sachin's progressions made it possible. Now I can hold crow for 30 seconds!", workshop: "Arm Balancing", rating: 5 },
   { name: "Lena K.", text: "Acro yoga was so much fun! Made great friends and learned to trust my body in completely new ways.", workshop: "Acro Yoga", rating: 5 },
 ];
 
 const Workshops = () => {
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
+
+  useEffect(() => {
+    void fetch("/api/testimonials?limit=3")
+      .then((response) => response.json())
+      .then((result) => {
+        if (Array.isArray(result.testimonials) && result.testimonials.length > 0) {
+          setTestimonials(
+            result.testimonials.map((item: { name: string; course?: string | null; quote: string; rating?: number }) => ({
+              name: item.name,
+              workshop: item.course || "Bali YTTC Graduate",
+              text: item.quote,
+              rating: item.rating || 5,
+            })),
+          );
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <>
       {/* Hero */}

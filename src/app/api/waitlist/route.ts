@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
+import { requireAdminUser, requireSameOrigin, writeAuditLog } from "@/lib/authz";
 import { sendEmail } from "@/lib/resend";
+import { createRateLimitResponse, getClientIp, rateLimit } from "@/lib/security";
 
 const waitlistSchema = z.object({
   name: z.string().min(1),
@@ -13,6 +15,11 @@ const waitlistSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const { response } = await requireAdminUser();
+  if (response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const batchId = searchParams.get("batchId");
@@ -49,6 +56,21 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const sameOriginResponse = requireSameOrigin(request);
+    if (sameOriginResponse) {
+      return sameOriginResponse;
+    }
+
+    const limit = rateLimit({
+      key: `public:waitlist:${getClientIp(request)}`,
+      limit: 6,
+      windowMs: 60 * 60 * 1000,
+    });
+
+    if (!limit.allowed) {
+      return createRateLimitResponse("Too many waitlist attempts. Try again later.", Math.ceil((limit.resetAt - Date.now()) / 1000));
+    }
+
     const body = await request.json();
     const data = waitlistSchema.parse(body);
 
@@ -124,6 +146,16 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAdminUser();
+  if (!user || response) {
+    return response;
+  }
+
   try {
     const body = await request.json();
     const { id, status, priority, notes } = body;
@@ -144,6 +176,15 @@ export async function PATCH(request: NextRequest) {
       data: updateData,
     });
 
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "waitlist.updated",
+      entity: "waitlist",
+      entityId: waitlist.id,
+      newValue: waitlist,
+      request,
+    });
+
     return NextResponse.json({ success: true, waitlist });
   } catch (error) {
     console.error("PATCH waitlist error:", error);
@@ -152,6 +193,16 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAdminUser();
+  if (!user || response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -160,65 +211,28 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
 
+    const existing = await prisma.waitlist.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Waitlist entry not found" }, { status: 404 });
+    }
+
     await prisma.waitlist.delete({ where: { id } });
+
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "waitlist.deleted",
+      entity: "waitlist",
+      entityId: id,
+      oldValue: existing,
+      request,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE waitlist error:", error);
     return NextResponse.json({ error: "Failed to remove from waitlist" }, { status: 500 });
-  }
-}
-
-// Notify next person on waitlist when a spot opens
-export async function notifyNext(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const batchId = searchParams.get("batchId");
-
-    if (!batchId) {
-      return NextResponse.json({ error: "batchId is required" }, { status: 400 });
-    }
-
-    // Find next person on waitlist
-    const nextPerson = await prisma.waitlist.findFirst({
-      where: {
-        batchId,
-        status: "WAITING",
-      },
-      orderBy: [{ priority: "desc" }, { createdAt: "asc" }],
-    });
-
-    if (!nextPerson) {
-      return NextResponse.json({ message: "No one on waitlist" });
-    }
-
-    // Mark as notified
-    await prisma.waitlist.update({
-      where: { id: nextPerson.id },
-      data: {
-        status: "NOTIFIED",
-        notifiedAt: new Date(),
-      },
-    });
-
-    // Send notification email
-    sendEmail({
-      to: nextPerson.email,
-      subject: "A Spot Opened! - Bali YTTC",
-      html: `
-        <h2>Great News, ${nextPerson.name}!</h2>
-        <p>A spot has opened up for the Yoga Teacher Training you were waiting for!</p>
-        <p>This offer is valid for 48 hours. Don't miss out!</p>
-        <p><a href="https://baliyttc.com/enroll?waitlist=${nextPerson.id}">Claim Your Spot Now</a></p>
-        <p>Namaste,<br>Bali YTTC Team</p>
-      `,
-    }).catch(console.error);
-
-    return NextResponse.json({
-      success: true,
-      notified: nextPerson,
-    });
-  } catch (error) {
-    console.error("Notify waitlist error:", error);
-    return NextResponse.json({ error: "Failed to notify" }, { status: 500 });
   }
 }

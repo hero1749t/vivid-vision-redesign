@@ -9,18 +9,38 @@
     "applyNow": "Jetzt Bewerben",
     "course100": "100-Stunden YTT",
     "course200": "200-Stunden YTT",
-    "course300": "300-Stunden YTT"
+    "course300": "300-Stunden YTT",
+    "login": "Login",
+    "scarcity": "Nur noch 4 Pl?tze f?r den Kurs im M?rz 2026!",
+    "needHelp": "Brauchst du Hilfe?",
+    "applyBatch": "F?r den Kurs 2026 bewerben",
+    "onlySeatsLeft": "Nur noch 4 Pl?tze",
+    "marchBatch": "f?r den 200-Stunden-YTT-Kurs im M?rz 2026.",
+    "reserveSpot": "Platz reservieren"
   },
   "Hero": {
-    "title": "Verwandle Dein Leben mit Yoga in Bali",
+    "title": "Yogalehrer-Ausbildung in Bali",
     "subtitle": "Yoga Alliance zertifizierte LehrerAusbildung in Ubud, Bali",
     "cta": "Beginne Deine Reise",
-    "watchVideo": "Video Ansehen"
+    "watchVideo": "Video Ansehen",
+    "titleLine1": "Yogalehrer-Ausbildung",
+    "titleLine2": "in Bali",
+    "description": "Yoga Alliance zertifizierte 100h, 200h und 300h Kurse in Ubud. Kleine Gruppen, erfahrene Lehrer und echte Praxis.",
+    "days": "TAGE",
+    "hrs": "STD",
+    "min": "MIN",
+    "sec": "SEK",
+    "nextBatchStarts": "Nächster Kurs startet bald",
+    "location": "Ubud, Bali",
+    "applyBatch": "Für den Kurs 2026 bewerben",
+    "explorePrograms": "Programme ansehen"
   },
   "TrustStrip": {
+    "recognisedBy": "Anerkannt & zertifiziert von",
     "yogaAlliance": "Yoga Alliance Zertifiziert",
     "students": "2.500+ Absolventen",
     "rating": "Bewertung 4.9/5",
+    "certified": "200Std & 300Std zertifiziert",
     "established": "Gegründet 2018"
   },
   "Courses": {

@@ -1,13 +1,44 @@
-// RBAC permissions matrix - shared between middleware and admin routes
+// RBAC permissions matrix shared between server routes and admin UI.
+
+export const STAFF_ROLES = [
+  "SUPER_ADMIN",
+  "STUDENT_MANAGER",
+  "SEO_EDITOR",
+  "FINANCE_MANAGER",
+  "COURSE_MANAGER",
+  "TEACHER",
+] as const;
+
+export const ADMIN_PANEL_ROLES = [
+  "SUPER_ADMIN",
+  "STUDENT_MANAGER",
+  "SEO_EDITOR",
+  "FINANCE_MANAGER",
+  "COURSE_MANAGER",
+] as const;
+
+export const USER_ROLES = [
+  "STUDENT",
+  "TEACHER",
+  "STAFF",
+  "ADMIN",
+  "SUPER_ADMIN",
+] as const;
+
+export type StaffRole = (typeof STAFF_ROLES)[number];
+export type UserRole = (typeof USER_ROLES)[number];
+export type AppRole = StaffRole | UserRole;
 
 export const PERMISSIONS: Record<string, string[]> = {
   SUPER_ADMIN: ["*"], // All permissions
   STUDENT_MANAGER: [
     "students.view", "students.edit", "students.approve", "students.email",
+    "leads.view", "leads.edit",
     "enrollments.view", "enrollments.approve", "enrollments.reject",
     "announcements.view", "announcements.create", "announcements.edit",
     "certificates.view", "certificates.issue",
     "testimonials.view", "testimonials.approve",
+    "communications.view", "communications.send",
     "analytics.partial",
   ],
   SEO_EDITOR: [
@@ -21,6 +52,8 @@ export const PERMISSIONS: Record<string, string[]> = {
   FINANCE_MANAGER: [
     "payments.view", "payments.refund",
     "coupons.view", "coupons.create", "coupons.edit",
+    "communications.view", "communications.send",
+    "leads.view",
     "analytics.revenue",
     "alumni.view", "alumni.edit",
   ],
@@ -31,6 +64,8 @@ export const PERMISSIONS: Record<string, string[]> = {
     "ceremonies.view", "ceremonies.create", "ceremonies.edit",
     "prearrival.view", "prearrival.edit",
     "teachers.view", "teachers.edit",
+    "leads.view",
+    "communications.view",
     "analytics.partial",
   ],
   TEACHER: [
@@ -46,4 +81,24 @@ export function getPermissions(role: string): string[] {
 export function hasPermission(role: string, permission: string): boolean {
   const perms = getPermissions(role);
   return perms.includes("*") || perms.includes(permission);
+}
+
+export function isStaffRole(role: string): role is StaffRole {
+  return STAFF_ROLES.includes(role as StaffRole);
+}
+
+export function isAdminPanelRole(role: string): role is (typeof ADMIN_PANEL_ROLES)[number] {
+  return ADMIN_PANEL_ROLES.includes(role as (typeof ADMIN_PANEL_ROLES)[number]);
+}
+
+export function getRoleHomePath(role: string): string {
+  if (role === "TEACHER") {
+    return "/app/teacher/dashboard";
+  }
+
+  if (isAdminPanelRole(role) || role === "ADMIN" || role === "SUPER_ADMIN") {
+    return "/admin/dashboard";
+  }
+
+  return "/app/dashboard";
 }

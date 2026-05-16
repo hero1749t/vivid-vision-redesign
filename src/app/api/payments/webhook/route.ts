@@ -1,101 +1,145 @@
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
-import { stripe, isStripeConfigured } from "@/lib/stripe";
-import Stripe from "stripe";
+import { markPaymentComplete } from "@/lib/payments/complete";
+import { verifyPayPalWebhook } from "@/lib/payments/paypal";
+import { verifyRazorpayWebhookSignature } from "@/lib/payments/razorpay";
+import { jsonWithRequestId, logApiError } from "@/lib/security";
+
+type RazorpayWebhookEvent = {
+  id?: string;
+  event?: string;
+  payload?: {
+    payment?: {
+      entity?: {
+        id?: string;
+        order_id?: string;
+        notes?: { paymentType?: string };
+      };
+    };
+  };
+};
 
 export async function POST(request: NextRequest) {
   try {
-    if (!isStripeConfigured()) {
-      return NextResponse.json({ received: true, demo: true });
-    }
+    const provider = request.nextUrl.searchParams.get("provider") || "razorpay";
+    const rawBody = await request.text();
 
-    const body = await request.text();
-    const headersList = await headers();
-    const sig = headersList.get("stripe-signature");
+    if (provider === "paypal") {
+      const event = JSON.parse(rawBody) as {
+        id?: string;
+        event_type?: string;
+        resource?: {
+          id?: string;
+          status?: string;
+          purchase_units?: Array<{
+            custom_id?: string;
+            payments?: { captures?: Array<{ id?: string; status?: string }> };
+          }>;
+        };
+      };
 
-    if (!sig) {
-      return NextResponse.json({ error: "No signature" }, { status: 400 });
-    }
+      const valid = await verifyPayPalWebhook(request.headers, event);
+      if (!valid) {
+        return jsonWithRequestId({ error: "Invalid PayPal signature" }, { status: 400 }, request);
+      }
 
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    if (!webhookSecret) {
-      console.error("STRIPE_WEBHOOK_SECRET not configured");
-      return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 });
-    }
+      if (!event.id) {
+        return jsonWithRequestId({ error: "Missing PayPal event id" }, { status: 400 }, request);
+      }
 
-    let event: Stripe.Event;
+      const existingEvent = await prisma.payment.findFirst({
+        where: { providerEventId: event.id },
+        select: { id: true },
+      });
 
-    try {
-      event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
-    } catch (err) {
-      console.error("Webhook signature verification failed:", err);
-      return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
-    }
+      if (existingEvent) {
+        return jsonWithRequestId({ received: true, duplicate: true }, undefined, request);
+      }
 
-    switch (event.type) {
-      case "payment_intent.succeeded": {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log("Payment succeeded:", paymentIntent.id);
-
+      if (event.event_type === "CHECKOUT.ORDER.APPROVED" || event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
+        const paypalOrderId = event.resource?.id;
+        const captureId = event.resource?.purchase_units?.[0]?.payments?.captures?.[0]?.id;
         const payment = await prisma.payment.findFirst({
-          where: { stripePaymentIntentId: paymentIntent.id },
+          where: paypalOrderId ? { paypalOrderId } : { paypalCaptureId: captureId },
+          include: { enrollment: true },
         });
 
         if (payment) {
           await prisma.payment.update({
             where: { id: payment.id },
-            data: { status: "COMPLETED", paidAt: new Date() },
+            data: {
+              paypalCaptureId: captureId,
+              providerEventId: event.id,
+              providerPayload: event,
+            },
           });
-
-          const enrollment = await prisma.enrollment.findUnique({
-            where: { id: payment.enrollmentId },
-          });
-
-          if (enrollment) {
-            const newStatus = paymentIntent.metadata?.paymentType === "deposit" ? "DEPOSIT_PAID" : "FULL_PAID";
-            const newAccessLevel = paymentIntent.metadata?.paymentType === "deposit" ? "PRE_ARRIVAL" : "FULL";
-
-            await prisma.enrollment.update({
-              where: { id: payment.enrollmentId },
-              data: { paymentStatus: newStatus, accessLevel: newAccessLevel as any },
-            });
-
-            if (enrollment.batchId) {
-              await prisma.batch.update({
-                where: { id: enrollment.batchId },
-                data: { enrolled: { increment: 1 } },
-              });
-            }
-          }
-        }
-        break;
-      }
-
-      case "payment_intent.payment_failed": {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log("Payment failed:", paymentIntent.id);
-
-        const payment = await prisma.payment.findFirst({
-          where: { stripePaymentIntentId: paymentIntent.id },
-        });
-
-        if (payment) {
-          await prisma.payment.update({
-            where: { id: payment.id },
-            data: { status: "FAILED" },
+          await markPaymentComplete({
+            paymentId: payment.id,
+            paymentType: payment.enrollment.paymentType.toLowerCase(),
+            providerPayload: event,
           });
         }
-        break;
       }
 
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
+      return jsonWithRequestId({ received: true }, undefined, request);
     }
 
-    return NextResponse.json({ received: true });
+    const signature = request.headers.get("x-razorpay-signature");
+    if (!verifyRazorpayWebhookSignature(rawBody, signature)) {
+      return jsonWithRequestId({ error: "Invalid Razorpay signature" }, { status: 400 }, request);
+    }
+
+    const event = JSON.parse(rawBody) as RazorpayWebhookEvent;
+    if (!event.id) {
+      return jsonWithRequestId({ error: "Missing Razorpay event id" }, { status: 400 }, request);
+    }
+
+    const existingEvent = await prisma.payment.findFirst({
+      where: { providerEventId: event.id },
+      select: { id: true },
+    });
+
+    if (existingEvent) {
+      return jsonWithRequestId({ received: true, duplicate: true }, undefined, request);
+    }
+
+    const paymentEntity = event.payload?.payment?.entity;
+
+    if (event.event === "payment.captured" && paymentEntity?.order_id) {
+      const payment = await prisma.payment.findFirst({
+        where: { razorpayOrderId: paymentEntity.order_id },
+        include: { enrollment: true },
+      });
+
+      if (payment) {
+        await prisma.payment.update({
+          where: { id: payment.id },
+          data: {
+            razorpayPaymentId: paymentEntity.id,
+            providerEventId: event.id,
+            providerPayload: event,
+          },
+        });
+        await markPaymentComplete({
+          paymentId: payment.id,
+          paymentType: paymentEntity.notes?.paymentType || payment.enrollment.paymentType.toLowerCase(),
+          providerPayload: event,
+        });
+      }
+    }
+
+    if (event.event === "payment.failed" && paymentEntity?.order_id) {
+      await prisma.payment.updateMany({
+        where: { razorpayOrderId: paymentEntity.order_id },
+        data: { status: "FAILED", providerEventId: event.id, providerPayload: event },
+      });
+    }
+
+    return jsonWithRequestId({ received: true }, undefined, request);
   } catch (error) {
-    console.error("Webhook error:", error);
-    return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 });
+    logApiError("payments.webhook", error, request, {
+      provider: request.nextUrl.searchParams.get("provider") || "razorpay",
+    });
+    return jsonWithRequestId({ error: "Webhook handler failed" }, { status: 500 }, request);
   }
 }

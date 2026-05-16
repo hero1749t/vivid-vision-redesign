@@ -180,7 +180,7 @@ export async function sendWelcomeWhatsApp(data: {
   });
 }
 
-export async function sendWhatsAppLink(phone: string, message: string): string {
+export function sendWhatsAppLink(phone: string, message: string): string {
   const formattedPhone = formatPhoneNumber(phone);
   return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
 }

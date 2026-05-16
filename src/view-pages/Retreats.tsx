@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Link } from "@/i18n/routing";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
@@ -138,13 +139,33 @@ const retreats = [
   },
 ];
 
-const testimonials = [
+const fallbackTestimonials = [
   { name: "Maria K.", location: "Germany", text: "The 7-day Ubud retreat was exactly what I needed. The temple ceremony and sound healing were transformative experiences.", rating: 5 },
   { name: "James L.", location: "Australia", text: "Canggu retreat was perfect — surf lessons combined with yoga was an incredible combination. Instructors were patient and supportive.", rating: 5 },
   { name: "Sophie R.", location: "France", text: "I came stressed from work and left feeling completely renewed. The daily schedule was balanced perfectly between activity and rest.", rating: 5 },
 ];
 
 const Retreats = () => {
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
+
+  useEffect(() => {
+    void fetch("/api/testimonials?limit=3")
+      .then((response) => response.json())
+      .then((result) => {
+        if (Array.isArray(result.testimonials) && result.testimonials.length > 0) {
+          setTestimonials(
+            result.testimonials.map((item: { name: string; location?: string | null; quote: string; rating?: number }) => ({
+              name: item.name,
+              location: item.location || "Bali YTTC Graduate",
+              text: item.quote,
+              rating: item.rating || 5,
+            })),
+          );
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <>
       {/* Hero */}

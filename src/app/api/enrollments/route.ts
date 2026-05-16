@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
+import { requireAdminUser } from "@/lib/authz";
+import { sendGmailEmail, sendEnrollmentConfirmationEmail, sendAdminNotificationEmail, isGmailConfigured } from "@/lib/gmail-smtp";
 import { sendEnrollmentConfirmation, sendAdminEnrollmentNotification } from "@/lib/resend";
 import { sendEnrollmentConfirmationWhatsApp, sendWelcomeWhatsApp } from "@/lib/whatsapp";
+import { resolveEnrollmentPricing } from "@/lib/payments/enrollment-pricing";
+import { createRateLimitResponse, getClientIp, jsonWithRequestId, logApiError, rateLimit } from "@/lib/security";
 
 const enrollmentSchema = z.object({
   name: z.string().min(2),
@@ -12,7 +16,7 @@ const enrollmentSchema = z.object({
   batchId: z.string().optional(),
   accommodation: z.enum(["SHARED", "PRIVATE", "LUXURY"]).default("SHARED"),
   paymentType: z.enum(["DEPOSIT", "FULL"]).default("DEPOSIT"),
-  amount: z.number(),
+  amount: z.number().optional(),
   currency: z.string().default("USD"),
   couponCode: z.string().optional(),
   preferredDate: z.string().optional(),
@@ -21,6 +25,11 @@ const enrollmentSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const { response } = await requireAdminUser();
+  if (response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
@@ -40,6 +49,36 @@ export async function GET(request: NextRequest) {
             select: {
               email: true,
               displayName: true,
+            },
+          },
+          student: {
+            select: {
+              id: true,
+              completedHours: true,
+              totalHours: true,
+              certificateIssued: true,
+              certificates: {
+                orderBy: { issuedAt: "desc" },
+                take: 1,
+                select: {
+                  id: true,
+                  certificateId: true,
+                  status: true,
+                  issuedAt: true,
+                },
+              },
+            },
+          },
+          payments: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            select: {
+              id: true,
+              method: true,
+              status: true,
+              amount: true,
+              currency: true,
+              createdAt: true,
             },
           },
         },
@@ -70,8 +109,30 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const limit = rateLimit({
+      key: `public:enrollments:${getClientIp(request)}`,
+      limit: 6,
+      windowMs: 60 * 60 * 1000,
+    });
+
+    if (!limit.allowed) {
+      return jsonWithRequestId(
+        { error: "Too many enrollment attempts. Try again later." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil((limit.resetAt - Date.now()) / 1000)) } },
+        request,
+      );
+    }
+
     const body = await request.json();
     const data = enrollmentSchema.parse(body);
+    const pricing = await resolveEnrollmentPricing({
+      courseSlug: data.course,
+      batchId: data.batchId,
+      accommodation: data.accommodation,
+      couponCode: data.couponCode,
+      email: data.email,
+    });
+    const finalAmount = data.paymentType === "DEPOSIT" ? pricing.depositAmount : pricing.totalAmount;
 
     // Check if user already exists
     let user = await prisma.user.findUnique({
@@ -119,11 +180,12 @@ export async function POST(request: NextRequest) {
         message: data.message,
         paymentType: data.paymentType,
         paymentStatus: "PENDING",
-        amount: data.amount,
+        amount: finalAmount,
         currency: data.currency,
-        couponCode: data.couponCode,
+        couponCode: pricing.appliedCouponCode || data.couponCode,
+        discount: pricing.discount,
         referralSource: data.referralSource,
-        accessLevel: "PRE_ARRIVAL",
+        accessLevel: "NONE",
       },
       include: {
         user: {
@@ -153,25 +215,47 @@ export async function POST(request: NextRequest) {
     const courseName = course?.name || data.course;
 
     // Send confirmation email to student (async, don't wait)
-    sendEnrollmentConfirmation({
-      name: data.name,
-      email: data.email,
-      course: courseName,
-      batch: batchName,
-      amount: data.amount,
-      paymentType: data.paymentType === "DEPOSIT" ? "deposit" : "full",
-    }).catch(console.error);
+    // Use Gmail if configured, otherwise use Resend
+    if (isGmailConfigured()) {
+      sendEnrollmentConfirmationEmail({
+        name: data.name,
+        email: data.email,
+        course: courseName,
+        batch: batchName || "TBD",
+        amount: finalAmount,
+        currency: data.currency,
+        paymentType: data.paymentType === "DEPOSIT" ? "deposit" : "full",
+      }).catch(console.error);
+    } else {
+      sendEnrollmentConfirmation({
+        name: data.name,
+        email: data.email,
+        course: courseName,
+        batch: batchName,
+        amount: finalAmount,
+        paymentType: data.paymentType === "DEPOSIT" ? "deposit" : "full",
+      }).catch(console.error);
+    }
 
     // Send admin notification (async, don't wait)
-    sendAdminEnrollmentNotification({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      course: courseName,
-      batch: batchName,
-      amount: data.amount,
-      paymentType: data.paymentType === "DEPOSIT" ? "deposit" : "full",
-    }).catch(console.error);
+    if (isGmailConfigured()) {
+      sendAdminNotificationEmail({
+        type: "enrollment",
+        name: data.name,
+        email: data.email,
+        course: `${courseName} - ${batchName || "TBD"}`,
+      }).catch(console.error);
+    } else {
+      sendAdminEnrollmentNotification({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        course: courseName,
+        batch: batchName,
+        amount: finalAmount,
+        paymentType: data.paymentType === "DEPOSIT" ? "deposit" : "full",
+      }).catch(console.error);
+    }
 
     // Send WhatsApp notification to student (async, don't wait)
     sendEnrollmentConfirmationWhatsApp({
@@ -188,24 +272,24 @@ export async function POST(request: NextRequest) {
       course: courseName,
     }).catch(console.error);
 
-    return NextResponse.json({
+    return jsonWithRequestId({
       success: true,
       enrollment,
-      message: data.paymentType === "DEPOSIT"
-        ? "Deposit received! Pre-arrival access granted."
-        : "Full payment received! Full access granted.",
-    });
+      message: "Enrollment created. Complete payment to unlock access.",
+    }, undefined, request);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
+      return jsonWithRequestId(
         { error: "Validation failed", details: error.errors },
-        { status: 400 }
+        { status: 400 },
+        request,
       );
     }
-    console.error("POST enrollment error:", error);
-    return NextResponse.json(
+    logApiError("enrollments.create", error, request);
+    return jsonWithRequestId(
       { error: "Failed to create enrollment" },
-      { status: 500 }
+      { status: 500 },
+      request,
     );
   }
 }

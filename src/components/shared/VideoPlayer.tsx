@@ -116,12 +116,36 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
 
   // YouTube embed
   if (youtubeId) {
+    if (!isPlaying) {
+      return (
+        <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-black aspect-video">
+          <img
+            src={poster}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/35 flex items-center justify-center">
+            <motion.button
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={handlePlay}
+              aria-label={`Play ${title}`}
+              className="w-16 h-16 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-xl transition-all duration-300"
+            >
+              <Play className="w-6 h-6 text-gray-900 fill-gray-900" />
+            </motion.button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div ref={containerRef} className="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-black">
         <iframe
           width="100%"
           height="600"
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${autoPlay ? 1 : 0}&mute=${muted ? 1 : 0}`}
+          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=${muted ? 1 : 0}`}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

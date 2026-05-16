@@ -1,7 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAuthenticatedUser, requireSameOrigin, writeAuditLog } from "@/lib/authz";
+import { hasPermission } from "@/lib/rbac";
+
+const ALLOWED_READ_ROLES = new Set([
+  "TEACHER",
+  "SUPER_ADMIN",
+  "ADMIN",
+  "STUDENT_MANAGER",
+  "COURSE_MANAGER",
+]);
 
 export async function GET(request: NextRequest) {
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!ALLOWED_READ_ROLES.has(user.role) && !hasPermission(user.role, "announcements.view")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const batchId = searchParams.get("batchId");
@@ -23,12 +42,26 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (user.role !== "TEACHER" && !hasPermission(user.role, "announcements.create")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
-    const { title, content, type = "GENERAL", batchId, authorId } = body;
+    const { title, content, type = "GENERAL", batchId } = body;
 
-    if (!title || !content || !authorId) {
-      return NextResponse.json({ error: "title, content, and authorId are required" }, { status: 400 });
+    if (!title || !content) {
+      return NextResponse.json({ error: "title and content are required" }, { status: 400 });
     }
 
     const announcement = await prisma.announcement.create({
@@ -37,9 +70,18 @@ export async function POST(request: NextRequest) {
         content,
         type,
         batchId,
-        authorId,
+        authorId: user.id,
         publishedAt: new Date(),
       },
+    });
+
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "teacher.announcement.created",
+      entity: "announcement",
+      entityId: announcement.id,
+      newValue: announcement,
+      request,
     });
 
     return NextResponse.json({ success: true, announcement });
@@ -50,13 +92,47 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (!id) return NextResponse.json({ error: "id is required" }, { status: 400 });
 
+    const existing = await prisma.announcement.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Announcement not found" }, { status: 404 });
+    }
+
+    const canManageAny = hasPermission(user.role, "announcements.edit");
+    const canManageOwn = user.role === "TEACHER" && existing.authorId === user.id;
+    if (!canManageAny && !canManageOwn) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     await prisma.announcement.delete({ where: { id } });
+
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "teacher.announcement.deleted",
+      entity: "announcement",
+      entityId: id,
+      oldValue: existing,
+      request,
+    });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("DELETE announcement error:", error);

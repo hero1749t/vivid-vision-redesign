@@ -50,6 +50,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          dark: "hsl(var(--brand-dark))",
+          light: "hsl(var(--brand-light))",
+          muted: "hsl(var(--brand-muted))",
+        },
         terra: {
           DEFAULT: "hsl(var(--terra))",
           deep: "hsl(var(--terra-deep))",
@@ -59,14 +65,20 @@ export default {
           DEFAULT: "hsl(var(--sand))",
           deep: "hsl(var(--sand-deep))",
         },
-        cream: "hsl(var(--cream))",
+        cream: {
+          DEFAULT: "hsl(var(--cream))",
+          dark: "hsl(var(--cream-dark))",
+        },
         sage: {
           DEFAULT: "hsl(var(--sage))",
           light: "hsl(var(--sage-light))",
+          pale: "hsl(var(--sage-pale))",
+          mist: "hsl(var(--sage-mist))",
         },
         gold: {
           DEFAULT: "hsl(var(--gold))",
           light: "hsl(var(--gold-light))",
+          muted: "hsl(var(--gold-muted))",
         },
         warm: {
           dark: "hsl(var(--warm-dark))",
@@ -77,6 +89,12 @@ export default {
           DEFAULT: "hsl(var(--ink))",
           soft: "hsl(var(--ink-soft))",
           muted: "hsl(var(--ink-muted))",
+          faint: "hsl(var(--ink-faint))",
+        },
+        charcoal: {
+          DEFAULT: "hsl(var(--charcoal))",
+          mid: "hsl(var(--charcoal-mid))",
+          light: "hsl(var(--charcoal-light))",
         },
       },
       borderRadius: {

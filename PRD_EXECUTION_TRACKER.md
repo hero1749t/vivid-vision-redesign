@@ -153,6 +153,8 @@ Target change: remove Stripe and implement Razorpay + PayPal.
 - Production deploy completed and aliased to `https://baliyytc.vercel.app`.
 - Hosted smoke passed: `/api/health` returns `200` with database/env ok, `/en` returns `200`, and unauthenticated `/en/app/dashboard` redirects.
 - Temporary env-gated test login fallback is enabled for `student@test.com` and `teacher@test.com` because their Firebase passwords do not match the intended test passwords. Disable `ENABLE_TEST_LOGIN` before client handoff.
+- Hosted auth/session smoke passed after fallback: admin, student, and teacher dashboards return `200`; student PWA routes all return `200`; notes, notification preferences, announcement replies, and announcement reactions pass same-origin API smoke.
+- Student PWA gap pass: active batch fallback fixed, `student@test.com` seeded with batch schedule and protected video resources, `/app/lessons` added, schedule now shows teacher/style/room/ceremony blocks, profile supports local image upload data URLs for testing, and review page now exposes Google + TripAdvisor one-click links plus testimonial submission.
 
 ## Legacy Route Removal Checklist
 

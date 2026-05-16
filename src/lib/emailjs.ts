@@ -8,6 +8,7 @@ const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "temp
 const EMAILJS_ADMIN_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_ADMIN_TEMPLATE_ID || "template_admin_notification";
 
 interface ContactFormData {
+  phone?: string;
   name: string;
   email: string;
   course?: string;

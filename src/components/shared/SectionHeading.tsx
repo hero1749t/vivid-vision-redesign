@@ -17,13 +17,13 @@ export const SectionHeading = ({ eyebrow, title, sub, align = "left", light, cla
   >
     {eyebrow && (
       <Reveal>
-        <p className={`eyebrow mb-5 ${light ? "text-gold-light" : "text-terra"}`}>
+        <p className={`eyebrow mb-5 ${light ? "text-sage-light" : "text-sage"}`}>
           {eyebrow}
         </p>
       </Reveal>
     )}
     <Reveal delay={0.05}>
-      <h2 className={`heading-xl ${light ? "text-cream" : "text-warm-dark"}`}>
+      <h2 className={`heading-xl ${light ? "text-cream" : "text-charcoal"}`}>
         {title}
       </h2>
     </Reveal>

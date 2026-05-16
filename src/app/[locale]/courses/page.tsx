@@ -5,12 +5,12 @@ import { ApplyModal } from "@/components/shared/ApplyModal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Clock, Users, Award } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 
-async function getCourses() {
+async function getCourses(locale: string) {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/courses`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/api/courses?locale=${encodeURIComponent(locale)}`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     return data.courses;
@@ -19,8 +19,8 @@ async function getCourses() {
   }
 }
 
-export default async function CoursesPage() {
-  const courses = await getCourses();
+export default async function CoursesPage({ params }: { params: { locale: string } }) {
+  const courses = await getCourses(params.locale);
 
   return (
     <NextLayoutWrapper>
@@ -71,7 +71,7 @@ export default async function CoursesPage() {
                       <div className="flex items-center justify-between pt-4 border-t border-warm-light/20">
                         <div>
                           <p className="text-xs text-warm-mid">Starting from</p>
-                          <p className="font-bold text-xl text-warm-dark">${course.priceFrom}</p>
+                          <p className="font-bold text-xl text-warm-dark">EUR {course.priceFrom}</p>
                         </div>
                         <div className="flex gap-2">
                           <Link href={`/courses/${course.slug}`}>

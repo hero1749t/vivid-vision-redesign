@@ -17,8 +17,15 @@ function createPrismaClient(): PrismaClient {
     return new PrismaClient({ adapter });
   }
 
-  // Fallback: create client without adapter (uses prisma.config.ts)
-  return new PrismaClient();
+  return new Proxy(
+    {},
+    {
+      get(_target, prop) {
+        if (prop === "then") return undefined;
+        throw new Error("DATABASE_URL is not configured");
+      },
+    }
+  ) as PrismaClient;
 }
 
 // Prevent multiple instances during hot reload in development

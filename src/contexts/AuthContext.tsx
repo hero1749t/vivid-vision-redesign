@@ -1,19 +1,23 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getDemoUser, clearDemoUser, setDemoUser } from "@/lib/firebase";
+import {
+  getDemoUser,
+  clearDemoUser,
+  setDemoUser,
+  isFirebaseConfigured,
+  type AuthenticatedAppUser,
+  type LoginResult,
+} from "@/lib/firebase";
 
-interface AppUser {
-  uid: string;
-  email: string;
-  displayName: string;
-}
+type AppUser = AuthenticatedAppUser;
 
 interface AuthContextType {
   user: AppUser | null;
   role: string | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<LoginResult>;
+  verifyTwoFactor: (challengeToken: string, code: string, pendingUser: AppUser) => Promise<{ role: string; redirectTo: string }>;
   logout: () => Promise<void>;
 }
 
@@ -25,11 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing user on mount
-    const stored = getDemoUser();
-    if (stored) {
-      setUser(stored.user);
-      setRole(stored.role);
+    if (!isFirebaseConfigured()) {
+      const stored = getDemoUser();
+      if (stored) {
+        setUser(stored.user);
+        setRole(stored.role);
+      }
     }
     setLoading(false);
   }, []);
@@ -37,14 +42,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     const { loginWithEmail } = await import("@/lib/firebase");
     const result = await loginWithEmail(email, password);
-    const appUser: AppUser = {
-      uid: result.user.uid,
-      email: result.user.email || email,
-      displayName: result.user.displayName || email.split("@")[0],
-    };
-    setUser(appUser);
+    const appUser: AppUser = result.user;
+
+    if (!result.requiresTwoFactor) {
+      setUser(appUser);
+      setRole(result.role || "STUDENT");
+      if (!isFirebaseConfigured()) {
+        setDemoUser(appUser, result.role || "STUDENT");
+      }
+    }
+
+    return result;
+  };
+
+  const verifyTwoFactor = async (challengeToken: string, code: string, pendingUser: AppUser) => {
+    const { verifyTwoFactorLogin } = await import("@/lib/firebase");
+    const result = await verifyTwoFactorLogin(challengeToken, code);
+    setUser(pendingUser);
     setRole(result.role || "STUDENT");
-    setDemoUser(appUser, result.role || "STUDENT");
+    if (!isFirebaseConfigured()) {
+      setDemoUser(pendingUser, result.role || "STUDENT");
+    }
+    return result;
   };
 
   const logout = async () => {
@@ -56,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, role, loading, login, verifyTwoFactor, logout }}>
       {children}
     </AuthContext.Provider>
   );

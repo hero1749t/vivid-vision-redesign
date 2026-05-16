@@ -9,12 +9,14 @@ import { X, Zap } from "lucide-react";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { WhatsAppChat } from "@/components/shared/WhatsAppChat";
 import { usePathname } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 
 const BANNER_H = 40;
 
 export const NextLayoutWrapper = ({ children }: { children: React.ReactNode }) => {
+  const t = useTranslations("Navigation");
   const pathname = usePathname();
-  const [showBanner, setShowBanner] = useState(true);
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
@@ -29,22 +31,14 @@ export const NextLayoutWrapper = ({ children }: { children: React.ReactNode }) =
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-x-0 top-0 z-[70] overflow-hidden bg-gradient-to-r from-[#D03D12] via-[#F04E23] to-[#D03D12]"
+            className="fixed inset-x-0 top-0 z-[70] overflow-hidden bg-gradient-to-r from-[#2D5A27] via-[#4A7C4F] to-[#2D5A27]"
             style={{ height: `${BANNER_H}px` }}
           >
             <div className="container-wide h-full flex items-center justify-between gap-4">
               <div className="flex-1 flex items-center justify-center gap-2.5 text-xs font-medium">
-                <Zap className="h-3.5 w-3.5 text-white/80 shrink-0" />
                 <span className="text-white/90">
-                  <span className="font-bold text-white">Only 4 seats left</span> for the March 2026 200-Hour YTT batch.
+                  {t("welcome")}
                 </span>
-                <ApplyModal
-                  trigger={
-                    <button className="hidden sm:inline-flex items-center gap-1 rounded-full bg-white/20 border border-white/40 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white hover:bg-white/30 transition-colors">
-                      Reserve your spot
-                    </button>
-                  }
-                />
               </div>
               <button
                 onClick={() => setShowBanner(false)}

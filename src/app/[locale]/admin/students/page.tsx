@@ -1,224 +1,542 @@
 "use client";
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Search, Mail, Phone, Eye, UserX, UserCheck, MoreHorizontal, 
-  ChevronLeft, ChevronRight, CheckCircle, XCircle, Clock, Shield
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Search, Mail, Eye, CheckCircle, Clock, Shield, Loader2,
+  CreditCard, XCircle, Award, Download, Users, Filter,
+  ChevronLeft, ChevronRight, GraduationCap, BookOpen, Calendar,
+  DollarSign, MessageCircle, MoreVertical, Phone, Globe,
+  Key, UserX, UserCheck, RefreshCw
 } from "lucide-react";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
 
-interface Student {
+interface EnrollmentRow {
   id: string;
   name: string;
   email: string;
   phone: string;
-  course: string;
-  batch: string;
-  progress: number;
-  status: "pending" | "approved" | "rejected" | "revoked";
+  courseSlug: string;
   accessLevel: "NONE" | "PRE_ARRIVAL" | "FULL" | "ALUMNI";
-  enrolledAt: string;
-  paymentStatus: "unpaid" | "deposit" | "full";
-  lastActivity: string;
+  paymentStatus: "PENDING" | "DEPOSIT_PAID" | "FULL_PAID" | "FAILED" | "REFUNDED";
+  createdAt: string;
+  updatedAt: string;
+  batchId?: string | null;
+  batch?: { name: string; startDate: string };
+  payments?: Array<{
+    id: string;
+    method: "RAZORPAY" | "PAYPAL" | "BANK_TRANSFER";
+    status: string;
+    amount: number;
+    currency: string;
+    createdAt: string;
+  }>;
+  student?: {
+    id: string;
+    completedHours: number;
+    totalHours: number;
+    certificateIssued: boolean;
+    certificates?: Array<{
+      id: string;
+      certificateId: string;
+      status: string;
+      issuedAt: string;
+    }>;
+  } | null;
 }
 
-const students: Student[] = [
-  { id: "1", name: "Sarah Johnson", email: "sarah@test.com", phone: "+1 555-0101", course: "200-Hour YTT", batch: "Mar 2026", progress: 0, status: "pending", accessLevel: "NONE", enrolledAt: "2026-01-15", paymentStatus: "unpaid", lastActivity: "2026-01-15" },
-  { id: "2", name: "Michael Chen", email: "michael@test.com", phone: "+1 555-0102", course: "100-Hour YTT", batch: "Feb 2026", progress: 45, status: "approved", accessLevel: "PRE_ARRIVAL", enrolledAt: "2026-01-14", paymentStatus: "deposit", lastActivity: "2026-01-18" },
-  { id: "3", name: "Emma Wilson", email: "emma@test.com", phone: "+1 555-0103", course: "300-Hour YTT", batch: "Apr 2026", progress: 78, status: "approved", accessLevel: "FULL", enrolledAt: "2026-01-13", paymentStatus: "full", lastActivity: "2026-01-20" },
-  { id: "4", name: "David Kim", email: "david@test.com", phone: "+1 555-0104", course: "200-Hour YTT", batch: "Mar 2026", progress: 0, status: "pending", accessLevel: "NONE", enrolledAt: "2026-01-12", paymentStatus: "unpaid", lastActivity: "2026-01-12" },
-  { id: "5", name: "Anna Schmidt", email: "anna@test.com", phone: "+1 555-0105", course: "100-Hour YTT", batch: "Feb 2026", progress: 100, status: "approved", accessLevel: "ALUMNI", enrolledAt: "2025-11-11", paymentStatus: "full", lastActivity: "2026-01-05" },
-  { id: "6", name: "James Wilson", email: "james@test.com", phone: "+1 555-0106", course: "200-Hour YTT", batch: "Mar 2026", progress: 0, status: "rejected", accessLevel: "NONE", enrolledAt: "2026-01-10", paymentStatus: "unpaid", lastActivity: "2026-01-10" },
-  { id: "7", name: "Lisa Park", email: "lisa@test.com", phone: "+1 555-0107", course: "300-Hour YTT", batch: "Apr 2026", progress: 12, status: "approved", accessLevel: "PRE_ARRIVAL", enrolledAt: "2026-01-09", paymentStatus: "deposit", lastActivity: "2026-01-19" },
-  { id: "8", name: "Robert Brown", email: "robert@test.com", phone: "+1 555-0108", course: "200-Hour YTT", batch: "Mar 2026", progress: 0, status: "revoked", accessLevel: "NONE", enrolledAt: "2025-12-28", paymentStatus: "deposit", lastActivity: "2026-01-02" },
-];
+const accessConfig: Record<string, { color: string; label: string; icon: React.ElementType }> = {
+  NONE: { color: "bg-gray-100 text-gray-600 border-gray-200", label: "No Access", icon: Clock },
+  PRE_ARRIVAL: { color: "bg-blue-100 text-blue-700 border-blue-200", label: "Pre-Arrival", icon: Calendar },
+  FULL: { color: "bg-green-100 text-green-700 border-green-200", label: "Full Access", icon: CheckCircle },
+  ALUMNI: { color: "bg-amber-100 text-amber-700 border-amber-200", label: "Alumni", icon: Award },
+};
+
+const paymentConfig: Record<string, { color: string; label: string; icon: React.ElementType }> = {
+  PENDING: { color: "bg-gray-100 text-gray-600", label: "Pending", icon: Clock },
+  DEPOSIT_PAID: { color: "bg-blue-100 text-blue-700", label: "Deposit Paid", icon: CreditCard },
+  FULL_PAID: { color: "bg-green-100 text-green-700", label: "Paid", icon: CheckCircle },
+  FAILED: { color: "bg-red-100 text-red-700", label: "Failed", icon: XCircle },
+  REFUNDED: { color: "bg-amber-100 text-amber-700", label: "Refunded", icon: XCircle },
+};
+
+const ITEMS_PER_PAGE = 10;
 
 export default function StudentsPage() {
+  const [enrollments, setEnrollments] = useState<EnrollmentRow[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [accessFilter, setAccessFilter] = useState<string>("all");
+  const [paymentFilter, setPaymentFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  
-  const filtered = students.filter(s => {
-    const matchSearch = s.name.toLowerCase().includes(search.toLowerCase()) || s.email.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === "all" || s.status === statusFilter;
-    return matchSearch && matchStatus;
+  const [viewDialog, setViewDialog] = useState<EnrollmentRow | null>(null);
+
+  const fetchEnrollments = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/enrollments?limit=100");
+      const data = await response.json();
+      setEnrollments(data.enrollments || []);
+    } catch (err) {
+      console.error("Failed to fetch enrollments:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateAccess = async (enrollmentId: string, newAccess: string) => {
+    try {
+      const response = await fetch("/api/admin/students/access", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enrollmentId, accessLevel: newAccess }),
+      });
+      if (response.ok) {
+        await fetchEnrollments();
+      }
+    } catch (err) {
+      console.error("Failed to update access:", err);
+    }
+  };
+
+  useEffect(() => {
+    void fetchEnrollments();
+  }, []);
+
+  const filteredEnrollments = enrollments.filter(e => {
+    const matchSearch = !search ||
+      e.name.toLowerCase().includes(search.toLowerCase()) ||
+      e.email.toLowerCase().includes(search.toLowerCase()) ||
+      e.courseSlug.toLowerCase().includes(search.toLowerCase());
+    const matchAccess = accessFilter === "all" || e.accessLevel === accessFilter;
+    const matchPayment = paymentFilter === "all" || e.paymentStatus === paymentFilter;
+    return matchSearch && matchAccess && matchPayment;
   });
 
-  const statusColors: Record<string, string> = {
-    pending: "bg-amber-100 text-amber-800",
-    approved: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-    revoked: "bg-gray-100 text-gray-600",
+  const totalPages = Math.ceil(filteredEnrollments.length / ITEMS_PER_PAGE);
+  const paginatedEnrollments = filteredEnrollments.slice(
+    (page - 1) * ITEMS_PER_PAGE,
+    page * ITEMS_PER_PAGE
+  );
+
+  const stats = {
+    total: enrollments.length,
+    preArrival: enrollments.filter(e => e.accessLevel === "PRE_ARRIVAL").length,
+    fullAccess: enrollments.filter(e => e.accessLevel === "FULL").length,
+    alumni: enrollments.filter(e => e.accessLevel === "ALUMNI").length,
+    pending: enrollments.filter(e => e.paymentStatus === "PENDING").length,
+    paid: enrollments.filter(e => e.paymentStatus === "FULL_PAID").length,
   };
 
-  const accessColors: Record<string, string> = {
-    NONE: "bg-gray-100 text-gray-600",
-    PRE_ARRIVAL: "bg-blue-100 text-blue-800",
-    FULL: "bg-green-100 text-green-800",
-    ALUMNI: "bg-purple-100 text-purple-800",
-  };
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
-  const handleApprove = (id: string) => {
-    console.log("Approve student:", id);
-  };
+  const formatCurrency = (amount: number, currency = "USD") =>
+    new Intl.NumberFormat("en-US", { style: "currency", currency, minimumFractionDigits: 0 }).format(amount);
 
-  const handleReject = (id: string) => {
-    console.log("Reject student:", id);
-  };
-
-  const handleRevoke = (id: string) => {
-    console.log("Revoke access:", id);
-  };
-
-  const handleSendEmail = (email: string) => {
-    window.open(`mailto:${email}`);
-  };
+  if (loading) {
+    return (
+      <div className="p-6 space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-24" />)}
+        </div>
+        <Skeleton className="h-96" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Student Management</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage enrollments, approve/reject students, control access levels</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="border-orange-500 text-orange-500">Export CSV</Button>
-          <Button className="bg-orange-500 hover:bg-orange-600">Add Student</Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Students</h1>
+            <p className="text-sm text-gray-500 mt-1">Manage all enrolled students and their access</p>
+          </div>
+          <div className="flex gap-3">
+            <Button variant="outline">
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button>
+              <Users className="h-4 w-4 mr-2" />
+              Add Student
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <Card className="bg-white border-0 shadow-sm">
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-3 bg-amber-100 rounded-xl"><Clock className="w-6 h-6 text-amber-600" /></div>
-            <div><p className="text-2xl font-bold">{students.filter(s => s.status === "pending").length}</p><p className="text-sm text-gray-500">Pending</p></div>
+      <div className="p-6 space-y-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <Card className="border-0 shadow-sm" onClick={() => setAccessFilter("all")}>
+            <CardContent className="p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+              <p className="text-sm text-gray-500">Total</p>
+            </CardContent>
+          </Card>
+          <Card className={`border-0 shadow-sm ${accessFilter === "PRE_ARRIVAL" ? "ring-2 ring-blue-500" : ""}`} onClick={() => setAccessFilter(accessFilter === "PRE_ARRIVAL" ? "all" : "PRE_ARRIVAL")}>
+            <CardContent className="p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <p className="text-3xl font-bold text-blue-600">{stats.preArrival}</p>
+              <p className="text-sm text-gray-500">Pre-Arrival</p>
+            </CardContent>
+          </Card>
+          <Card className={`border-0 shadow-sm ${accessFilter === "FULL" ? "ring-2 ring-green-500" : ""}`} onClick={() => setAccessFilter(accessFilter === "FULL" ? "all" : "FULL")}>
+            <CardContent className="p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <p className="text-3xl font-bold text-green-600">{stats.fullAccess}</p>
+              <p className="text-sm text-gray-500">Full Access</p>
+            </CardContent>
+          </Card>
+          <Card className={`border-0 shadow-sm ${accessFilter === "ALUMNI" ? "ring-2 ring-amber-500" : ""}`} onClick={() => setAccessFilter(accessFilter === "ALUMNI" ? "all" : "ALUMNI")}>
+            <CardContent className="p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <p className="text-3xl font-bold text-amber-600">{stats.alumni}</p>
+              <p className="text-sm text-gray-500">Alumni</p>
+            </CardContent>
+          </Card>
+          <Card className={`border-0 shadow-sm ${paymentFilter === "PENDING" ? "ring-2 ring-orange-500" : ""}`} onClick={() => setPaymentFilter(paymentFilter === "PENDING" ? "all" : "PENDING")}>
+            <CardContent className="p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <p className="text-3xl font-bold text-orange-600">{stats.pending}</p>
+              <p className="text-sm text-gray-500">Pending</p>
+            </CardContent>
+          </Card>
+          <Card className={`border-0 shadow-sm ${paymentFilter === "FULL_PAID" ? "ring-2 ring-green-500" : ""}`} onClick={() => setPaymentFilter(paymentFilter === "FULL_PAID" ? "all" : "FULL_PAID")}>
+            <CardContent className="p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+              <p className="text-3xl font-bold text-green-600">{stats.paid}</p>
+              <p className="text-sm text-gray-500">Paid</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Filters */}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-4">
+            <div className="flex flex-wrap gap-4">
+              <div className="flex-1 min-w-[250px]">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search by name, email, or course..."
+                    value={search}
+                    onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <select
+                className="rounded-lg border px-3 py-2 text-sm"
+                value={accessFilter}
+                onChange={(e) => { setAccessFilter(e.target.value); setPage(1); }}
+              >
+                <option value="all">All Access Levels</option>
+                <option value="PRE_ARRIVAL">Pre-Arrival</option>
+                <option value="FULL">Full Access</option>
+                <option value="ALUMNI">Alumni</option>
+                <option value="NONE">No Access</option>
+              </select>
+              <select
+                className="rounded-lg border px-3 py-2 text-sm"
+                value={paymentFilter}
+                onChange={(e) => { setPaymentFilter(e.target.value); setPage(1); }}
+              >
+                <option value="all">All Payment Status</option>
+                <option value="PENDING">Pending</option>
+                <option value="DEPOSIT_PAID">Deposit Paid</option>
+                <option value="FULL_PAID">Paid</option>
+                <option value="FAILED">Failed</option>
+                <option value="REFUNDED">Refunded</option>
+              </select>
+              {(accessFilter !== "all" || paymentFilter !== "all" || search) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => { setAccessFilter("all"); setPaymentFilter("all"); setSearch(""); setPage(1); }}
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
-        <Card className="bg-white border-0 shadow-sm">
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-3 bg-green-100 rounded-xl"><CheckCircle className="w-6 h-6 text-green-600" /></div>
-            <div><p className="text-2xl font-bold">{students.filter(s => s.status === "approved").length}</p><p className="text-sm text-gray-500">Approved</p></div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-0 shadow-sm">
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-3 bg-blue-100 rounded-xl"><Shield className="w-6 h-6 text-blue-600" /></div>
-            <div><p className="text-2xl font-bold">{students.filter(s => s.accessLevel === "FULL").length}</p><p className="text-sm text-gray-500">Full Access</p></div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white border-0 shadow-sm">
-          <CardContent className="p-4 flex items-center gap-4">
-            <div className="p-3 bg-purple-100 rounded-xl"><UserCheck className="w-6 h-6 text-purple-600" /></div>
-            <div><p className="text-2xl font-bold">{students.filter(s => s.accessLevel === "ALUMNI").length}</p><p className="text-sm text-gray-500">Alumni</p></div>
+
+        {/* Students Table */}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-0">
+            {paginatedEnrollments.length === 0 ? (
+              <div className="p-12 text-center">
+                <Users className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                <p className="text-gray-500">No students found</p>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b bg-gray-50">
+                        <th className="text-left py-4 px-4 text-sm font-semibold text-gray-600">Student</th>
+                        <th className="text-left py-4 px-4 text-sm font-semibold text-gray-600">Course</th>
+                        <th className="text-left py-4 px-4 text-sm font-semibold text-gray-600">Access</th>
+                        <th className="text-left py-4 px-4 text-sm font-semibold text-gray-600">Payment</th>
+                        <th className="text-left py-4 px-4 text-sm font-semibold text-gray-600">Progress</th>
+                        <th className="text-left py-4 px-4 text-sm font-semibold text-gray-600">Enrolled</th>
+                        <th className="text-right py-4 px-4 text-sm font-semibold text-gray-600">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedEnrollments.map((enrollment) => {
+                        const access = accessConfig[enrollment.accessLevel] || accessConfig.NONE;
+                        const payment = paymentConfig[enrollment.paymentStatus] || paymentConfig.PENDING;
+                        const AccessIcon = access.icon;
+                        const PaymentIcon = payment.icon;
+                        const progress = enrollment.student?.totalHours
+                          ? Math.round((enrollment.student.completedHours / enrollment.student.totalHours) * 100)
+                          : 0;
+
+                        return (
+                          <tr key={enrollment.id} className="border-b hover:bg-gray-50 transition-colors">
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                  {enrollment.name?.split(" ").map(n => n[0]).join("").slice(0, 2) || "S"}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900">{enrollment.name}</p>
+                                  <p className="text-xs text-gray-500">{enrollment.email}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <div>
+                                <p className="text-sm font-medium text-gray-900 uppercase">{enrollment.courseSlug}</p>
+                                {enrollment.batch && (
+                                  <p className="text-xs text-gray-500">{enrollment.batch.name}</p>
+                                )}
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <Badge className={`${access.color} gap-1`}>
+                                <AccessIcon className="h-3 w-3" />
+                                {access.label}
+                              </Badge>
+                            </td>
+                            <td className="py-4 px-4">
+                              <Badge className={`${payment.color} gap-1`}>
+                                <PaymentIcon className="h-3 w-3" />
+                                {payment.label}
+                              </Badge>
+                              {enrollment.payments?.[0] && (
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {formatCurrency(enrollment.payments[0].amount, enrollment.payments[0].currency)}
+                                </p>
+                              )}
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="w-24">
+                                <div className="flex justify-between text-xs text-gray-500 mb-1">
+                                  <span>{enrollment.student?.completedHours || 0}h</span>
+                                  <span>{progress}%</span>
+                                </div>
+                                <div className="w-full bg-gray-100 rounded-full h-2">
+                                  <div
+                                    className="bg-orange-500 h-2 rounded-full transition-all"
+                                    style={{ width: `${progress}%` }}
+                                  />
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <p className="text-sm text-gray-500">{formatDate(enrollment.createdAt)}</p>
+                            </td>
+                            <td className="py-4 px-4 text-right">
+                              <div className="flex items-center justify-end gap-1">
+                                {/* Access Toggle */}
+                                {enrollment.accessLevel === "NONE" ? (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => updateAccess(enrollment.id, "PRE_ARRIVAL")}
+                                    title="Grant Pre-Arrival Access"
+                                  >
+                                    <UserCheck className="h-4 w-4 text-blue-500" />
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => updateAccess(enrollment.id, "NONE")}
+                                    title="Revoke Access"
+                                  >
+                                    <UserX className="h-4 w-4 text-red-500" />
+                                  </Button>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setViewDialog(enrollment)}
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="sm">
+                                  <Mail className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between p-4 border-t">
+                    <p className="text-sm text-gray-500">
+                      Showing {(page - 1) * ITEMS_PER_PAGE + 1} to {Math.min(page * ITEMS_PER_PAGE, filteredEnrollments.length)} of {filteredEnrollments.length} students
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPage(p => Math.max(1, p - 1))}
+                        disabled={page === 1}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      {Array.from({ length: totalPages }, (_, i) => i + 1)
+                        .filter(p => p === 1 || p === totalPages || Math.abs(p - page) <= 1)
+                        .map((p, idx, arr) => (
+                          <div key={p} className="flex items-center">
+                            {idx > 0 && arr[idx - 1] !== p - 1 && <span className="text-gray-400 px-1">...</span>}
+                            <Button
+                              variant={p === page ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setPage(p)}
+                              className="w-8 h-8"
+                            >
+                              {p}
+                            </Button>
+                          </div>
+                        ))}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                        disabled={page === totalPages}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      <Card className="bg-white border-0 shadow-sm">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input placeholder="Search students..." className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
-            </div>
-            <select className="px-3 py-2 border rounded-lg text-sm" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
-              <option value="revoked">Revoked</option>
-            </select>
-          </div>
+      {/* View Dialog */}
+      <Dialog open={!!viewDialog} onOpenChange={() => setViewDialog(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Student Details</DialogTitle>
+          </DialogHeader>
+          {viewDialog && (
+            <div className="space-y-6 py-4">
+              {/* Header */}
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                  {viewDialog.name?.split(" ").map(n => n[0]).join("").slice(0, 2) || "S"}
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">{viewDialog.name}</h3>
+                  <p className="text-gray-500">{viewDialog.email}</p>
+                  {viewDialog.phone && <p className="text-sm text-gray-400">{viewDialog.phone}</p>}
+                </div>
+              </div>
 
-          <table className="w-full">
-            <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="text-left p-3 text-sm font-semibold text-gray-600">Student</th>
-                <th className="text-left p-3 text-sm font-semibold text-gray-600">Course / Batch</th>
-                <th className="text-left p-3 text-sm font-semibold text-gray-600">Payment</th>
-                <th className="text-left p-3 text-sm font-semibold text-gray-600">Access Level</th>
-                <th className="text-left p-3 text-sm font-semibold text-gray-600">Last Activity</th>
-                <th className="text-left p-3 text-sm font-semibold text-gray-600">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((student) => (
-                <tr key={student.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
-                        {student.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{student.name}</p>
-                        <p className="text-xs text-gray-500">{student.email}</p>
-                        <p className="text-xs text-gray-400">{student.phone}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-3">
-                    <p className="text-sm font-medium">{student.course}</p>
-                    <p className="text-xs text-gray-500">{student.batch}</p>
-                  </td>
-                  <td className="p-3">
-                    <Badge className={student.paymentStatus === "full" ? "bg-green-100 text-green-800" : student.paymentStatus === "deposit" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-600"}>
-                      {student.paymentStatus.toUpperCase()}
-                    </Badge>
-                  </td>
-                  <td className="p-3">
-                    <Badge className={accessColors[student.accessLevel]}>
-                      {student.accessLevel.replace("_", " ")}
-                    </Badge>
-                  </td>
-                  <td className="p-3 text-sm text-gray-500">{student.lastActivity}</td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      {student.status === "pending" && (
-                        <>
-                          <Button size="sm" variant="ghost" className="text-green-600 hover:text-green-700" onClick={() => handleApprove(student.id)}>
-                            <CheckCircle size={16} />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => handleReject(student.id)}>
-                            <XCircle size={16} />
-                          </Button>
-                        </>
-                      )}
-                      {student.status === "approved" && student.accessLevel !== "NONE" && (
-                        <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => handleRevoke(student.id)}>
-                          <UserX size={16} />
-                        </Button>
-                      )}
-                      <Button size="sm" variant="ghost" onClick={() => handleSendEmail(student.email)}>
-                        <Mail size={16} />
-                      </Button>
-                      <Button size="sm" variant="ghost">
-                        <Eye size={16} />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              {/* Status Badges */}
+              <div className="flex gap-3">
+                <Badge className={accessConfig[viewDialog.accessLevel]?.color}>
+                  {accessConfig[viewDialog.accessLevel]?.label}
+                </Badge>
+                <Badge className={paymentConfig[viewDialog.paymentStatus]?.color}>
+                  {paymentConfig[viewDialog.paymentStatus]?.label}
+                </Badge>
+              </div>
 
-          <div className="flex items-center justify-between mt-4 pt-4 border-t">
-            <p className="text-sm text-gray-500">Showing {filtered.length} of {students.length} students</p>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
-                <ChevronLeft size={16} />
-              </Button>
-              <span className="text-sm">Page {page}</span>
-              <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filtered.length / 10)}>
-                <ChevronRight size={16} />
-              </Button>
+              {/* Details Grid */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-500">Course</p>
+                  <p className="font-medium text-gray-900 uppercase">{viewDialog.courseSlug}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-500">Batch</p>
+                  <p className="font-medium text-gray-900">{viewDialog.batch?.name || "Not assigned"}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-500">Enrolled On</p>
+                  <p className="font-medium text-gray-900">{formatDate(viewDialog.createdAt)}</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <p className="text-sm text-gray-500">Progress</p>
+                  <p className="font-medium text-gray-900">
+                    {viewDialog.student?.completedHours || 0} / {viewDialog.student?.totalHours || 0} hours
+                  </p>
+                </div>
+              </div>
+
+              {/* Payment History */}
+              {viewDialog.payments && viewDialog.payments.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-3">Payment History</h4>
+                  <div className="space-y-2">
+                    {viewDialog.payments.map((payment) => (
+                      <div key={payment.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            payment.status === "SUCCESS" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+                          }`}>
+                            <CreditCard className="h-4 w-4" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">{payment.method.replace("_", " ")}</p>
+                            <p className="text-xs text-gray-500">{formatDate(payment.createdAt)}</p>
+                          </div>
+                        </div>
+                        <p className="font-bold text-gray-900">{formatCurrency(payment.amount, payment.currency)}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-3 pt-4 border-t">
+                <Button variant="outline" className="flex-1">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Send Email
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Send Message
+                </Button>
+                <Button className="flex-1">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Manage Access
+                </Button>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

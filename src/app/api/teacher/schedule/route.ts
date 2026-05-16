@@ -1,7 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAuthenticatedUser, requireSameOrigin, writeAuditLog } from "@/lib/authz";
+import { hasPermission } from "@/lib/rbac";
+
+const ALLOWED_TEACHER_SCHEDULE_ROLES = new Set([
+  "TEACHER",
+  "SUPER_ADMIN",
+  "ADMIN",
+  "COURSE_MANAGER",
+  "STUDENT_MANAGER",
+]);
 
 export async function GET(request: NextRequest) {
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!ALLOWED_TEACHER_SCHEDULE_ROLES.has(user.role) && !hasPermission(user.role, "schedule.view")) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const batchId = searchParams.get("batchId");
@@ -48,6 +67,20 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!ALLOWED_TEACHER_SCHEDULE_ROLES.has(user.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
     const { batchId, teacherId, date, dayNumber, activities, ceremonyBlocked, notes } = body;
@@ -74,6 +107,15 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "schedule.created",
+      entity: "schedule_entry",
+      entityId: schedule.id,
+      newValue: schedule,
+      request,
+    });
+
     return NextResponse.json({ success: true, schedule });
   } catch (error) {
     console.error("POST schedule error:", error);
@@ -82,12 +124,34 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!ALLOWED_TEACHER_SCHEDULE_ROLES.has(user.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
     const { id, ...data } = body;
 
     if (!id) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
+    }
+
+    const existing = await prisma.scheduleEntry.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Schedule entry not found" }, { status: 404 });
     }
 
     const schedule = await prisma.scheduleEntry.update({
@@ -98,6 +162,16 @@ export async function PATCH(request: NextRequest) {
       },
     });
 
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "schedule.updated",
+      entity: "schedule_entry",
+      entityId: schedule.id,
+      oldValue: existing,
+      newValue: schedule,
+      request,
+    });
+
     return NextResponse.json({ success: true, schedule });
   } catch (error) {
     console.error("PATCH schedule error:", error);
@@ -106,6 +180,20 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const sameOriginResponse = requireSameOrigin(request);
+  if (sameOriginResponse) {
+    return sameOriginResponse;
+  }
+
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!ALLOWED_TEACHER_SCHEDULE_ROLES.has(user.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -114,7 +202,24 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "id is required" }, { status: 400 });
     }
 
+    const existing = await prisma.scheduleEntry.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Schedule entry not found" }, { status: 404 });
+    }
+
     await prisma.scheduleEntry.delete({ where: { id } });
+
+    await writeAuditLog({
+      actorUserId: user.id,
+      action: "schedule.deleted",
+      entity: "schedule_entry",
+      entityId: id,
+      oldValue: existing,
+      request,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

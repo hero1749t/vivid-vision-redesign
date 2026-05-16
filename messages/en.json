@@ -1,6 +1,7 @@
 {
   "Navigation": {
     "home": "Home",
+    "welcome": "Welcome to Bali YTTC - Transform Your Life",
     "courses": "Courses",
     "about": "About",
     "teachers": "Teachers",
@@ -9,18 +10,63 @@
     "applyNow": "Apply Now",
     "course100": "100-Hour YTT",
     "course200": "200-Hour YTT",
-    "course300": "300-Hour YTT"
+    "course300": "300-Hour YTT",
+    "trainings": "Trainings",
+    "allTrainings": "All Trainings",
+    "experience": "Experience",
+    "activities": "Activities",
+    "studentStories": "Student Stories",
+    "videos": "Videos",
+    "blog": "Blog",
+    "whyUbud": "Why Ubud",
+    "planYourTrip": "Plan Your Trip",
+    "pricing": "Pricing & Fees",
+    "visa": "Visa Information",
+    "faq": "FAQ",
+    "school": "School",
+    "aboutUs": "About Bali YTTC",
+    "yogaAlliance": "Yoga Alliance",
+    "reviews": "Student Reviews",
+    "terms": "Terms & Policy",
+    "retreats": "Retreats",
+    "workshops": "Workshops",
+    "programs": "Programs",
+    "testimonials": "Testimonials",
+    "login": "Login",
+    "scarcity": "Only 4 seats left for March 2026 batch!",
+    "needHelp": "Need help?",
+    "applyBatch": "Apply for 2026 Batch",
+    "onlySeatsLeft": "Only 4 seats left",
+    "marchBatch": "for the March 2026 200-Hour YTT batch.",
+    "reserveSpot": "Reserve your spot"
   },
   "Hero": {
-    "title": "Transform Your Life with Yoga in Bali",
+    "title": "Yoga Teacher Training in Bali",
+    "titleLine1": "Yoga Teacher Training",
+    "titleLine2": "in Bali",
+    "description": "Yoga Alliance certified 100hr, 200hr and 300hr courses in Ubud. Small batches, experienced teachers and real practice.",
     "subtitle": "Yoga Alliance certified teacher training in Ubud, Bali",
     "cta": "Start Your Journey",
-    "watchVideo": "Watch Video"
+    "watchVideo": "Watch Video",
+    "days": "DAYS",
+    "hrs": "HRS",
+    "min": "MIN",
+    "sec": "SEC",
+    "nextBatch": "Next Batch",
+    "graduates": "Graduates",
+    "rating": "Rating",
+    "certified": "Certified",
+    "nextBatchStarts": "Next batch starts!",
+    "location": "Ubud, Bali",
+    "applyBatch": "Apply for 2026 Batch",
+    "explorePrograms": "Explore Programs"
   },
   "TrustStrip": {
+    "recognisedBy": "Recognised & certified by",
     "yogaAlliance": "Yoga Alliance Certified",
     "students": "2,500+ Graduates",
     "rating": "4.9/5 Rating",
+    "certified": "200hr & 300hr certified",
     "established": "Est. 2018"
   },
   "Courses": {
@@ -57,9 +103,30 @@
     "nextBatch": "Next Batch",
     "highlights": "Highlights"
   },
+  "FeaturedCourses": {
+    "title": "Yoga Teacher Training Programs",
+    "subtitle": "Choose your yoga path",
+    "viewDetails": "View Details",
+    "applyNow": "Apply Now",
+    "seatsLeft": "seats left",
+    "enrollmentOpen": "Enrollment Open",
+    "popular": "Popular",
+    "ctaText": "Yoga Alliance certified 100, 200 and 300 hour programs",
+    "viewAllCourses": "View All Courses"
+  },
   "Manifesto": {
     "title": "Our Philosophy",
-    "quote": "Yoga is for everyone. It is a harmonious blend of Traditional Wisdom and Modern Science."
+    "quote": "Yoga is for everyone. It is a harmonious blend of Traditional Wisdom and Modern Science.",
+    "eyebrow": "About Bali YTTC",
+    "titleLine1": "Serious yoga training,",
+    "titleLine2": "held in calm Bali.",
+    "description1": "Bali YTTC is a Yoga Alliance registered school in Ubud. The programs combine asana, pranayama, meditation, anatomy, philosophy and teaching methodology in one structured residential experience.",
+    "description2": "The goal is not just a certificate. Students leave with a stronger personal practice, clearer teaching language, and enough supervised practice to guide a real class with confidence.",
+    "point1": "Small batches with individual feedback",
+    "point2": "Traditional practice backed by practical anatomy",
+    "point3": "Daily teaching practice before graduation",
+    "yearsExperience": "Years Experience",
+    "learnMore": "Learn More About Us"
   },
   "Pillars": {
     "title": "The Six Pillars",
@@ -86,8 +153,15 @@
     "subtitle": "Stories from our alumni"
   },
   "FAQ": {
-    "title": "Frequently Asked Questions",
-    "subtitle": "Find answers to your questions"
+    "title": "Everything you need to know",
+    "subtitle": "Have questions before applying? Our team is ready to help you choose the right training and answer anything.",
+    "eyebrow": "Frequently asked",
+    "searchPlaceholder": "Search questions...",
+    "noResults": "No questions found",
+    "contactTitle": "Still have questions?",
+    "contactDesc": "Can't find what you're looking for? Contact us directly.",
+    "emailButton": "Email Us",
+    "whatsappButton": "WhatsApp"
   },
   "FinalCTA": {
     "title": "Ready to Start Your Yoga Journey?",
@@ -133,6 +207,7 @@
   },
   "Footer": {
     "tagline": "Transformation through yoga in the heart of Bali",
+    "description": "Join thousands of students who have transformed their lives through our Yoga Alliance certified teacher training programs in Ubud, Bali.",
     "quickLinks": "Quick Links",
     "programs": "Programs",
     "legal": "Legal",
@@ -140,7 +215,13 @@
     "terms": "Terms & Conditions",
     "contact": "Contact",
     "followUs": "Follow Us",
-    "copyright": "© 2024 Bali YTTC. All rights reserved."
+    "copyright": "© 2024 Bali YTTC. All rights reserved.",
+    "newsletter": "Newsletter",
+    "newsletterDesc": "Get yoga tips and exclusive offers",
+    "emailPlaceholder": "Your email address",
+    "subscribe": "Subscribe",
+    "newsletterSuccess": "Thanks for subscribing!",
+    "rights": "All rights reserved."
   },
   "WhatsApp": {
     "chatWithUs": "Chat with us on WhatsApp",

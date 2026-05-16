@@ -3,178 +3,286 @@ import { COURSES } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Link } from "@/i18n/routing";
-import { ArrowUpRight, CalendarDays, Clock, Users, Flame, Star, CheckCircle2 } from "lucide-react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { ArrowUpRight, CalendarDays, Clock, Users, Flame, CheckCircle2 } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
 import { ApplyModal } from "@/components/shared/ApplyModal";
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
-// 3D tilt card component
-const TiltCard = ({ children, featured }: { children: React.ReactNode; featured?: boolean }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 200, damping: 20 });
-  const springY = useSpring(y, { stiffness: 200, damping: 20 });
-  const rotateX = useTransform(springY, [-0.5, 0.5], ["8deg", "-8deg"]);
-  const rotateY = useTransform(springX, [-0.5, 0.5], ["-8deg", "8deg"]);
+type ApiCourse = {
+  id: string;
+  slug: string;
+  name: string;
+  duration: string;
+  summary: string;
+  priceFrom: number;
+  image?: string | null;
+  modules?: Array<{ title?: string | null }>;
+  batches?: Array<{ startDate?: string | null; seatsLeft?: number | null }>;
+};
 
-  const handleMouse = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
+type DisplayCourse = {
+  slug: string;
+  title: string;
+  duration: string;
+  days: string;
+  next: string;
+  seats: string;
+  style: string;
+  image: string;
+  summary: string;
+  highlights: string[];
+  href: string;
+  priceFrom: number;
+  featured?: boolean;
+};
+
+const formatBatchDate = (date?: string | null, locale = "en") => {
+  if (!date) return "Next dates";
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return "Next dates";
+  return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }).format(parsed);
+};
+
+const normalizeApiCourse = (course: ApiCourse, index: number, locale: string): DisplayCourse => {
+  const durationParts = course.duration.split("|").map((part) => part.trim()).filter(Boolean);
+  const batch = course.batches?.[0];
+  const highlights = course.modules?.map((module) => module.title).filter(Boolean).slice(0, 4) as string[] | undefined;
+
+  return {
+    slug: course.slug,
+    title: course.name,
+    duration: durationParts[0] || course.duration || "Yoga Training",
+    days: durationParts[1] || "Residential",
+    next: formatBatchDate(batch?.startDate, locale),
+    seats: typeof batch?.seatsLeft === "number" ? `${batch.seatsLeft} seats left` : "Open seats",
+    style: "Yoga Teacher Training",
+    image: course.image || "/images/course-200hr.webp",
+    summary: course.summary,
+    highlights: highlights?.length ? highlights : ["Yoga Alliance curriculum", "Daily guided practice", "Residential Bali experience"],
+    href: `/courses/${course.slug}`,
+    priceFrom: course.priceFrom,
+    featured: course.slug.includes("200") || index === 1,
   };
-  const resetTilt = () => { x.set(0); y.set(0); };
+};
+
+const normalizeStaticCourse = (course: (typeof COURSES)[number]): DisplayCourse => ({
+  slug: course.slug,
+  title: course.title,
+  duration: course.duration,
+  days: course.days,
+  next: course.next,
+  seats: course.seats,
+  style: course.style,
+  image: course.image,
+  summary: course.summary,
+  highlights: course.highlights,
+  href: course.href,
+  priceFrom: course.priceFrom,
+  featured: course.featured,
+});
+
+// Premium Course Card Component
+const CourseCard = ({ course, index, t }: { course: DisplayCourse; index: number; t: any }) => {
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] as const }
+    }
+  };
 
   return (
     <motion.div
-      ref={ref}
-      onMouseMove={handleMouse}
-      onMouseLeave={resetTilt}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: "1000px" }}
-      className={`group flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-300 ${
-        featured
-          ? "border-amber-400/60 shadow-2xl shadow-amber-500/20"
-          : "border-warm-dark/12 shadow-elev-md"
-      } bg-white`}
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-50px" }}
+      className="group flex h-full flex-col"
     >
-      {children}
+      {/* Card Container - Cleaner design */}
+      <div className={`relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white transition-all duration-300 ${course.featured ? 'border-2 border-brand shadow-premium-md' : 'border border-gray-100 shadow-premium-sm'} hover:shadow-premium-xl hover:-translate-y-1`}>
+
+        {/* Image Section */}
+        <div className="relative overflow-hidden" style={{ height: "280px" }}>
+          <img
+            src={course.image}
+            alt={course.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+          />
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/20 to-transparent" />
+
+          {/* Top Badges */}
+          <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
+            {course.featured ? (
+              <div className="flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
+                <Flame className="h-3 w-3" /> {t("popular")}
+              </div>
+            ) : (
+              <div className="h-8" />
+            )}
+
+            {/* Seat availability badge */}
+            <div className={`rounded-full px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider backdrop-blur-sm ${
+              course.seats.toLowerCase().includes("4") || course.seats.toLowerCase().includes("6")
+                ? "bg-red-500/90 text-white"
+                : "bg-white/90 text-charcoal"
+            }`}>
+              {course.seats}
+            </div>
+          </div>
+
+          {/* Bottom Info Overlay */}
+          <div className="absolute bottom-0 left-0 right-0 p-5">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-sage-light mb-1">{course.style}</p>
+            <h3 className="font-serif text-xl font-bold leading-tight text-white md:text-2xl">{course.title}</h3>
+            <div className="mt-3 flex items-center gap-4 text-white/80 text-xs">
+              <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
+              <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{course.days}</span>
+              <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />{course.next.split(" - ")[0]}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Card Body */}
+        <div className="flex flex-1 flex-col p-6">
+          {/* Summary */}
+          <p className="text-sm leading-6 text-ink-soft line-clamp-2">{course.summary}</p>
+
+          {/* Highlights */}
+          <ul className="mt-4 space-y-2">
+            {course.highlights.slice(0, 3).map((h, i) => (
+              <li key={i} className="flex items-center gap-2 text-xs text-ink-muted">
+                <CheckCircle2 className="h-4 w-4 text-sage shrink-0" />
+                <span className="line-clamp-1">{h}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Price and CTA */}
+          <div className="mt-auto flex items-end justify-between border-t border-gray-100 pt-5 mt-5">
+            <div>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-faint">Starts from</p>
+              <p className="mt-1 font-serif text-3xl font-bold leading-none text-charcoal">
+                EUR {course.priceFrom}
+              </p>
+              <p className="text-[9px] text-ink-faint mt-0.5">All inclusive</p>
+            </div>
+
+            <Link
+              href={course.href}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-sage-mist px-4 py-2.5 text-sm font-semibold text-sage transition-all duration-300 hover:bg-sage hover:text-white"
+            >
+              {t("viewDetails")} <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Apply Button - Below card */}
+        <ApplyModal
+          defaultCourse={course.slug}
+          trigger={
+            <button
+              className={`mx-6 mb-6 w-auto rounded-xl py-3.5 text-sm font-semibold transition-all duration-300 ${
+                course.featured
+                  ? "bg-brand text-white hover:bg-brand-dark hover:shadow-lg hover:shadow-brand/20"
+                  : "border-2 border-gray-200 bg-white text-charcoal hover:border-sage hover:text-sage"
+              }`}
+            >
+              {t("applyNow")} - {course.duration}
+            </button>
+          }
+        />
+      </div>
     </motion.div>
   );
 };
 
-export const FeaturedCourses = () => (
-  <section id="courses" className="relative bg-sand py-20 md:py-32 overflow-hidden">
-    {/* Subtle decorative orbs */}
-    <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-bl from-amber-100/40 to-transparent blur-3xl" />
-    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-orange-100/30 to-transparent blur-3xl" />
+export const FeaturedCourses = () => {
+  const params = useParams<{ locale?: string }>();
+  const locale = useLocale();
+  const t = useTranslations("Courses");
+  const [apiCourses, setApiCourses] = useState<ApiCourse[] | null>(null);
 
-    <div className="container-edit relative z-10">
-      <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
-        <SectionHeading
-          eyebrow="Yoga Teacher Training"
-          title={
-            <>
-              Choose the training
-              <br />
-              that matches your path
-            </>
-          }
-          sub="Yoga Alliance certified 100, 200 and 300 hour programs. Small cohorts, clear schedules, and a fully residential Bali experience."
-        />
-        <Link href="/gallery"
-          className="hidden items-center gap-2 rounded-xl border border-warm-dark/15 bg-white/80 backdrop-blur-sm px-5 py-3 text-sm font-semibold text-warm-dark transition-all duration-300 hover:bg-white hover:shadow-elev-md md:inline-flex"
-        >
-          See gallery <ArrowUpRight className="h-4 w-4" />
-        </Link>
+  useEffect(() => {
+    const controller = new AbortController();
+    const locale = params?.locale || "en";
+
+    fetch(`/api/courses?locale=${encodeURIComponent(locale)}`, { signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (Array.isArray(data?.courses)) {
+          setApiCourses(data.courses);
+        }
+      })
+      .catch((error) => {
+        if (error instanceof Error && error.name !== "AbortError") {
+          setApiCourses(null);
+        }
+      });
+
+    return () => controller.abort();
+  }, [params?.locale]);
+
+  const courses = useMemo(
+    () => (apiCourses?.length ? apiCourses.map((course, index) => normalizeApiCourse(course, index, locale)) : COURSES.map(normalizeStaticCourse)),
+    [apiCourses, locale],
+  );
+
+  return (
+    <section id="courses" className="relative bg-gradient-to-b from-sand to-cream section-padding overflow-hidden">
+      {/* Subtle decorative elements */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-sage-mist blur-3xl opacity-60" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-brand-muted blur-3xl opacity-40" />
+
+      <div className="container-edit relative z-10">
+        {/* Section Header */}
+        <div className="mb-12 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
+          <SectionHeading
+            eyebrow={t("title")}
+            title={
+              <>
+                {t("subtitle")}
+                <span className="text-brand"> Bali YTTC</span>
+              </>
+            }
+            sub={t("enrolmentOpen")}
+          />
+
+          <Link href="/courses"
+            className="hidden items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-charcoal transition-all duration-300 hover:border-sage hover:text-sage md:inline-flex shadow-premium-sm"
+          >
+            View All Courses <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {/* Course Cards Grid */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {courses.map((course, index) => (
+            <CourseCard
+              key={course.slug}
+              course={course}
+              index={index}
+              t={t}
+            />
+          ))}
+        </div>
+
+        {/* Mobile CTA */}
+        <div className="mt-8 text-center md:hidden">
+          <Link href="/courses"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-sage"
+          >
+            View All Courses <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
-
-      {/* Cards — tall cinematic layout inspired by Gemini concept */}
-      <div className="grid gap-6 md:grid-cols-3" style={{ perspective: "1200px" }}>
-        {COURSES.map((course, index) => (
-          <Reveal key={course.slug} delay={index * 0.1}>
-            <div className="flex h-full flex-col">
-              <TiltCard featured={course.featured}>
-                {/* Full-bleed tall image */}
-                <div className="relative overflow-hidden" style={{ height: "340px" }}>
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  {/* Cinematic bottom gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-
-                  {/* Badges */}
-                  <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
-                    {course.featured ? (
-                      <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
-                        <Flame className="h-3 w-3" /> Most Popular
-                      </div>
-                    ) : <div />}
-                    <div className={`rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider ${
-                      course.seats.toLowerCase().includes("4") || course.seats.toLowerCase().includes("6")
-                        ? "bg-red-500/90 text-white"
-                        : "bg-black/50 backdrop-blur-sm text-cream/90"
-                    }`}>
-                      {course.seats}
-                    </div>
-                  </div>
-
-                  {/* Bottom name overlay — glassmorphism panel */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.24em] text-amber-300 mb-1">{course.style}</p>
-                    <h3 className="font-serif text-xl font-bold leading-tight text-white md:text-2xl">{course.title}</h3>
-                    <div className="mt-3 flex items-center gap-4 text-cream/70 text-xs">
-                      <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
-                      <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{course.days}</span>
-                      <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />{course.next.split(" - ")[0]}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card body */}
-                <div className="flex flex-1 flex-col p-5 md:p-6">
-                  <p className="text-sm leading-7 text-ink-soft">{course.summary}</p>
-
-                  {/* Highlights */}
-                  <ul className="mt-4 space-y-1.5">
-                    {course.highlights.map(h => (
-                      <li key={h} className="flex items-center gap-2 text-xs text-warm-mid">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-terra shrink-0" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {/* Price + explore */}
-                  <div className="mt-auto flex items-end justify-between border-t border-warm-dark/8 pt-5 mt-5">
-                    <div>
-                      <p className="text-[9px] font-semibold uppercase tracking-[0.20em] text-warm-light">Starts from</p>
-                      <p className="mt-1 font-serif text-4xl font-bold leading-none text-warm-dark">
-                        ${course.priceFrom}
-                      </p>
-                      <p className="text-[9px] text-warm-light mt-0.5">All inclusive</p>
-                    </div>
-                    <Link href={course.href}
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-100 to-orange-100 px-4 py-2.5 text-sm font-bold text-amber-800 transition-all duration-300 group-hover:from-amber-500 group-hover:to-orange-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30"
-                    >
-                      Explore <ArrowUpRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-              </TiltCard>
-
-              {/* Apply button below — highlighted for featured */}
-              <ApplyModal
-                defaultCourse={course.slug}
-                trigger={
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className={`mt-3 w-full rounded-xl py-3.5 text-sm font-bold transition-all duration-300 ${
-                      course.featured
-                        ? "bg-[#F04E23] text-white shadow-xl shadow-[#F04E23]/25 hover:bg-[#D03D12] hover:shadow-[#F04E23]/40"
-                        : "border-2 border-warm-dark/12 bg-white text-warm-dark hover:border-[#F04E23]/50 hover:text-[#F04E23] hover:bg-orange-50"
-                    }`}
-                  >
-                    Apply for {course.duration} Training →
-                  </motion.button>
-                }
-              />
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
-      {/* Mobile CTA */}
-      <Link href="/#courses"
-        className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-warm-dark px-5 py-4 text-sm font-bold text-cream transition-colors hover:bg-terra-deep md:hidden"
-      >
-        View all programs <ArrowUpRight className="h-4 w-4" />
-      </Link>
-    </div>
-  </section>
-);
+    </section>
+  );
+};

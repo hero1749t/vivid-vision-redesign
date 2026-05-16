@@ -1,121 +1,136 @@
 "use client";
+
 import { TESTIMONIALS as STATIC_TESTIMONIALS } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
-import { Star, Quote, ExternalLink, TrendingUp } from "lucide-react";
+import { ExternalLink, Quote, Star, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useLocale } from "next-intl";
+import { getHomeCopy } from "@/lib/home-localized";
 
-const avatarColors = [
-  "from-amber-400 to-orange-500",
-  "from-emerald-400 to-teal-500",
-  "from-violet-400 to-purple-500",
-];
+type PublicTestimonial = {
+  name: string;
+  course: string;
+  quote: string;
+  rating: number;
+};
 
-const platforms = [
-  { name: "Google", color: "text-blue-400" },
-  { name: "Trustpilot", color: "text-green-400" },
-  { name: "TripAdvisor", color: "text-emerald-400" },
-];
+const avatarColors = ["from-sage to-sage-light", "from-brand to-brand-light", "from-gold to-gold-light"];
 
 export const Testimonials = () => {
-  const testimonials = STATIC_TESTIMONIALS;
+  const copy = getHomeCopy(useLocale());
+  const fallbackTestimonials = STATIC_TESTIMONIALS.map((item, index) => ({
+    ...item,
+    course: copy.testimonials.items[index]?.course || item.course,
+    quote: copy.testimonials.items[index]?.quote || item.quote,
+    rating: 5,
+  }));
+  const [testimonials, setTestimonials] = useState<PublicTestimonial[]>(fallbackTestimonials);
+  const [stats, setStats] = useState({ averageRating: 4.9, totalApproved: 200 });
+
+  useEffect(() => {
+    void fetch("/api/testimonials?limit=6")
+      .then((response) => response.json())
+      .then((result) => {
+        if (Array.isArray(result.testimonials) && result.testimonials.length > 0) {
+          setTestimonials(result.testimonials);
+        }
+        if (result.stats) {
+          setStats({
+            averageRating: result.stats.averageRating || 4.9,
+            totalApproved: result.stats.totalApproved || 200,
+          });
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   return (
-    <section id="testimonials" className="relative py-20 md:py-36 bg-warm-dark overflow-hidden">
-      {/* Rich background texture */}
-      <div className="absolute inset-0 opacity-[0.04]"
-        style={{ backgroundImage: "radial-gradient(circle, #d4a853 1px, transparent 1px)", backgroundSize: "32px 32px" }}
-      />
-      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-amber-500/6 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] bg-orange-500/5 rounded-full blur-3xl" />
+    <section id="testimonials" className="relative overflow-hidden bg-gradient-to-b from-charcoal to-charcoal-mid py-20 md:py-32">
+      {/* Subtle pattern */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--sage)) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
-      <div className="container-edit relative z-10">
+      {/* Decorative glows */}
+      <div className="absolute left-1/4 top-0 h-[400px] w-[400px] rounded-full bg-sage/10 blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 h-[300px] w-[300px] rounded-full bg-brand/10 blur-3xl" />
+
+      <div className="container-wide relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-16 md:mb-24">
+        <div className="mb-12 flex flex-col gap-8 md:mb-20 md:flex-row md:items-end md:justify-between lg:container-edit">
           <div>
             <Reveal>
-              <p className="eyebrow mb-5">💬 Student Success Stories</p>
+              <p className="eyebrow mb-5 text-sage-light">{copy.testimonials.eyebrow}</p>
             </Reveal>
             <Reveal delay={0.05}>
-              <h2 className="font-serif font-bold leading-[1.06] tracking-tight text-cream"
-                style={{ fontSize: "clamp(2rem, 5vw, 3.8rem)" }}>
-                Stories from our
+              <h2 className="font-serif font-bold leading-[1.05] tracking-tight text-white" style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}>
+                {copy.testimonials.title}
                 <br />
-                <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                  Empowered Graduates
-                </span>
+                <span className="bg-gradient-to-r from-sage-light to-brand bg-clip-text text-transparent">{copy.testimonials.accent}</span>
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-4 max-w-xl text-base text-cream/55 leading-7">
-                Real transformations from over 2,500 yoga students who've completed training in Ubud. Hear their journeys and breakthroughs.
-              </p>
+              <p className="mt-4 max-w-xl text-base leading-7 text-white/60">{copy.testimonials.subtitle}</p>
             </Reveal>
           </div>
 
-          {/* Aggregate rating card — dark glass */}
+          {/* Rating Card */}
           <Reveal delay={0.1}>
-            <div className="shrink-0 rounded-2xl border border-amber-500/20 bg-white/5 backdrop-blur-md px-8 py-6 text-center shadow-xl">
-              <div className="flex gap-1 justify-center mb-3">
-                {[1,2,3,4,5].map(n => <Star key={n} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
+            <div className="shrink-0 rounded-2xl border border-white/10 bg-white/[0.05] p-8 backdrop-blur-sm">
+              <div className="mb-4 flex items-center justify-center gap-1">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <Star key={n} className="h-5 w-5 fill-gold text-gold" />
+                ))}
               </div>
-              <p className="font-serif text-4xl font-bold text-amber-300">4.9/5</p>
-              <p className="text-xs text-cream/40 uppercase tracking-widest mt-2">200+ verified reviews</p>
-              <div className="flex items-center justify-center gap-1 mt-3">
-                <TrendingUp className="w-3 h-3 text-emerald-400" />
-                <span className="text-[10px] text-emerald-400 font-semibold">Top rated in Bali</span>
+              <p className="font-serif text-4xl font-bold text-white text-center">{stats.averageRating.toFixed(1)}/5</p>
+              <p className="mt-3 text-center text-[10px] uppercase tracking-widest text-white/40">
+                {stats.totalApproved}+ {copy.testimonials.verified}
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <TrendingUp className="h-4 w-4 text-sage-light" />
+                <span className="text-xs font-semibold text-sage-light">{copy.testimonials.topRated}</span>
               </div>
             </div>
           </Reveal>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.name + i} delay={i * 0.1}>
+        {/* Testimonial Cards Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:container-edit">
+          {testimonials.map((testimonial, index) => (
+            <Reveal key={testimonial.name + index} delay={index * 0.1}>
               <motion.article
-                whileHover={{ y: -10, scale: 1.01 }}
+                whileHover={{ y: -6, scale: 1.01 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="group relative flex h-full flex-col rounded-2xl border border-cream/8 bg-white/5 backdrop-blur-sm p-7 shadow-xl hover:border-amber-500/30 hover:bg-white/8 transition-all duration-500"
+                className="group relative flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-sage/30 hover:bg-white/[0.06]"
               >
-                {/* Platform Badge */}
-                <div className="flex items-center justify-between mb-6">
+                {/* Top section with stars and quote icon */}
+                <div className="mb-6 flex items-center justify-between">
                   <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map(n => (
-                      <Star key={n} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    {Array.from({ length: testimonial.rating || 5 }).map((_, n) => (
+                      <Star key={n} className="h-4 w-4 fill-gold text-gold" />
                     ))}
                   </div>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${platforms[i % 3].color}`}>
-                    {platforms[i % 3].name} ✓
-                  </span>
+                  <Quote className="h-6 w-6 text-sage/40" />
                 </div>
 
-                {/* Large quote mark */}
-                <div className="mb-4">
-                  <Quote className="w-8 h-8 text-amber-500/30" />
-                </div>
-
-                {/* Quote */}
-                <p className="font-serif italic text-lg md:text-xl text-cream/85 leading-relaxed flex-1 tracking-wide">
-                  &ldquo;{t.quote}&rdquo;
+                {/* Quote text */}
+                <p className="flex-1 font-serif text-lg italic leading-relaxed text-white/80 md:text-xl">
+                  &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
-                {/* Author */}
-                <div className="mt-8 pt-6 border-t border-cream/8 flex items-center gap-4">
-                  <div className={`flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br ${avatarColors[i % 3]} flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
-                    {t.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                {/* Author info */}
+                <div className="mt-8 flex items-center gap-4 border-t border-white/10 pt-6">
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarColors[index % 3]} text-sm font-bold text-white shadow-lg`}>
+                    {testimonial.name.split(" ").map((name) => name[0]).join("").slice(0, 2)}
                   </div>
                   <div>
-                    <p className="font-semibold text-cream text-sm md:text-base">{t.name}</p>
-                    <p className="text-[10px] uppercase tracking-widest text-amber-500/70 font-medium mt-0.5">{t.course}</p>
+                    <p className="text-sm font-semibold text-white md:text-base">{testimonial.name}</p>
+                    <p className="mt-0.5 text-[10px] font-medium uppercase tracking-widest text-sage-light/70">
+                      {testimonial.course}
+                    </p>
                   </div>
                 </div>
-
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-amber-500/4 to-transparent pointer-events-none" />
-                {/* Bottom amber line on hover */}
-                <div className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </motion.article>
             </Reveal>
           ))}
@@ -125,26 +140,23 @@ export const Testimonials = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          className="mt-16 md:mt-24 text-center"
+          viewport={{ once: true }}
+          className="mt-16 text-center md:mt-24 lg:container-edit"
         >
-          <p className="text-cream/45 text-sm mb-5">
-            Read all 200+ verified reviews from graduates worldwide
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <ApplyModal
-              trigger={
-                <Button className="bg-[#F04E23] hover:bg-[#D03D12] text-white font-bold px-8 py-3 h-12 rounded-xl shadow-xl shadow-[#F04E23]/30">
-                  Start Your Journey →
-                </Button>
-              }
-            />
+          <p className="mb-6 text-sm text-white/50">{copy.testimonials.readVerified}</p>
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <ApplyModal trigger={
+              <Button className="h-12 rounded-full bg-brand px-8 py-3 font-semibold text-white shadow-lg shadow-brand/20 hover:bg-brand-dark hover:shadow-xl hover:shadow-brand/30">
+                {copy.testimonials.startJourney}
+              </Button>
+            } />
             <a
               href="https://baliyttc.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-cream/15 text-cream/60 font-semibold text-sm hover:border-amber-500/40 hover:text-amber-300 transition-all duration-300"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white/60 transition-all duration-300 hover:border-sage/40 hover:text-sage-light"
             >
-              View All Reviews <ExternalLink className="w-4 h-4" />
+              {copy.testimonials.viewAll} <ExternalLink className="h-4 w-4" />
             </a>
           </div>
         </motion.div>

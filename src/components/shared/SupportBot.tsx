@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, ChevronDown, Bot, User } from "lucide-react";
+import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SITE } from "@/data/site";
 
@@ -22,7 +22,7 @@ const faqDatabase: Record<string, FAQ[]> = {
     { keywords: ["certification", "certificate", "yoga alliance", "ryt", "rys"], question: "Will I get certified?", answer: "Yes! Upon successful completion, you'll receive a Yoga Alliance RYT certificate (RYS-200, RYS-300, or RYS-500 depending on your program). This is internationally recognized.", category: "Certification" },
     { keywords: ["experience", "beginner", "never", "first time", "no yoga"], question: "Do I need yoga experience?", answer: "100hr is designed for beginners with little to no experience. 200hr is for beginners to intermediate. 300hr requires a 200hr certification. We recommend at least 6 months of regular practice.", category: "Courses" },
     { keywords: ["schedule", "day", "typical", "morning", "evening"], question: "What does a typical day look like?", answer: "Days start at 6am with meditation, followed by 2 hours of asana practice, then philosophy/anatomy lectures, lunch, workshops, and evening practice. Evenings are free. Temple ceremonies and excursions are scheduled weekly.", category: "Schedule" },
-    { keywords: ["payment", "pay", "deposit", "installment", "card"], question: "How can I pay?", answer: "We accept Stripe (credit/debit in EUR or USD), PayPal, and bank transfer. Pay a deposit (from €200) to secure your spot, with the balance due 30 days before arrival. Full payment gets 5% discount.", category: "Payment" },
+    { keywords: ["payment", "pay", "deposit", "installment", "card"], question: "How can I pay?", answer: "We accept Razorpay, PayPal, and bank transfer. Pay a deposit (from €200) to secure your spot, with the balance due 30 days before arrival. Full payment gets 5% discount.", category: "Payment" },
     { keywords: ["cancellation", "refund", "refund policy", "cancel"], question: "What's your cancellation policy?", answer: "Deposits are partially refundable up to 30 days before the course start (minus €50 admin fee). Full payments can be cancelled for a full refund up to 30 days before. Within 30 days, deposits are non-refundable but transferable to future batches.", category: "Policies" },
     { keywords: ["location", "ubud", "where", "airport", "transfer"], question: "Where is the school located?", answer: "We're in Ubud, Gianyar Regency, Bali — the spiritual heart of Bali. Ngurah Rai Airport (DPS) is 90 minutes away. We offer airport transfer arrangements for €25 each way.", category: "Location" },
   ],
@@ -50,7 +50,7 @@ const faqDatabase: Record<string, FAQ[]> = {
     { keywords: ["비자", "인도네시아", "발리", "여권"], question: "발리에 필요한 비자는 무엇인가요?", answer: "대부분 도착 비자(VOA) 사용 — 30일 $35 USD. 200시간/300시간 프로그램의 경우 B211A 사회비자(60일) 권장.", category: "비자" },
   ],
   ja: [
-    { keywords: ["コース", "プログラム", "ヨガ", "先生"], question: "どのコースを選んだらいいですか？", answer: "経験に応じて選択：100時間は初心者向け（11日）、200時間は 가르침旅を始める方向け（21日）、300時間は認定教师向け（28日）。", category: "コース" },
+    { keywords: ["コース", "プログラム", "ヨガ", "先生"], question: "どのコースを選んだらいいですか？", answer: "経験に応じて選択：100時間は初心者向け（11日）、200時間は教える旅を始める方向け（21日）、300時間は認定教師向け（28日）。", category: "コース" },
     { keywords: ["価格", "費用", "料金"], question: "トレーニングの費用はいくらですか？", answer: "100時間€999から、200時間€1,499から、300時間€1,899から。すべての価格に宿泊、食事が含まれます。", category: "価格" },
     { keywords: ["ビザ", "インドネシア", "バリ", "パスポート"], question: "バリに必要なビザは何ですか？", answer: "ほとんどの方が到着ビザ（VOA）を利用 — 30日$35 USD。200時間/300時間プログラムの您にはB211A社会ビザ（60日）をお勧めします。", category: "ビザ" },
   ],
@@ -66,17 +66,61 @@ const faqDatabase: Record<string, FAQ[]> = {
   ],
 };
 
-const defaultResponses = {
-  greeting: "Hello! I'm here to help with any questions about Bali YTTC. Try asking about courses, pricing, visas, accommodation, or anything else!",
-  fallback: "I'm not sure I understand that. Try asking about courses, pricing, visa requirements, or accommodation. Or click 'Contact Us' to chat with our team directly!",
-  contact: "Would you like to chat with our team directly on WhatsApp? Click the WhatsApp button or email us at info@baliyttc.com — we reply within 24 hours!",
+const defaultResponses: Record<string, { greeting: string; fallback: string; contact: string; suggestions: string[] }> = {
+  en: {
+    greeting: "Hello! I'm your Bali YTTC assistant. Ask me about courses, pricing, visas, accommodation, or anything else!",
+    fallback: "I'm not sure I understand that. Try asking about courses, pricing, visa requirements, or accommodation. Or click 'Contact Us' to chat with our team directly!",
+    contact: "Would you like to chat with our team directly on WhatsApp?",
+    suggestions: ["Which course is right for me?", "How much does it cost?", "What visa do I need?", "Is accommodation included?"],
+  },
+  es: {
+    greeting: "¡Hola! Soy tu asistente de Bali YTTC. ¡Pregúntame sobre cursos, precios, visas, alojamiento y más!",
+    fallback: "No estoy seguro de entender eso. Prueba preguntando sobre cursos, precios, requisitos de visa o alojamiento.",
+    contact: "¿Te gustaría chatear con nuestro equipo en WhatsApp?",
+    suggestions: ["¿Qué curso es para mí?", "¿Cuánto cuesta?", "¿Qué visa necesito?", "¿El alojamiento está incluido?"],
+  },
+  de: {
+    greeting: "Hallo! Ich bin dein Bali YTTC Assistent. Frag mich über Kurse, Preise, Visa, Unterkunft und mehr!",
+    fallback: "Ich bin nicht sicher, ob ich das verstehe. Versuche es mit Fragen zu Kursen, Preisen, Visa-Anforderungen oder Unterkunft.",
+    contact: "Möchtest du direkt mit unserem Team auf WhatsApp chatten?",
+    suggestions: ["Welchen Kurs sollte ich wählen?", "Wie viel kostet es?", "Welches Visum brauche ich?", "Welche Unterkunft ist inbegriffen?"],
+  },
+  fr: {
+    greeting: "Bonjour! Je suis votre assistant Bali YTTC. Demandez-moi sur les cours, les prix, les visas, l'hébergement et plus!",
+    fallback: "Je ne suis pas sûr de comprendre. Essayez de demander des informations sur les cours, les prix, les exigences de visa ou l'hébergement.",
+    contact: "Souhaitez-vous discuter avec notre équipe directement sur WhatsApp?",
+    suggestions: ["Quel cours est fait pour moi?", "Combien ça coûte?", "Quel visa ai-je besoin?", "L'hébergement est-il inclus?"],
+  },
+  ko: {
+    greeting: "안녕하세요! 발리 YTTC 어시스턴트입니다. 과정, 가격, 비자, 숙박에 대해 질문하세요!",
+    fallback: "잘 이해하지 못했습니다. 과정, 가격, 비자 요건 또는 숙박에 대해 질문해 보세요.",
+    contact: "WhatsApp으로 팀과 바로 대화하고 싶으신가요?",
+    suggestions: ["어떤 과정이 제게 맞나요?", "비용은 얼마인가요?", "어떤 비자가 필요하나요?", "숙박이 포함되나요?"],
+  },
+  ja: {
+    greeting: "こんにちは！バリのYTTCアシスタントです。コース、料金、ビザ、宿泊についてお聞きください！",
+    fallback: "よく理解できませんでした。コース、料金、ビザの要件、宿泊についてお聞きください。",
+    contact: "WhatsAppでチームと直接チャットしませんか？",
+    suggestions: ["どのコースが適切ですか？", "費用はいくらですか？", "どのビザが必要ですか？", "宿泊は含まれていますか？"],
+  },
+  id: {
+    greeting: "Halo! Saya asisten Bali YTTC Anda. Tanyakan tentang kursus, harga, visa, akomodasi, dan lainnya!",
+    fallback: "Saya tidak yakin memahami itu. Coba tanyakan tentang kursus, harga, persyaratan visa, atau akomodasi.",
+    contact: "Apakah Anda ingin mengobrol dengan tim kami langsung di WhatsApp?",
+    suggestions: ["Kursus mana yang tepat untuk saya?", "Berapa biayanya?", "Visa apa yang saya butuhkan?", "Apakah akomodasi termasuk?"],
+  },
+  zh: {
+    greeting: "你好！我是巴厘岛YTTC助手。问我关于课程、价格、签证、住宿等问题！",
+    fallback: "我不确定我理解正确。请尝试询问有关课程、价格、签证要求或住宿的问题。",
+    contact: "您想直接在WhatsApp上与我们的团队聊天吗？",
+    suggestions: ["哪个课程适合我？", "费用是多少？", "我需要什么签证？", "住宿包括在内吗？"],
+  },
 };
 
 function findBestMatch(input: string, lang: string): FAQ | null {
   const normalizedInput = input.toLowerCase().trim();
   const faqs = faqDatabase[lang] || faqDatabase.en;
 
-  // Check for direct keyword matches
   for (const faq of faqs) {
     for (const keyword of faq.keywords) {
       if (normalizedInput.includes(keyword.toLowerCase())) {
@@ -85,10 +129,8 @@ function findBestMatch(input: string, lang: string): FAQ | null {
     }
   }
 
-  // Check for question patterns
-  const questionWords = ["what", "how", "which", "when", "where", "do", "can", "is", "are", "cost", "price"];
+  const questionWords = ["what", "how", "which", "when", "where", "do", "can", "is", "are", "cost", "price", "qué", "cuánto", "cómo", "welche", "wie", "quel", "combien", "어떤", "얼마", "어떻게", "どの", "いくら", "どんな"];
   if (questionWords.some(w => normalizedInput.startsWith(w) || normalizedInput.includes(w))) {
-    // Try to match by checking all FAQs for any keyword overlap
     const inputWords = normalizedInput.split(/\s+/);
     let bestMatch: FAQ | null = null;
     let bestScore = 0;
@@ -96,7 +138,7 @@ function findBestMatch(input: string, lang: string): FAQ | null {
     for (const faq of faqs) {
       let score = 0;
       for (const word of inputWords) {
-        if (faq.question.toLowerCase().includes(word) || 
+        if (faq.question.toLowerCase().includes(word) ||
             faq.answer.toLowerCase().includes(word) ||
             faq.keywords.some(k => k.toLowerCase().includes(word))) {
           score++;
@@ -121,14 +163,13 @@ interface Message {
   category?: string;
 }
 
-const SupportBot = () => {
+export default function SupportBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [lang, setLang] = useState("en");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Get browser language
   useEffect(() => {
     const browserLang = navigator.language.split("-")[0];
     const supportedLangs = ["en", "es", "de", "fr", "ko", "ja", "id", "zh"];
@@ -137,18 +178,17 @@ const SupportBot = () => {
     }
   }, []);
 
-  // Initial greeting
   useEffect(() => {
     if (isOpen && messages.length === 0) {
+      const response = defaultResponses[lang] || defaultResponses.en;
       setMessages([{
         id: "1",
         role: "bot",
-        content: defaultResponses.greeting,
+        content: response.greeting,
       }]);
     }
-  }, [isOpen]);
+  }, [isOpen, lang]);
 
-  // Scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -165,14 +205,14 @@ const SupportBot = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput("");
 
-    // Bot response after delay
     setTimeout(() => {
       const match = findBestMatch(input, lang);
-      
+      const response = defaultResponses[lang] || defaultResponses.en;
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "bot",
-        content: match ? match.answer : defaultResponses.fallback,
+        content: match ? match.answer : response.fallback,
         category: match?.category,
       };
 
@@ -180,9 +220,10 @@ const SupportBot = () => {
     }, 800);
   };
 
+  const suggestions = defaultResponses[lang]?.suggestions || defaultResponses.en.suggestions;
+
   return (
     <>
-      {/* Floating Button */}
       <AnimatePresence>
         {!isOpen && (
           <motion.button
@@ -199,16 +240,15 @@ const SupportBot = () => {
         )}
       </AnimatePresence>
 
-      {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
             className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-32px)] h-[560px] max-h-[calc(100vh-120px)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100"
           >
-            {/* Header */}
             <div className="bg-gradient-to-r from-[#F04E23] to-[#D03D12] p-4 text-white flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -216,7 +256,7 @@ const SupportBot = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Bali YTTC Assistant</h3>
-                  <p className="text-xs text-white/80">Here to help you ✨</p>
+                  <p className="text-xs text-white/80">Here to help you</p>
                 </div>
               </div>
               <button
@@ -227,7 +267,6 @@ const SupportBot = () => {
               </button>
             </div>
 
-            {/* Language selector */}
             <div className="px-4 py-2 bg-gray-50 border-b flex items-center gap-2">
               <span className="text-xs text-gray-500">Language:</span>
               <select
@@ -246,7 +285,6 @@ const SupportBot = () => {
               </select>
             </div>
 
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg) => (
                 <motion.div
@@ -257,8 +295,8 @@ const SupportBot = () => {
                 >
                   <div className={`flex gap-2 max-w-[85%] ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                      msg.role === "bot" 
-                        ? "bg-[#F04E23]/10 text-[#F04E23]" 
+                      msg.role === "bot"
+                        ? "bg-[#F04E23]/10 text-[#F04E23]"
                         : "bg-gray-100 text-gray-600"
                     }`}>
                       {msg.role === "bot" ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
@@ -281,17 +319,14 @@ const SupportBot = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggested Questions */}
             {messages.length <= 2 && (
               <div className="px-4 pb-2">
                 <p className="text-xs text-gray-400 mb-2">Try asking:</p>
                 <div className="flex flex-wrap gap-2">
-                  {["Which course is right for me?", "How much does it cost?", "What visa do I need?", "Is accommodation included?"].map((q) => (
+                  {suggestions.map((q) => (
                     <button
                       key={q}
-                      onClick={() => {
-                        setInput(q);
-                      }}
+                      onClick={() => setInput(q)}
                       className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-colors"
                     >
                       {q}
@@ -301,7 +336,6 @@ const SupportBot = () => {
               </div>
             )}
 
-            {/* Input */}
             <div className="p-4 border-t bg-white">
               <div className="flex gap-2">
                 <input
@@ -336,6 +370,4 @@ const SupportBot = () => {
       </AnimatePresence>
     </>
   );
-};
-
-export default SupportBot;
+}

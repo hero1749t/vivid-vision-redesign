@@ -11,12 +11,17 @@ import { BalieytcLogo } from "@/components/shared/BalieytcLogo";
 import { toast } from "@/hooks/use-toast";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { getRoleHomePath } from "@/lib/rbac";
+import { isFirebaseConfigured } from "@/lib/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, verifyTwoFactor } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [twoFactorCode, setTwoFactorCode] = useState("");
+  const [pendingChallenge, setPendingChallenge] = useState<string | null>(null);
+  const [pendingUser, setPendingUser] = useState<{ uid: string; email: string; displayName: string } | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -50,31 +55,54 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await login(email, password);
+      const result = await login(email, password);
+
+      if (result.requiresTwoFactor && result.challengeToken) {
+        setPendingChallenge(result.challengeToken);
+        setPendingUser(result.user);
+        toast({
+          title: "Two-factor authentication required",
+          description: "Enter the 6-digit code from your authenticator app.",
+        });
+        return;
+      }
 
       toast({
         title: "Login successful!",
         description: "Redirecting to your dashboard...",
       });
 
-      // Redirect based on role
-      const userRole = localStorage.getItem("baliyttc_user");
-      if (userRole) {
-        const parsed = JSON.parse(userRole);
-        if (parsed.role === "TEACHER") {
-          router.push("/app/teacher/dashboard");
-        } else if (parsed.role === "SUPER_ADMIN" || parsed.role === "ADMIN") {
-          router.push("/admin/dashboard");
-        } else {
-          router.push("/app/dashboard");
-        }
-      } else {
-        router.push("/app/dashboard");
-      }
-    } catch (error) {
+      router.push(result.redirectTo || getRoleHomePath(result.role || "STUDENT"));
+    } catch (error: any) {
       toast({
         title: "Login failed",
         description: error instanceof Error ? error.message : "Please check your credentials",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTwoFactorSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!pendingChallenge || !pendingUser) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await verifyTwoFactor(pendingChallenge, twoFactorCode, pendingUser);
+      toast({
+        title: "Verification successful",
+        description: "Redirecting to your dashboard...",
+      });
+      router.push(result.redirectTo || getRoleHomePath(result.role));
+    } catch (error) {
+      toast({
+        title: "Verification failed",
+        description: error instanceof Error ? error.message : "Invalid authentication code",
         variant: "destructive",
       });
     } finally {
@@ -95,15 +123,16 @@ export default function LoginPage() {
             <p className="text-gray-600 mt-2">Sign in to your Bali YTTC account</p>
           </div>
 
-          {/* Demo Credentials Notice */}
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-            <p className="text-sm text-blue-800 font-medium mb-2">Test Credentials:</p>
-            <div className="text-xs text-blue-700 space-y-1">
-              <p><strong>Admin:</strong> admin@baliyttc.com / admin123</p>
-              <p><strong>Student:</strong> student@test.com / student123</p>
-              <p><strong>Teacher:</strong> teacher@test.com / teacher123</p>
+          {!isFirebaseConfigured() && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+              <p className="text-sm text-blue-800 font-medium mb-2">Test Credentials:</p>
+              <div className="text-xs text-blue-700 space-y-1">
+                <p><strong>Admin:</strong> admin@baliyttc.com / admin123</p>
+                <p><strong>Student:</strong> student@test.com / student123</p>
+                <p><strong>Teacher:</strong> teacher@test.com / teacher123</p>
+              </div>
             </div>
-          </div>
+          )}
 
           <Card className="border-amber-100 shadow-xl">
             <CardHeader className="space-y-1 pb-4">
@@ -113,6 +142,54 @@ export default function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {pendingChallenge ? (
+                <form onSubmit={handleTwoFactorSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="otp" className="text-gray-700 font-medium">
+                      Authentication Code
+                    </Label>
+                    <Input
+                      id="otp"
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder="123456"
+                      value={twoFactorCode}
+                      onChange={(e) => setTwoFactorCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                      className="bg-white border-2 border-gray-200 focus:border-amber-400"
+                      disabled={isLoading}
+                    />
+                    <p className="text-sm text-gray-500">Open your authenticator app and enter the current 6-digit code.</p>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isLoading || twoFactorCode.length !== 6}
+                    className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold h-11"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      "Verify Code"
+                    )}
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setPendingChallenge(null);
+                      setPendingUser(null);
+                      setTwoFactorCode("");
+                    }}
+                  >
+                    Back
+                  </Button>
+                </form>
+              ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Email */}
                 <div className="space-y-2">
@@ -207,6 +284,7 @@ export default function LoginPage() {
                   )}
                 </Button>
               </form>
+              )}
 
               {/* Register Link */}
               <p className="text-center text-sm text-gray-600 mt-6">

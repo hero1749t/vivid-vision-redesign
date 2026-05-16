@@ -195,7 +195,7 @@ const pricingFaqs = [
   { q: "Is the deposit refundable?", a: "Deposits are partially refundable up to 30 days before the course start date (minus a €50 admin fee). Within 30 days, deposits are non-refundable but can be transferred to a future batch. Full payments can be cancelled up to 30 days before for a full refund." },
   { q: "Can I upgrade my accommodation?", a: "Yes! Private and luxury villa upgrades are available for an additional fee. Simply let us know when booking and we'll arrange everything. Private upgrades are subject to availability." },
   { q: "Are there any hidden costs?", a: "No hidden costs. Your course fee covers accommodation, meals, training, materials, and certification. Optional extras: private yoga sessions (€50/hr), spa treatments, additional excursions, and personal expenses." },
-  { q: "What payment methods do you accept?", a: "We accept Stripe (credit/debit cards in EUR or USD), PayPal, and bank transfer (EUR preferred). All payments are processed securely. Currency is auto-detected but you can manually switch EUR/USD." },
+  { q: "What payment methods do you accept?", a: "We accept Razorpay, PayPal, and bank transfer (EUR preferred). All payments are processed securely. Currency is auto-detected but you can manually switch EUR/USD." },
   { q: "When do I need to pay the full amount?", a: "For deposit bookings, the balance is due 30 days before your course start date. You'll receive payment reminders at 45, 30, 14, and 7 days before. Installment plans are available for longer programs." },
   { q: "Is there an early bird discount?", a: "Yes! Early bird pricing is available for most batches — typically €100-300 off. Early bird prices are available until a set deadline (usually 30-60 days before the batch). After the deadline, regular pricing applies." },
   { q: "Do you offer group discounts?", a: "Yes! Groups of 3 or more students booking together receive a 5% group discount. Groups of 5+ receive 8%. Contact us directly to arrange group bookings and we'll process the discount manually." },
@@ -589,7 +589,7 @@ const Pricing = () => {
           {/* Trust Badges */}
           <div className="mt-12 flex flex-wrap justify-center gap-6">
             {[
-              { icon: Shield, label: "Secure Payment", desc: "Stripe & PayPal" },
+              { icon: Shield, label: "Secure Payment", desc: "Razorpay & PayPal" },
               { icon: Check, label: "Free Cancellation", desc: "30 days before" },
               { icon: Zap, label: "Instant Confirmation", desc: "Email & WhatsApp" },
             ].map((badge) => (

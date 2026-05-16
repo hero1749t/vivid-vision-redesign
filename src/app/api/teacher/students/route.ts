@@ -1,7 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAuthenticatedUser } from "@/lib/authz";
+
+export const dynamic = "force-dynamic";
+
+type TeacherStudent = {
+  id: string;
+  user: {
+    displayName: string | null;
+    email: string;
+  };
+  phone: string | null;
+  batch: {
+    name: string;
+    course: {
+      name: string;
+    };
+  } | null;
+  completedHours: number;
+  totalHours: number;
+  certificateIssued: boolean;
+  enrollmentDate: Date | null;
+};
 
 export async function GET(request: NextRequest) {
+  const { user, response } = await requireAuthenticatedUser();
+  if (!user || response) {
+    return response;
+  }
+
+  if (!["TEACHER", "SUPER_ADMIN", "ADMIN", "STUDENT_MANAGER", "COURSE_MANAGER"].includes(user.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const batchId = searchParams.get("batchId");
@@ -11,7 +42,7 @@ export async function GET(request: NextRequest) {
     };
     if (batchId) where.batchId = batchId;
 
-    const students = await prisma.student.findMany({
+    const students = (await prisma.student.findMany({
       where,
       include: {
         user: {
@@ -22,7 +53,7 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: { createdAt: "desc" },
-    });
+    })) as TeacherStudent[];
 
     return NextResponse.json({
       students: students.map((s) => ({
