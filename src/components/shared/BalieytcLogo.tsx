@@ -18,7 +18,7 @@ export const BalieytcLogo = ({
       <img
         src={logoUrl}
         alt={`${siteName} logo`}
-        className={`${className} rounded-sm object-cover shadow-sm`}
+        className={`${className} object-contain drop-shadow-sm`}
         loading="eager"
         decoding="async"
       />

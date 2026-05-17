@@ -1,8 +1,7 @@
 "use client";
 import { COURSES } from "@/data/site";
-import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Link } from "@/i18n/routing";
-import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Clock, Users, Flame, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Flame, CheckCircle2 } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -110,22 +109,73 @@ const normalizeStaticCourse = (course: (typeof COURSES)[number]): DisplayCourse 
   featured: course.featured,
 });
 
-const getDepth = (offset: number) => Math.max(-2, Math.min(2, offset));
+const getMobileBadge = (course: DisplayCourse) => {
+  if (course.featured) return "Most Popular";
+  if (course.slug.includes("100")) return "Most Accessible";
+  if (course.slug.includes("300")) return "Advanced Track";
+  if (course.slug.includes("50")) return "Short Course";
+  return "Open Seats";
+};
+
+const getCompactTitle = (title: string) =>
+  title
+    .replace("Yoga Teacher Training", "YTT")
+    .replace("Advanced Teacher Training", "Advanced YTT")
+    .replace("Hatha-Vinyasa Yoga Teacher Training", "Hatha-Vinyasa YTT");
+
+const MobileCourseCard = ({ course }: { course: DisplayCourse }) => (
+  <Link
+    href={course.href}
+    className="group flex w-[280px] shrink-0 snap-center flex-col overflow-hidden rounded-[22px] border border-stone-200 bg-white shadow-[0_16px_42px_rgba(35,35,30,0.12)] transition hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(35,35,30,0.16)]"
+  >
+    <div className="relative h-[200px] overflow-hidden">
+      <img
+        src={course.image}
+        alt={course.title}
+        className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+        loading="lazy"
+        decoding="async"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/65 via-charcoal/10 to-transparent" />
+      <span className="absolute left-4 top-4 rounded-full bg-sage px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-lg">
+        {getMobileBadge(course)}
+      </span>
+      <span className="absolute bottom-4 left-4 rounded-full bg-white/92 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-charcoal shadow-sm">
+        {course.seats}
+      </span>
+    </div>
+
+    <div className="flex min-h-[230px] flex-col p-6">
+      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-sage">{course.days}</p>
+      <h3 className="mt-2 font-serif text-[1.55rem] leading-[1.08] text-charcoal">
+        {getCompactTitle(course.title)}
+      </h3>
+      <p className="mt-4 line-clamp-3 text-sm leading-6 text-ink-soft">{course.summary}</p>
+
+      <div className="mt-auto flex items-end justify-between border-t border-stone-100 pt-5">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-faint">From</p>
+          <p className="mt-1 font-serif text-2xl font-bold leading-none text-charcoal">EUR {course.priceFrom}</p>
+        </div>
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-sage">
+          Details <ArrowUpRight className="h-4 w-4" />
+        </span>
+      </div>
+    </div>
+  </Link>
+);
 
 const CourseCard = ({
   course,
   index,
   active,
-  offset,
   t,
 }: {
   course: DisplayCourse;
   index: number;
   active: boolean;
-  offset: number;
   t: any;
 }) => {
-  const depth = getDepth(offset);
   const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -141,49 +191,32 @@ const CourseCard = ({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      animate={{
-        rotateY: depth * -5,
-        z: active ? 28 : 0,
-        scale: active ? 1 : 0.965,
-        y: active ? 0 : 8,
-        opacity: 1,
-      }}
-      transition={{ type: "spring", stiffness: 150, damping: 30, mass: 0.9 }}
-      style={{
-        transformStyle: "preserve-3d",
-        transformOrigin: offset < 0 ? "right center" : offset > 0 ? "left center" : "center",
-      }}
-      className="group flex h-full min-w-[86vw] snap-center scroll-mx-6 flex-col will-change-transform sm:min-w-[430px] lg:min-w-[400px] xl:min-w-[410px]"
+      className="group flex h-full flex-col"
     >
-      {/* Card Container - Cleaner design */}
-      <div className={`relative flex flex-1 flex-col overflow-hidden rounded-3xl bg-white transition-all duration-500 ${active ? "shadow-[0_26px_70px_rgba(15,23,42,0.2)]" : "shadow-[0_14px_40px_rgba(15,23,42,0.1)]"} ${course.featured ? 'border-2 border-brand' : 'border border-gray-100'} hover:shadow-premium-xl`}>
-        <div className="pointer-events-none absolute inset-x-8 top-0 z-20 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
-
-        {/* Image Section */}
-        <div className="relative overflow-hidden" style={{ height: "280px" }}>
+      <article className={`relative flex h-full min-h-[530px] flex-col overflow-hidden rounded-[6px] bg-white shadow-[0_18px_48px_rgba(42,36,28,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(42,36,28,0.16)] ${course.featured || active ? "ring-1 ring-brand/75" : "ring-1 ring-stone-200"}`}>
+        <div className="relative h-[210px] shrink-0 overflow-hidden">
           <img
             src={course.image}
             alt={course.title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
             loading="lazy"
             decoding="async"
           />
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
 
-          {/* Top Badges */}
-          <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
+          <div className="absolute left-4 right-4 top-4 flex items-start justify-between">
             {course.featured ? (
-              <div className="flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white shadow-lg">
-                <Flame className="h-3 w-3" /> {t("popular")}
+              <div className="flex items-center gap-1.5 rounded-[3px] bg-sage px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-lg">
+                <Flame className="h-3 w-3" /> Most Popular
               </div>
             ) : (
-              <div className="h-8" />
+              <div className="rounded-[3px] bg-sage px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-lg">
+                {getMobileBadge(course)}
+              </div>
             )}
 
-            {/* Seat availability badge */}
-            <div className={`rounded-full px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider backdrop-blur-sm ${
+            <div className={`rounded-full px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider shadow-sm backdrop-blur-sm ${
               course.seats.toLowerCase().includes("4") || course.seats.toLowerCase().includes("6")
                 ? "bg-red-500/90 text-white"
                 : "bg-white/90 text-charcoal"
@@ -192,68 +225,54 @@ const CourseCard = ({
             </div>
           </div>
 
-          {/* Bottom Info Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-sage-light mb-1">{course.style}</p>
-            <h3 className="font-serif text-2xl font-bold leading-tight text-white">{course.title}</h3>
-            <div className="mt-3 flex items-center gap-4 text-white/80 text-xs">
-              <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{course.duration}</span>
-              <span className="flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" />{course.days}</span>
-              <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" />{course.next.split(" - ")[0]}</span>
-            </div>
+          <div className="absolute bottom-4 left-5 right-5">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">{course.style}</p>
           </div>
         </div>
 
-        {/* Card Body */}
         <div className="flex flex-1 flex-col p-6">
-          {/* Summary */}
-          <p className="line-clamp-2 text-sm leading-6 text-ink-soft">{course.summary}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand">{course.days}</p>
+          <h3 className="mt-2 font-serif text-[1.7rem] font-semibold leading-tight text-charcoal">
+            {getCompactTitle(course.title)}
+          </h3>
+          <p className="mt-2 text-sm text-ink-soft">{course.duration} certification track</p>
+          <div className="my-5 h-px bg-stone-200" />
+          <p className="line-clamp-3 text-sm leading-6 text-ink-soft">{course.summary}</p>
 
-          {/* Highlights */}
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-5 space-y-2.5">
             {course.highlights.slice(0, 3).map((h, i) => (
               <li key={i} className="flex items-center gap-2 text-xs text-ink-muted">
-                <CheckCircle2 className="h-4 w-4 text-sage shrink-0" />
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-sage" />
                 <span className="line-clamp-1">{h}</span>
               </li>
             ))}
           </ul>
 
-          {/* Price and CTA */}
-          <div className="mt-auto flex items-end justify-between border-t border-gray-100 pt-5 mt-5">
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-faint">Starts from</p>
-              <p className="mt-1 font-serif text-3xl font-bold leading-none text-charcoal">
-                EUR {course.priceFrom}
-              </p>
-              <p className="text-[9px] text-ink-faint mt-0.5">All inclusive</p>
+          <div className="mt-auto border-t border-stone-200 pt-5">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-faint">Starts from</p>
+                <p className="mt-1 font-serif text-3xl font-semibold leading-none text-charcoal">
+                  EUR {course.priceFrom}
+                </p>
+              </div>
+              <Link href={course.href} className="inline-flex items-center gap-1 text-sm font-semibold text-brand transition hover:text-brand-dark">
+                Details <ArrowUpRight className="h-4 w-4" />
+              </Link>
             </div>
-
-            <Link
-              href={course.href}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-sage-mist px-4 py-2.5 text-sm font-semibold text-sage transition-all duration-300 hover:bg-sage hover:text-white"
-            >
-              {t("viewDetails")} <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            <div className="mt-4">
+              <ApplyModal
+                defaultCourse={course.slug}
+                trigger={
+                  <button className="inline-flex h-11 w-full items-center justify-center rounded-full bg-charcoal px-5 text-sm font-semibold text-white transition hover:bg-brand">
+                    {t("applyNow")}
+                  </button>
+                }
+              />
+            </div>
           </div>
         </div>
-
-        {/* Apply Button - Below card */}
-        <ApplyModal
-          defaultCourse={course.slug}
-          trigger={
-            <button
-              className={`mx-6 mb-6 w-auto rounded-xl py-3.5 text-sm font-semibold transition-all duration-300 ${
-                course.featured
-                  ? "bg-brand text-white hover:bg-brand-dark hover:shadow-lg hover:shadow-brand/20"
-                  : "border-2 border-gray-200 bg-white text-charcoal hover:border-sage hover:text-sage"
-              }`}
-            >
-              {t("applyNow")} - {course.duration}
-            </button>
-          }
-        />
-      </div>
+      </article>
     </motion.div>
   );
 };
@@ -263,9 +282,7 @@ export const FeaturedCourses = () => {
   const locale = useLocale();
   const t = useTranslations("Courses");
   const [apiCourses, setApiCourses] = useState<ApiCourse[] | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const scrollFrameRef = useRef<number | null>(null);
+  const mobileSliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -292,102 +309,76 @@ export const FeaturedCourses = () => {
     [apiCourses, locale],
   );
 
-  useEffect(() => {
-    const refresh = () => updateActiveCard(sliderRef.current, setActiveIndex);
-    refresh();
-    window.addEventListener("resize", refresh);
-    return () => {
-      window.removeEventListener("resize", refresh);
-      if (scrollFrameRef.current !== null) {
-        cancelAnimationFrame(scrollFrameRef.current);
-      }
-    };
-  }, [courses.length]);
-
-  const handleSliderScroll = () => {
-    if (scrollFrameRef.current !== null) return;
-    scrollFrameRef.current = requestAnimationFrame(() => {
-      scrollFrameRef.current = null;
-      const nextIndex = getActiveCardIndex(sliderRef.current);
-      if (nextIndex !== null) {
-        setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
-      }
-    });
-  };
-
-  const scrollSlider = (direction: "prev" | "next") => {
-    const node = sliderRef.current;
+  const scrollMobileSlider = (direction: "prev" | "next") => {
+    const node = mobileSliderRef.current;
     if (!node) return;
-    const current = getActiveCardIndex(node) ?? activeIndex;
-    const cards = Array.from(node.children) as HTMLElement[];
-    const target = cards[Math.max(0, Math.min(cards.length - 1, direction === "next" ? current + 1 : current - 1))];
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      return;
-    }
     node.scrollBy({
-      left: direction === "next" ? node.clientWidth * 0.85 : -node.clientWidth * 0.85,
+      left: direction === "next" ? 300 : -300,
       behavior: "smooth",
     });
   };
 
   return (
-    <section id="courses" className="relative bg-gradient-to-b from-sand to-cream section-padding overflow-hidden">
-      {/* Subtle decorative elements */}
+    <section id="courses" className="relative overflow-hidden bg-[#f5f1ea] py-16 md:py-24">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-gray-200" />
 
       <div className="container-edit relative z-10">
-        {/* Section Header */}
         <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
-          <SectionHeading
-            eyebrow={t("title")}
-            title={
-              <>
-                {t("subtitle")}
-                <span className="text-brand"> Bali YTTC</span>
-              </>
-            }
-            sub={t("enrolmentOpen")}
-          />
-
-          <div className="hidden items-center gap-3 md:flex">
-            <button
-              type="button"
-              onClick={() => scrollSlider("prev")}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-premium-sm transition hover:border-sage hover:text-sage"
-              aria-label="Previous courses"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollSlider("next")}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-premium-sm transition hover:border-sage hover:text-sage"
-              aria-label="Next courses"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </button>
+          <div>
+            <h2 className="font-serif text-5xl font-semibold leading-[0.95] text-charcoal md:text-6xl">
+              Choose Your Path
+            </h2>
+            <div className="mt-9 flex items-center gap-4">
+              <span className="h-px w-20 bg-sage" />
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-sage">
+                Professional Certification Tracks
+              </p>
+            </div>
+          </div>
+          <div className="hidden md:block">
             <Link
               href="/courses"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-charcoal shadow-premium-sm transition-all duration-300 hover:border-sage hover:text-sage"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand transition hover:text-brand-dark"
             >
-              View All Courses <ArrowUpRight className="h-4 w-4" />
+              View All Programs <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
 
-        <div
-          ref={sliderRef}
-          onScroll={handleSliderScroll}
-          className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-10 pt-4 [perspective:1600px] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-[max(2.5rem,calc((100vw-1180px)/2))] [&::-webkit-scrollbar]:hidden"
-        >
+        <div className="relative md:hidden">
+          <button
+            type="button"
+            onClick={() => scrollMobileSlider("prev")}
+            className="absolute left-0 top-[112px] z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-stone-200 bg-white text-charcoal shadow-[0_10px_26px_rgba(35,35,30,0.16)] transition hover:border-sage hover:text-sage"
+            aria-label="Previous courses"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <div
+            ref={mobileSliderRef}
+            className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain scroll-smooth px-5 pb-8 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {courses.map((course) => (
+              <MobileCourseCard key={course.slug} course={course} />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => scrollMobileSlider("next")}
+            className="absolute right-0 top-[112px] z-20 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-stone-200 bg-white text-charcoal shadow-[0_10px_26px_rgba(35,35,30,0.16)] transition hover:border-sage hover:text-sage"
+            aria-label="Next courses"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="hidden gap-6 md:grid md:grid-cols-2 xl:grid-cols-4">
           {courses.map((course, index) => (
             <CourseCard
               key={course.slug}
               course={course}
               index={index}
-              active={index === activeIndex}
-              offset={index - activeIndex}
+              active={course.featured || index === 1}
               t={t}
             />
           ))}

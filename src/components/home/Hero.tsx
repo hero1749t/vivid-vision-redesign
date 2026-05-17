@@ -141,9 +141,6 @@ export const Hero = () => {
             className="mt-10 flex flex-wrap gap-3"
           >
             {[
-              { label: "100hr YTT", bg: "bg-brand" },
-              { label: "200hr YTT", bg: "bg-sage" },
-              { label: "300hr YTT", bg: "bg-gold" },
               { label: "Ubud, Bali", bg: "bg-white/17" },
             ].map((tag) => (
               <span

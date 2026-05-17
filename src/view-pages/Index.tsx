@@ -6,7 +6,6 @@ import { Manifesto } from "@/components/home/Manifesto";
 import { Pillars } from "@/components/home/Pillars";
 import { VideoShowcase } from "@/components/home/VideoShowcase";
 import { Teachers } from "@/components/home/Teachers";
-import { Schedule } from "@/components/home/Schedule";
 import { Experiences } from "@/components/home/Experiences";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -30,7 +29,6 @@ const Index = () => (
     {/* 7. Meet the teachers */}
     <Teachers />
     {/* 8. Upcoming batch dates — urgency/conversion */}
-    <Schedule />
     {/* 9. Beyond the mat — extra experiences */}
     <Experiences />
     {/* 10. Visual proof — gallery */}

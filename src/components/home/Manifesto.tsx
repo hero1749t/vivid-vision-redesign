@@ -1,140 +1,129 @@
 "use client";
+
 import { Reveal } from "@/components/shared/Reveal";
 import { IMG } from "@/data/site";
-import { Link } from "@/i18n/routing";
-import { ArrowRight, CheckCircle2, Award, Leaf, Users, BookOpen } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useRef } from "react";
+
+const whyCards = [
+  {
+    eyebrow: "Graduation Day",
+    title: "Yoga Alliance Certified",
+    desc: "Fully accredited RYS 200 and 300 registry recognized worldwide for international teaching.",
+    image: IMG.graduation,
+  },
+  {
+    eyebrow: "Sanctuary Life",
+    title: "All-Inclusive Ubud Sanctuary",
+    desc: "Immersive stay, plant-based meals, daily practice space, and complete course materials.",
+    image: IMG.classMain,
+  },
+  {
+    eyebrow: "Lifetime Connection",
+    title: "Global Alumni Community",
+    desc: "Join an expansive network of graduates from 70+ countries practicing and teaching worldwide.",
+    image: IMG.certified,
+  },
+  {
+    eyebrow: "Practical Mastery",
+    title: "Hands-on Teaching Practice",
+    desc: "Graduate with real teaching experience, direct alignment feedback, and classroom confidence.",
+    image: IMG.course100,
+  },
+  {
+    eyebrow: "Sacred Culture",
+    title: "Traditional Balinese Blessings",
+    desc: "Take part in purification ceremonies, flower blessings, and temple-based cultural learning.",
+    image: IMG.templePurification,
+  },
+  {
+    eyebrow: "Ongoing Mentorship",
+    title: "Lifetime Support & Mentorship",
+    desc: "Access continuing guidance, teacher check-ins, school updates, and career direction after graduation.",
+    image: IMG.pranayama,
+  },
+];
 
 export const Manifesto = () => {
-  const t = useTranslations("Manifesto");
+  const sliderRef = useRef<HTMLDivElement>(null);
 
-  const translatedStats = [
-    { num: "2,500+", label: "Graduates" },
-    { num: "8 yrs", label: "Established" },
-    { num: "RYS 200 & 300", label: "Yoga Alliance" },
-  ];
+  const scrollSlider = (direction: "prev" | "next") => {
+    const node = sliderRef.current;
+    if (!node) return;
 
-  const highlights = [
-    { text: "Small batches with individual feedback", icon: Users },
-    { text: "Traditional practice backed by practical anatomy", icon: BookOpen },
-    { text: "Daily teaching practice before graduation", icon: CheckCircle2 },
-  ];
+    node.scrollBy({
+      left: direction === "next" ? 310 : -310,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <section className="relative bg-gradient-to-b from-white to-cream py-20 md:py-32 overflow-hidden">
-      {/* Decorative */}
-      <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-brand/5 blur-3xl" />
-      <div className="absolute left-0 bottom-0 h-64 w-64 rounded-full bg-sage/5 blur-3xl" />
-
-      <div className="container-edit relative z-10 grid items-center gap-12 lg:grid-cols-12 lg:gap-20">
-        {/* Left Column */}
-        <div className="lg:col-span-7">
-          <Reveal>
-            <p className="eyebrow text-brand">Why Choose Us</p>
-          </Reveal>
-
-          <Reveal delay={0.05}>
-            <h2 className="mt-5 max-w-3xl font-serif text-[clamp(2rem,4.5vw,3.5rem)] font-bold leading-[1.05] tracking-tight text-charcoal">
-              {t("titleLine1")}
-              <br />
-              <span className="text-brand">{t("titleLine2")}</span>
+    <section id="why-us" className="relative overflow-hidden border-y border-stone-200 bg-white py-16 md:py-24">
+      <div className="container-edit">
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-sage">Why Choose Us</p>
+            <div className="mx-auto my-5 h-px w-16 bg-brand" />
+            <h2 className="font-serif text-4xl font-bold leading-tight text-charcoal md:text-6xl">
+              More Than a <em className="font-serif italic text-brand">Certification</em>
             </h2>
-          </Reveal>
+            <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-ink-soft md:text-base md:leading-8">
+              Bali YTTC is a sanctuary of deep learning. We merge authentic Vedic philosophy with modern alignment in Ubud's most healing environment.
+            </p>
+          </div>
+        </Reveal>
 
-          <Reveal delay={0.1}>
-            <div className="mt-7 max-w-2xl space-y-5 text-base leading-7 text-ink-soft md:text-lg">
-              <p>{t("description1")}</p>
-              <p>{t("description2")}</p>
-            </div>
-          </Reveal>
+        <div className="relative mt-12">
+          <button
+            type="button"
+            onClick={() => scrollSlider("prev")}
+            className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-stone-200 bg-white text-charcoal shadow-[0_10px_28px_rgba(35,35,30,0.14)] transition hover:border-sage hover:text-sage md:inline-flex"
+            aria-label="Scroll why choose us left"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
 
-          {/* Stats row */}
-          <Reveal delay={0.12}>
-            <div className="mt-10 flex gap-8 md:gap-12">
-              {translatedStats.map((s, i) => (
-                <div key={i} className="flex flex-col">
-                  <p className="font-serif text-2xl font-bold text-charcoal md:text-3xl">{s.num}</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-ink-muted font-semibold">{s.label}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-
-          {/* Highlights */}
-          <Reveal delay={0.15}>
-            <div className="mt-10 grid gap-3 sm:grid-cols-1 md:grid-cols-3">
-              {[
-                { text: "Small batches with individual feedback", icon: Award },
-                { text: "Traditional practice with anatomy", icon: Leaf },
-                { text: "Daily teaching practice", icon: CheckCircle2 },
-              ].map((item, i) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={i}
-                    className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-premium-sm transition-all duration-300 hover:border-brand/20 hover:shadow-premium-md hover:-translate-y-1"
-                  >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand/10">
-                      <Icon className="h-5 w-5 text-brand" />
-                    </div>
-                    <p className="text-sm font-medium leading-6 text-ink-soft">{item.text}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </Reveal>
-
-          {/* CTA Buttons */}
-          <Reveal delay={0.2}>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link href="/about"
-                className="btn-primary"
+          <div
+            ref={sliderRef}
+            className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] md:gap-6 md:px-1 [&::-webkit-scrollbar]:hidden"
+          >
+            {whyCards.map((card, index) => (
+              <motion.article
+                key={card.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.45, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative h-[330px] w-[268px] shrink-0 snap-center overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 shadow-[0_18px_50px_rgba(35,35,30,0.13)] md:h-[360px] md:w-[280px]"
               >
-                Learn More <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/instructors"
-                className="btn-outline border-charcoal text-charcoal hover:bg-charcoal hover:text-white"
-              >
-                Meet Our Teachers
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Right Column - Image */}
-        <div className="relative lg:col-span-5">
-          <Reveal y={30}>
-            <div className="overflow-hidden rounded-3xl bg-sand shadow-premium-xl">
-              <img
-                src={IMG.certified}
-                alt="Certified yoga teacher training in Bali"
-                className="aspect-[4/5] h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-          </Reveal>
-
-          {/* Floating stat card */}
-          <Reveal delay={0.18} y={18}>
-            <motion.div
-              whileHover={{ y: -6, scale: 1.02 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="absolute -bottom-6 left-4 right-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-premium-xl md:left-auto md:right-8 md:w-64"
-            >
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-brand">
-                  <Award className="h-6 w-6" />
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/92 via-charcoal/20 to-charcoal/35" />
+                <span className="absolute left-4 top-4 rounded bg-white/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md">
+                  {card.eyebrow}
+                </span>
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <h3 className="font-serif text-[1.35rem] leading-tight text-white">{card.title}</h3>
+                  <p className="mt-3 text-xs leading-6 text-white/75">{card.desc}</p>
                 </div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-ink-muted font-semibold">{t("yearsExperience")}</p>
-              </div>
-              <p className="font-serif text-4xl font-bold text-brand">15+</p>
-              <p className="mt-2 text-sm leading-6 text-ink-soft">
-                Years of combined teaching experience
-              </p>
-            </motion.div>
-          </Reveal>
+              </motion.article>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => scrollSlider("next")}
+            className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-stone-200 bg-white text-charcoal shadow-[0_10px_28px_rgba(35,35,30,0.14)] transition hover:border-sage hover:text-sage md:inline-flex"
+            aria-label="Scroll why choose us right"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </section>

@@ -8,7 +8,7 @@ import { Eye, Sparkles } from "lucide-react";
 import { useLocale } from "next-intl";
 import { getHomeCopy } from "@/lib/home-localized";
 
-const icons = ["🙏", "💪", "🔔", "🤸", "🌅", "🎨"];
+const icons = ["01", "02", "03", "04", "05", "06"];
 
 export const Experiences = () => {
   const copy = getHomeCopy(useLocale());
@@ -41,7 +41,9 @@ export const Experiences = () => {
                     className="pointer-events-none absolute inset-0 flex flex-col justify-between p-6 text-cream group-hover:pointer-events-auto"
                   >
                     <div className="flex items-start justify-between">
-                      <div className="text-4xl drop-shadow-lg">{icons[index] || "✨"}</div>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-white/10 text-sm font-bold tracking-[0.12em] drop-shadow-lg backdrop-blur">
+                        {icons[index] || "07"}
+                      </div>
                       <div className="flex items-center gap-1 rounded-full bg-white/10 px-2 py-1 text-xs text-cream backdrop-blur-sm">
                         <Eye size={12} />
                         <span>{copy.common.view}</span>

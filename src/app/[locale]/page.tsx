@@ -6,7 +6,6 @@ import { Manifesto } from "@/components/home/Manifesto";
 import { Pillars } from "@/components/home/Pillars";
 import { VideoShowcase } from "@/components/home/VideoShowcase";
 import { Teachers } from "@/components/home/Teachers";
-import { Schedule } from "@/components/home/Schedule";
 import { Experiences } from "@/components/home/Experiences";
 import { GalleryTeaser } from "@/components/home/GalleryTeaser";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -24,7 +23,6 @@ export default function HomePage() {
       <Pillars />
       <VideoShowcase />
       <Teachers />
-      <Schedule />
       <Experiences />
       <GalleryTeaser />
       <Testimonials />

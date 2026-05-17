@@ -25,12 +25,12 @@ const menuColumns = [
   {
     title: "Experience",
     links: [
-      { label: "Gallery", to: "/gallery", strong: true },
-      { label: "Activities", to: "/activities" },
-      { label: "Student Stories", to: "/#testimonials" },
+      { label: "Activities", to: "/activities", strong: true },
+      { label: "Gallery", to: "/gallery" },
+      { label: "Testimonials", to: "/#testimonials" },
       { label: "Youtube Videos", to: "/#campus-video" },
       { label: "Blog", to: "/blog" },
-      { label: "Why Ubud", to: "/about" },
+      { label: "FAQ", to: "/#faq" },
     ],
   },
   {
@@ -88,8 +88,8 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
   const desktopLinkClass = isLightMode ? "text-gray-700 hover:text-brand" : "text-white/90 hover:text-white";
   const desktopPanelClass = isLightMode
     ? "border-gray-100 bg-white text-gray-900 shadow-premium-lg"
-    : "border-white/12 bg-black/78 text-white shadow-premium-xl backdrop-blur-xl";
-  const desktopPanelSubClass = isLightMode ? "text-gray-500" : "text-white/60";
+    : "border-white/20 bg-neutral-950/95 text-white shadow-[0_24px_70px_rgba(0,0,0,0.55)] ring-1 ring-white/10";
+  const desktopPanelSubClass = isLightMode ? "text-gray-500" : "text-white/75";
   const desktopPanelItemClass = isLightMode
     ? "hover:bg-sage-mist/50 hover:text-sage"
     : "hover:bg-white/10 hover:text-white";
@@ -101,12 +101,21 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
     { label: "50-Hour Hatha-Vinyasa YTT", description: "Short course", to: "/courses/50hr" },
   ];
 
+  const experienceLinks = [
+    { label: t("activities"), description: "Workshops, ceremonies and Bali culture", to: "/activities" },
+    { label: t("gallery"), description: "Student moments and campus life", to: "/gallery" },
+    { label: t("testimonials"), description: "Real student reviews", to: "/#testimonials" },
+    { label: t("videos"), description: "Campus and alumni video journals", to: "/#campus-video" },
+  ];
+
   return (
     <>
       <header
         style={{ top: `${bannerHeight}px` }}
         className={`fixed inset-x-0 z-50 transition-all duration-300 ${
-          isLightMode ? "border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-md" : "bg-transparent"
+          isLightMode
+            ? "border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur-md"
+            : "border-b border-white/10 bg-black/55 shadow-[0_10px_40px_rgba(0,0,0,0.28)] backdrop-blur-md"
         }`}
       >
         {scrolled && (
@@ -122,10 +131,10 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
         )}
 
         <div className="container-wide" style={{ height: `${NAV_H}px` }}>
-          <div className="flex h-full items-center justify-between gap-4">
-            <Link href="/" className="group flex shrink-0 items-center gap-2.5 transition-opacity hover:opacity-90">
-              <BalieytcLogo className="h-8 w-8 flex-shrink-0" showText={false} />
-              <div className="flex flex-col leading-none">
+          <div className="relative flex h-full items-center justify-between gap-4">
+            <Link href="/" className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-2.5 transition-opacity hover:opacity-90">
+              <BalieytcLogo className="h-10 w-10 flex-shrink-0" showText={false} />
+              <div className="hidden flex-col leading-none sm:flex">
                 <span className={`text-sm font-bold tracking-[0.04em] transition-colors ${textClass}`}>Bali YTTC</span>
                 <span className={`mt-[3px] text-[9px] font-semibold uppercase tracking-[0.16em] transition-colors ${subTextClass}`}>
                   Yoga Teacher Training
@@ -139,10 +148,10 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
                   type="button"
                   className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}
                 >
-                  {t("programs")}
+                  {t("trainings")}
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
                 </button>
-                <div className="invisible absolute left-0 top-full z-50 w-[300px] translate-y-2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="invisible absolute left-0 top-full z-50 w-[320px] translate-y-2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                   <div className={`rounded-xl border p-2 ${desktopPanelClass}`}>
                     <div className={`px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] ${desktopPanelSubClass}`}>
                       {t("trainings")}
@@ -160,15 +169,35 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
                   </div>
                 </div>
               </div>
-              <Link href="/about" className={`inline-flex h-9 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}>
-                {t("about")}
-              </Link>
-              <Link href="/blog" className={`inline-flex h-9 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}>
-                {t("blog")}
-              </Link>
+              <div className="group relative">
+                <button
+                  type="button"
+                  className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}
+                >
+                  {t("experience")}
+                  <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+                </button>
+                <div className="invisible absolute left-0 top-full z-50 w-[320px] translate-y-2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className={`rounded-xl border p-2 ${desktopPanelClass}`}>
+                    <div className={`px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] ${desktopPanelSubClass}`}>
+                      {t("experience")}
+                    </div>
+                    {experienceLinks.map((item) => (
+                      <Link
+                        key={item.to}
+                        href={item.to}
+                        className={`block rounded-lg px-3 py-2.5 transition-colors ${desktopPanelItemClass}`}
+                      >
+                        <span className="block text-sm font-bold">{item.label}</span>
+                        <span className={`mt-0.5 block text-xs ${desktopPanelSubClass}`}>{item.description}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </nav>
 
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="ml-auto flex shrink-0 items-center gap-2">
               <LanguageSwitcher isLightMode={isLightMode} />
               <Link
                 href="/login"
