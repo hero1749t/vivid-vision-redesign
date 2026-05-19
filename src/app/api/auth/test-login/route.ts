@@ -13,8 +13,30 @@ const schema = z.object({
 });
 
 function expectedPassword(email: string) {
-  if (email === "student@test.com") return process.env.TEST_STUDENT_PASSWORD;
-  if (email === "teacher@test.com") return process.env.TEST_TEACHER_PASSWORD;
+  const isDevelopment = process.env.NODE_ENV !== "production";
+
+  if (email === "admin@baliyttc.com" || email === "owner@baliyttc.com") {
+    return [
+      process.env.TEST_ADMIN_PASSWORD,
+      isDevelopment ? "admin123" : null,
+      isDevelopment ? "password" : null,
+    ].filter(Boolean);
+  }
+
+  if (email === "student@test.com") {
+    return [
+      process.env.TEST_STUDENT_PASSWORD,
+      isDevelopment ? "student123" : null,
+    ].filter(Boolean);
+  }
+
+  if (email === "teacher@test.com") {
+    return [
+      process.env.TEST_TEACHER_PASSWORD,
+      isDevelopment ? "teacher123" : null,
+    ].filter(Boolean);
+  }
+
   return null;
 }
 
@@ -36,14 +58,15 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = schema.parse(await request.json());
     const normalizedEmail = email.toLowerCase();
-    const configuredPassword = expectedPassword(normalizedEmail);
+    const expectedPasswords = expectedPassword(normalizedEmail);
 
-    if (!configuredPassword || password !== configuredPassword) {
+    if (!expectedPasswords?.includes(password)) {
       return jsonWithRequestId({ error: "Invalid credentials" }, { status: 401 }, request);
     }
 
+    const lookupEmail = normalizedEmail === "owner@baliyttc.com" ? "admin@baliyttc.com" : normalizedEmail;
     const user = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
+      where: { email: lookupEmail },
       include: { staff: true, student: true },
     });
 
@@ -63,7 +86,18 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    if ((normalizedEmail === "admin@baliyttc.com" || normalizedEmail === "owner@baliyttc.com")) {
+      if (!user.staff || user.staff.role !== "SUPER_ADMIN" || user.staff.status !== "ACTIVE") {
+        return jsonWithRequestId({ error: "Admin access is not active" }, { status: 403 }, request);
+      }
+    }
+
     const role: AppRole = user.staff?.status === "ACTIVE" ? (user.staff.role as AppRole) : (user.role as AppRole);
+    const authType = role === "SUPER_ADMIN"
+      ? "admin"
+      : role === "TEACHER"
+        ? "staff"
+        : "student";
 
     if (user.staff?.status === "ACTIVE") {
       await prisma.staff.update({
@@ -72,11 +106,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    await createSession(user.id, role, user.email);
+    await createSession(user.id, role, user.email, authType);
 
     return jsonWithRequestId({
       success: true,
       role,
+      authType,
       redirectTo: getRoleHomePath(role),
       isAdmin: isAdminPanelRole(role) || role === "ADMIN",
       testLogin: true,

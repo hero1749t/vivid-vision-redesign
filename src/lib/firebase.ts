@@ -62,24 +62,28 @@ export interface LoginResult {
 
 // Auth functions
 export async function loginWithEmail(email: string, password: string) {
-  // Demo mode - check against test users
+  // Demo mode - create a real server session through the test-login route.
   if (!isFirebaseConfigured()) {
-    const testUser = TEST_USERS.find(
-      (u) => u.email === email && u.password === password
-    );
-    if (testUser) {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    const response = await fetch("/api/auth/test-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json().catch(() => null);
+
+    if (response.ok && data?.success) {
       return {
         user: {
           uid: email,
-          email: testUser.email,
-          displayName: testUser.name,
+          email,
+          displayName: email.split("@")[0],
         },
-        role: testUser.role,
-        redirectTo: testUser.role === "TEACHER" ? "/app/teacher/dashboard" : testUser.role === "SUPER_ADMIN" ? "/admin/dashboard" : "/app/dashboard",
+        role: data.role,
+        redirectTo: data.redirectTo,
       };
     }
-    throw new Error("Invalid credentials");
+
+    throw new Error(data?.error || "Invalid credentials");
   }
 
   // Real Firebase auth
