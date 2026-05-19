@@ -1,66 +1,76 @@
 "use client";
 import { motion } from "framer-motion";
 import { VideoPlayer } from "@/components/shared/VideoPlayer";
-import { IMG } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
 import { SectionHeading } from "@/components/shared/SectionHeading";
-import { Play, Users, Award, Heart, MessageCircle } from "lucide-react";
-import Link from "next/link";
+import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
+import { Play, Award, MessageCircle, ArrowLeft } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 const videos = [
   {
     youtubeId: "TNzFh1N3GI0",
-    poster: IMG.heroCeremony,
-    title: "Bali YTTC Campus Tour",
-    category: "Campus",
-    duration: "5:32",
-    description: "Walk through our world-class yoga sanctuary in Ubud. See the meditation halls, yoga studios, and cozy accommodations.",
+    poster: "https://img.youtube.com/vi/TNzFh1N3GI0/hqdefault.jpg",
+    title: "Bali YTTC Yoga Teacher Training",
+    category: "Training",
+    duration: "YouTube",
+    description: "A real look at Bali YTTC training, practice, teachers, and student life in Ubud.",
   },
   {
-    youtubeId: "dQw4w9WgXcQ",
-    poster: IMG.classMain,
-    title: "Student Transformation Stories",
-    category: "Testimonials",
-    duration: "8:15",
-    description: "Hear from our alumni about how their yoga teacher training journey changed their lives and opened new career paths.",
-  },
-  {
-    youtubeId: "ABC123demo123",
-    poster: IMG.ceremony200,
-    title: "A Day in the Life",
+    youtubeId: "ZtGLDbj5wTs",
+    poster: "https://img.youtube.com/vi/ZtGLDbj5wTs/hqdefault.jpg",
+    title: "Bali Yoga Teacher Training Experience",
     category: "Student Life",
-    duration: "6:48",
-    description: "Experience a typical training day at Bali YTTC - from morning meditation to evening satsang.",
+    duration: "YouTube",
+    description: "Campus atmosphere, daily practice, and training moments from Bali Yoga Teacher Training Center.",
   },
   {
-    youtubeId: "XYZ456demo456",
-    poster: IMG.graduation,
-    title: "Graduation Ceremony 2025",
+    youtubeId: "1MKgYxzERks",
+    poster: "https://img.youtube.com/vi/1MKgYxzERks/hqdefault.jpg",
+    title: "Yoga Teacher Training in Bali",
+    category: "Campus",
+    duration: "YouTube",
+    description: "Explore the school environment, teaching space, and Bali YTTC learning experience.",
+  },
+  {
+    youtubeId: "gMPL_lF6KF8",
+    poster: "https://img.youtube.com/vi/gMPL_lF6KF8/hqdefault.jpg",
+    title: "Bali YTTC Student Journey",
     category: "Ceremony",
-    duration: "12:20",
-    description: "Celebrate with our latest batch of certified yoga teachers as they receive their Yoga Alliance certifications.",
+    duration: "YouTube",
+    description: "Student journey, ceremony moments, and the transformation around teacher training in Bali.",
   },
 ];
 
 const videoCategories = [
   { name: "All Videos", count: videos.length },
-  { name: "Campus", count: 1 },
-  { name: "Testimonials", count: 1 },
+  { name: "Training", count: 1 },
   { name: "Student Life", count: 1 },
+  { name: "Campus", count: 1 },
   { name: "Ceremony", count: 1 },
 ];
 
 export default function VideosPage() {
   return (
-    <div className="min-h-screen bg-[#FAFAFA]">
+    <NextLayoutWrapper>
+      <div className="min-h-screen bg-[#FAFAFA]">
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-24 overflow-hidden">
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 pb-20 pt-40 text-white md:pb-24 md:pt-44">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500 rounded-full blur-[120px]" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-600 rounded-full blur-[120px]" />
         </div>
 
         <div className="container-wide relative z-10">
+          <Reveal>
+            <Link
+              href="/"
+              className="mb-10 inline-flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-white/70 transition-colors hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Link>
+          </Reveal>
           <Reveal>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -69,12 +79,12 @@ export default function VideosPage() {
             >
               <div className="inline-flex items-center gap-2 mb-6">
                 <Play className="h-5 w-5 text-orange-400" />
-                <span className="text-orange-400 font-semibold text-sm uppercase tracking-wider">Video Gallery</span>
+                <span className="label-caps text-orange-400">Video Gallery</span>
               </div>
-              <h1 className="font-serif font-bold text-4xl md:text-5xl lg:text-6xl mb-6">
+              <h1 className="display-xl mb-6">
                 Experience Bali YTTC
               </h1>
-              <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
+              <p className="body-lg text-gray-300">
                 Watch videos from our campus, hear student stories, and see what makes our yoga teacher training unique.
               </p>
             </motion.div>
@@ -103,12 +113,12 @@ export default function VideosPage() {
               </div>
               <div className="mt-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold">
+                  <span className="label-caps rounded-full bg-orange-100 px-3 py-1 text-orange-700">
                     {videos[0].category}
                   </span>
                   <span className="text-sm text-gray-500">{videos[0].duration}</span>
                 </div>
-                <h2 className="font-serif font-bold text-2xl md:text-3xl text-gray-900 mb-3">
+                <h2 className="display-md mb-3 text-gray-900">
                   {videos[0].title}
                 </h2>
                 <p className="text-gray-600 leading-relaxed">
@@ -152,12 +162,12 @@ export default function VideosPage() {
                   </div>
                   <div className="mt-4">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">
+                      <span className="label-caps rounded-full bg-gray-100 px-2.5 py-0.5 text-gray-700">
                         {video.category}
                       </span>
                       <span className="text-xs text-gray-400">{video.duration}</span>
                     </div>
-                    <h3 className="font-bold text-lg text-gray-900 group-hover:text-orange-600 transition-colors">
+                    <h3 className="display-sm text-gray-900 transition-colors group-hover:text-orange-600">
                       {video.title}
                     </h3>
                     <p className="text-sm text-gray-500 mt-1 line-clamp-2">
@@ -175,7 +185,7 @@ export default function VideosPage() {
       <section className="bg-gradient-to-br from-orange-500 to-orange-600 py-20 text-white">
         <div className="container-wide">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif font-bold text-3xl md:text-4xl mb-6">
+            <h2 className="display-lg mb-6">
               Ready to Create Your Own Story?
             </h2>
             <p className="text-lg text-orange-100 mb-8">
@@ -184,7 +194,7 @@ export default function VideosPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/courses/200hr"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-orange-600 font-bold hover:bg-orange-50 transition-colors shadow-lg"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 text-[0.8125rem] font-medium uppercase tracking-[0.08em] text-orange-600 shadow-lg transition-colors hover:bg-orange-50"
               >
                 <Award className="h-5 w-5" />
                 Apply for Training
@@ -200,6 +210,7 @@ export default function VideosPage() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </NextLayoutWrapper>
   );
 }

@@ -11,7 +11,7 @@ CREATE TYPE "StaffStatus" AS ENUM ('PENDING', 'ACTIVE', 'INACTIVE');
 CREATE TYPE "BatchStatus" AS ENUM ('DRAFT', 'OPEN', 'FULL', 'CLOSED');
 
 -- CreateEnum
-CREATE TYPE "RoomType" AS ENUM ('SHARED', 'PRIVATE', 'LUXURY');
+CREATE TYPE "RoomType" AS ENUM ('SHARED', 'PRIVATE');
 
 -- CreateEnum
 CREATE TYPE "PaymentType" AS ENUM ('DEPOSIT', 'FULL');

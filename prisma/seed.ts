@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { PrismaClient, UserRole, StaffRole, BatchStatus, RoomType, PaymentType, PostStatus } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
+import { STATIC_BLOG_POSTS } from '../src/data/blog';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -96,13 +97,13 @@ async function main() {
     update: {},
     create: {
       slug: '100hr',
-      name: '100-Hour Yoga Teacher Training',
+      name: '100-Hour Multi-Style Yoga Teacher Training',
       duration: '100 Hours | 11 Days',
-      summary: 'An 11-day multi-style Yoga Teacher Training course for beginner yogis, accredited by Yoga Alliance.',
-      description: 'A focused first immersion into authentic yoga. Perfect for beginners wanting to start their yoga journey.',
-      priceFrom: 999,
-      priceFull: 1299,
-      image: 'https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Art-of-adjustment-Bali-YTTC.jpg',
+      summary: 'An 11-day beginner-friendly foundation in Hatha, Ashtanga and Vinyasa practice, designed as a compact immersion or first step toward a 200-hour certification path.',
+      description: 'A focused first immersion into authentic yoga for beginners and early practitioners. Students build practical foundations in asana, breathwork, philosophy, anatomy and teaching practice in Ubud, Bali.',
+      priceFrom: 699,
+      priceFull: 999,
+      image: 'https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:1080/h:1080/q:eco/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/09/100-hour-Yoga-Teacher-Training-Vinyasa-class-in-Bali.jpg',
       isActive: true,
     },
   });
@@ -112,13 +113,13 @@ async function main() {
     update: {},
     create: {
       slug: '200hr',
-      name: '200-Hour Yoga Teacher Training',
+      name: '200-Hour Hatha Ashtanga Vinyasa YTT',
       duration: '200 Hours | 21 Days',
-      summary: 'Our flagship 21-day immersion for beginner and intermediate yogis. Become a Yoga Alliance certified teacher.',
-      description: 'Comprehensive training covering Hatha, Ashtanga, Vinyasa, anatomy, philosophy, and teaching methodology.',
+      summary: 'A 21-day Yoga Alliance certified teacher training in Ubud for beginners and committed practitioners, covering Hatha, Ashtanga, Vinyasa, anatomy, philosophy and teaching methodology.',
+      description: 'Bali YTTC complete foundation program for students who want to become confident yoga teachers through daily practice, alignment, anatomy, philosophy, pranayama, meditation and supervised teaching labs.',
       priceFrom: 1499,
       priceFull: 1899,
-      image: 'https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/200-hour-Yoga-Teacher-Training-in-bali-1.jpg',
+      image: 'https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:1080/h:1080/q:eco/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/200-hour-Yoga-Teacher-Training-for-Beginners.jpg',
       isActive: true,
     },
   });
@@ -128,10 +129,10 @@ async function main() {
     update: {},
     create: {
       slug: '300hr',
-      name: '300-Hour Advanced Teacher Training',
+      name: '300-Hour Advanced Yoga Teacher Training',
       duration: '300 Hours | 28 Days',
-      summary: 'For certified 200-hour teachers ready to deepen practice and teaching through advanced modules.',
-      description: 'Advanced asana, yoga therapy, Bhagavad Gita study, and one-on-one mentorship.',
+      summary: 'A 28-day advanced Yoga Alliance pathway for 200-hour graduates ready to deepen practice, refine teaching, study yoga therapy and move toward RYT-500 level training.',
+      description: 'An advanced training for certified 200-hour teachers covering advanced asana, sequencing, meditation, pranayama, energy body anatomy, yoga therapy foundations, deeper philosophy and teaching mentorship.',
       priceFrom: 1899,
       priceFull: 2299,
       image: 'https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Yoga-Retreat-in-Bali.jpg',
@@ -256,7 +257,6 @@ async function main() {
       data: [
         { batchId: batch200Mar.id, type: RoomType.SHARED, price: 0, mandatory: true },
         { batchId: batch200Mar.id, type: RoomType.PRIVATE, price: 400, mandatory: false },
-        { batchId: batch200Mar.id, type: RoomType.LUXURY, price: 900, mandatory: false },
       ],
       skipDuplicates: true,
     });
@@ -630,39 +630,27 @@ async function main() {
   // 10. BLOG POSTS
   // ─────────────────────────────────────────────
 
-  const blogPosts = [
-    {
-      title: 'Why Bali is the Perfect Place for Yoga Teacher Training',
-      slug: 'why-bali-perfect-yoga-teacher-training',
-      excerpt: 'Discover why Ubud, Bali has become one of the world\'s most sought-after destinations for yoga teacher training programs.',
-      content: 'Bali offers a unique combination of spiritual energy, natural beauty, and a supportive community that makes it ideal for immersive yoga training...',
-      category: 'Yoga',
-      tags: ['yoga', 'bali', 'ubud', 'yoga teacher training'],
-      author: 'Vivek Kalura',
-      status: PostStatus.PUBLISHED,
-      publishedAt: new Date('2025-01-15'),
-      locale: 'en',
-      readTime: 5,
-    },
-    {
-      title: 'What to Expect During Your 200-Hour YTT',
-      slug: 'what-to-expect-200-hour-ytt',
-      excerpt: 'A comprehensive guide to what you\'ll experience during your 21-day yoga teacher training journey.',
-      content: 'The 200-hour yoga teacher training is a transformative journey that goes beyond just learning how to teach yoga...',
-      category: 'Guide',
-      tags: ['200-hour', 'ytt', 'guide', 'what to expect'],
-      author: 'Sachin Rautela',
-      status: PostStatus.PUBLISHED,
-      publishedAt: new Date('2025-02-20'),
-      locale: 'en',
-      readTime: 8,
-    },
-  ];
+  const blogPosts = STATIC_BLOG_POSTS.map((post) => ({
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    content: post.content,
+    featuredImage: post.featuredImage,
+    category: post.category,
+    tags: post.tags,
+    author: post.author,
+    status: PostStatus.PUBLISHED,
+    publishedAt: new Date(post.publishedAt),
+    locale: 'en',
+    readTime: post.readTime,
+    metaTitle: post.title,
+    metaDescription: post.excerpt,
+  }));
 
   for (const post of blogPosts) {
     await prisma.blogPost.upsert({
-      where: { slug: post.slug },
-      update: {},
+      where: { slug_locale: { slug: post.slug, locale: post.locale } },
+      update: post,
       create: post,
     });
   }

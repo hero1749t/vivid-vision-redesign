@@ -18,16 +18,15 @@ export const BalieytcLogo = ({
       <img
         src={logoUrl}
         alt={`${siteName} logo`}
-        className={`${className} object-contain drop-shadow-sm`}
+        className={`${className} object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]`}
         loading="eager"
         decoding="async"
       />
 
       {showText && (
         <div className={`leading-tight ${textClassName}`}>
-          <p className="font-serif text-lg font-bold text-current">{siteName}</p>
-          <p className="text-[8px] font-medium uppercase tracking-[0.2em] text-current/70">
-            Yoga Teacher Training
+          <p className="font-serif text-[1.35rem] font-semibold leading-none tracking-[0.015em] text-current">
+            {siteName}
           </p>
         </div>
       )}

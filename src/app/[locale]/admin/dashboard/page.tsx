@@ -68,7 +68,7 @@ interface Batch {
   waitlistEnabled?: boolean;
   accommodation?: Array<{
     id: string;
-    type: "SHARED" | "PRIVATE" | "LUXURY";
+    type: "SHARED" | "PRIVATE";
     price: number;
     mandatory: boolean;
   }>;
@@ -284,7 +284,6 @@ export default function AdminDashboard() {
     accommodation: [
       { type: "SHARED", price: "0", mandatory: false },
       { type: "PRIVATE", price: "0", mandatory: false },
-      { type: "LUXURY", price: "0", mandatory: false },
     ],
   });
   const [moduleSubmitting, setModuleSubmitting] = useState<"coupon" | "batch" | null>(null);
@@ -916,7 +915,6 @@ export default function AdminDashboard() {
         accommodation: [
           { type: "SHARED", price: "0", mandatory: false },
           { type: "PRIVATE", price: "0", mandatory: false },
-          { type: "LUXURY", price: "0", mandatory: false },
         ],
       });
       await fetchData();
@@ -1024,7 +1022,6 @@ export default function AdminDashboard() {
         accommodation: [
           { type: "SHARED", price: "0", mandatory: false },
           { type: "PRIVATE", price: "0", mandatory: false },
-          { type: "LUXURY", price: "0", mandatory: false },
         ],
       });
       await fetchData();

@@ -2,10 +2,9 @@ import prisma from "@/lib/prisma";
 import { DiscountType, RoomType } from "@prisma/client";
 import { calculatePrice } from "@/lib/payments/pricing";
 
-const fallbackAccommodationPrices: Record<RoomType, number> = {
+const fallbackAccommodationPrices: Partial<Record<RoomType, number>> = {
   SHARED: 0,
   PRIVATE: 400,
-  LUXURY: 900,
 };
 
 function applyCouponDiscount(params: {
@@ -103,7 +102,8 @@ export async function resolveEnrollmentPricing(input: {
 
   const accommodationPrice =
     batch?.accommodation.find((option) => option.type === input.accommodation)?.price ??
-    fallbackAccommodationPrices[input.accommodation];
+    fallbackAccommodationPrices[input.accommodation] ??
+    0;
 
   const activeCoupon =
     coupon &&

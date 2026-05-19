@@ -1,12 +1,11 @@
 "use client";
 import { COURSES } from "@/data/site";
 import { Link } from "@/i18n/routing";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Flame, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
-import { ApplyModal } from "@/components/shared/ApplyModal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 type ApiCourse = {
   id: string;
@@ -41,34 +40,6 @@ const formatBatchDate = (date?: string | null, locale = "en") => {
   const parsed = new Date(date);
   if (Number.isNaN(parsed.getTime())) return "Next dates";
   return new Intl.DateTimeFormat(locale, { month: "short", day: "numeric" }).format(parsed);
-};
-
-const getActiveCardIndex = (
-  node: HTMLDivElement | null,
-): number | null => {
-  if (!node) return null;
-  const cards = Array.from(node.children) as HTMLElement[];
-  if (!cards.length) return null;
-
-  const viewportCenter = node.getBoundingClientRect().left + node.clientWidth / 2;
-  const nearest = cards.reduce(
-    (closest, card, index) => {
-      const rect = card.getBoundingClientRect();
-      const distance = Math.abs(rect.left + rect.width / 2 - viewportCenter);
-      return distance < closest.distance ? { index, distance } : closest;
-    },
-    { index: 0, distance: Number.POSITIVE_INFINITY },
-  );
-
-  return nearest.index;
-};
-
-const updateActiveCard = (
-  node: HTMLDivElement | null,
-  setActiveIndex: (index: number) => void,
-) => {
-  const index = getActiveCardIndex(node);
-  if (index !== null) setActiveIndex(index);
 };
 
 const normalizeApiCourse = (course: ApiCourse, index: number, locale: string): DisplayCourse => {
@@ -126,9 +97,9 @@ const getCompactTitle = (title: string) =>
 const MobileCourseCard = ({ course }: { course: DisplayCourse }) => (
   <Link
     href={course.href}
-    className="group flex w-[280px] shrink-0 snap-center flex-col overflow-hidden rounded-[22px] border border-stone-200 bg-white shadow-[0_16px_42px_rgba(35,35,30,0.12)] transition hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(35,35,30,0.16)]"
+    className="group flex w-[276px] shrink-0 snap-center flex-col overflow-hidden rounded-[10px] border border-stone-200 bg-white shadow-[0_10px_26px_rgba(35,35,30,0.07)] transition hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(35,35,30,0.12)]"
   >
-    <div className="relative h-[200px] overflow-hidden">
+    <div className="relative h-[154px] overflow-hidden">
       <img
         src={course.image}
         alt={course.title}
@@ -136,26 +107,22 @@ const MobileCourseCard = ({ course }: { course: DisplayCourse }) => (
         loading="lazy"
         decoding="async"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/65 via-charcoal/10 to-transparent" />
-      <span className="absolute left-4 top-4 rounded-full bg-sage px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-lg">
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/35 via-transparent to-transparent" />
+      <span className="absolute left-4 top-4 rounded-[3px] bg-sage px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white shadow-lg">
         {getMobileBadge(course)}
-      </span>
-      <span className="absolute bottom-4 left-4 rounded-full bg-white/92 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-charcoal shadow-sm">
-        {course.seats}
       </span>
     </div>
 
-    <div className="flex min-h-[230px] flex-col p-6">
-      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-sage">{course.days}</p>
-      <h3 className="mt-2 font-serif text-[1.55rem] leading-[1.08] text-charcoal">
+    <div className="flex min-h-[126px] flex-col p-4">
+      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-sage">{course.days}</p>
+      <h3 className="mt-1 font-serif text-[1.16rem] leading-[1.18] text-charcoal">
         {getCompactTitle(course.title)}
       </h3>
-      <p className="mt-4 line-clamp-3 text-sm leading-6 text-ink-soft">{course.summary}</p>
 
-      <div className="mt-auto flex items-end justify-between border-t border-stone-100 pt-5">
+      <div className="mt-auto flex items-end justify-between border-t border-stone-100 pt-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-ink-faint">From</p>
-          <p className="mt-1 font-serif text-2xl font-bold leading-none text-charcoal">EUR {course.priceFrom}</p>
+          <p className="price-label">From</p>
+          <p className="price-value mt-1 text-[1.25rem]">EUR {course.priceFrom}</p>
         </div>
         <span className="inline-flex items-center gap-1 text-sm font-semibold text-sage">
           Details <ArrowUpRight className="h-4 w-4" />
@@ -169,12 +136,10 @@ const CourseCard = ({
   course,
   index,
   active,
-  t,
 }: {
   course: DisplayCourse;
   index: number;
   active: boolean;
-  t: any;
 }) => {
   const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
@@ -193,8 +158,11 @@ const CourseCard = ({
       viewport={{ once: true, margin: "-50px" }}
       className="group flex h-full flex-col"
     >
-      <article className={`relative flex h-full min-h-[530px] flex-col overflow-hidden rounded-[6px] bg-white shadow-[0_18px_48px_rgba(42,36,28,0.10)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(42,36,28,0.16)] ${course.featured || active ? "ring-1 ring-brand/75" : "ring-1 ring-stone-200"}`}>
-        <div className="relative h-[210px] shrink-0 overflow-hidden">
+      <Link
+        href={course.href}
+        className={`relative flex h-full min-h-[358px] flex-col overflow-hidden rounded-[8px] bg-white shadow-[0_12px_28px_rgba(42,36,28,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(42,36,28,0.11)] ${course.featured || active ? "ring-1 ring-brand/70" : "ring-1 ring-stone-200"}`}
+      >
+        <div className="relative h-[174px] shrink-0 overflow-hidden xl:h-[184px]">
           <img
             src={course.image}
             alt={course.title}
@@ -203,76 +171,38 @@ const CourseCard = ({
             decoding="async"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
 
-          <div className="absolute left-4 right-4 top-4 flex items-start justify-between">
-            {course.featured ? (
-              <div className="flex items-center gap-1.5 rounded-[3px] bg-sage px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-lg">
-                <Flame className="h-3 w-3" /> Most Popular
-              </div>
-            ) : (
-              <div className="rounded-[3px] bg-sage px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-lg">
-                {getMobileBadge(course)}
-              </div>
-            )}
-
-            <div className={`rounded-full px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider shadow-sm backdrop-blur-sm ${
-              course.seats.toLowerCase().includes("4") || course.seats.toLowerCase().includes("6")
-                ? "bg-red-500/90 text-white"
-                : "bg-white/90 text-charcoal"
-            }`}>
-              {course.seats}
-            </div>
-          </div>
-
-          <div className="absolute bottom-4 left-5 right-5">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">{course.style}</p>
-          </div>
+          <span className="absolute left-4 top-4 rounded-[3px] bg-sage px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.13em] text-white shadow-lg">
+            {getMobileBadge(course)}
+          </span>
         </div>
 
-        <div className="flex flex-1 flex-col p-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand">{course.days}</p>
-          <h3 className="mt-2 font-serif text-[1.7rem] font-semibold leading-tight text-charcoal">
+        <div className="flex flex-1 flex-col p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand">{course.days}</p>
+          <h3 className="mt-2 font-serif text-[1.22rem] font-semibold leading-[1.1] text-charcoal">
             {getCompactTitle(course.title)}
           </h3>
-          <p className="mt-2 text-sm text-ink-soft">{course.duration} certification track</p>
-          <div className="my-5 h-px bg-stone-200" />
-          <p className="line-clamp-3 text-sm leading-6 text-ink-soft">{course.summary}</p>
+          <p className="mt-1.5 text-[13px] text-ink-soft">{course.duration} certification track</p>
+          <p className="mt-3 line-clamp-2 text-[13px] leading-6 text-ink-soft">
+            {course.summary}
+          </p>
 
-          <ul className="mt-5 space-y-2.5">
-            {course.highlights.slice(0, 3).map((h, i) => (
-              <li key={i} className="flex items-center gap-2 text-xs text-ink-muted">
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-sage" />
-                <span className="line-clamp-1">{h}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-auto border-t border-stone-200 pt-5">
+          <div className="mt-auto border-t border-stone-200 pt-3">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-ink-faint">Starts from</p>
-                <p className="mt-1 font-serif text-3xl font-semibold leading-none text-charcoal">
-                  EUR {course.priceFrom}
+                <p className="price-label">Starts from</p>
+                <p className="price-value mt-1">
+                  EUR {course.priceFrom.toLocaleString("en-US")}
                 </p>
               </div>
-              <Link href={course.href} className="inline-flex items-center gap-1 text-sm font-semibold text-brand transition hover:text-brand-dark">
-                Details <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="mt-4">
-              <ApplyModal
-                defaultCourse={course.slug}
-                trigger={
-                  <button className="inline-flex h-11 w-full items-center justify-center rounded-full bg-charcoal px-5 text-sm font-semibold text-white transition hover:bg-brand">
-                    {t("applyNow")}
-                  </button>
-                }
-              />
+              <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand transition group-hover:text-brand-dark">
+                Details <ArrowUpRight className="h-3.5 w-3.5" />
+              </span>
             </div>
           </div>
         </div>
-      </article>
+      </Link>
     </motion.div>
   );
 };
@@ -280,7 +210,6 @@ const CourseCard = ({
 export const FeaturedCourses = () => {
   const params = useParams<{ locale?: string }>();
   const locale = useLocale();
-  const t = useTranslations("Courses");
   const [apiCourses, setApiCourses] = useState<ApiCourse[] | null>(null);
   const mobileSliderRef = useRef<HTMLDivElement>(null);
 
@@ -319,18 +248,18 @@ export const FeaturedCourses = () => {
   };
 
   return (
-    <section id="courses" className="relative overflow-hidden bg-[#f5f1ea] py-16 md:py-24">
+    <section id="courses" className="relative overflow-hidden bg-[#f7f4ef] py-7 md:py-10">
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-gray-200" />
 
       <div className="container-edit relative z-10">
-        <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
+        <div className="mb-5 flex flex-col gap-5 md:mb-7 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="font-serif text-5xl font-semibold leading-[0.95] text-charcoal md:text-6xl">
+            <h2 className="display-lg text-charcoal xl:hidden">
               Choose Your Path
             </h2>
-            <div className="mt-9 flex items-center gap-4">
-              <span className="h-px w-20 bg-sage" />
-              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-sage">
+            <div className="mt-5 flex items-center gap-4 xl:mt-0">
+              <span className="h-px w-20 bg-sage xl:w-28" />
+              <p className="label-caps text-sage">
                 Professional Certification Tracks
               </p>
             </div>
@@ -356,7 +285,7 @@ export const FeaturedCourses = () => {
           </button>
           <div
             ref={mobileSliderRef}
-            className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain scroll-smooth px-5 pb-8 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-5 pb-6 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {courses.map((course) => (
               <MobileCourseCard key={course.slug} course={course} />
@@ -372,20 +301,19 @@ export const FeaturedCourses = () => {
           </button>
         </div>
 
-        <div className="hidden gap-6 md:grid md:grid-cols-2 xl:grid-cols-4">
+        <div className="hidden gap-5 md:grid md:grid-cols-2 xl:grid-cols-4">
           {courses.map((course, index) => (
             <CourseCard
               key={course.slug}
               course={course}
               index={index}
               active={course.featured || index === 1}
-              t={t}
             />
           ))}
         </div>
 
         {/* Mobile CTA */}
-        <div className="mt-8 text-center md:hidden">
+        <div className="mt-5 text-center md:hidden">
           <Link href="/courses"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 text-sm font-medium text-white transition-colors hover:bg-sage"
           >

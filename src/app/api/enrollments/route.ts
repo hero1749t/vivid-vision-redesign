@@ -14,7 +14,7 @@ const enrollmentSchema = z.object({
   phone: z.string().min(6),
   course: z.string(),
   batchId: z.string().optional(),
-  accommodation: z.enum(["SHARED", "PRIVATE", "LUXURY"]).default("SHARED"),
+  accommodation: z.enum(["SHARED", "PRIVATE"]).default("SHARED"),
   paymentType: z.enum(["DEPOSIT", "FULL"]).default("DEPOSIT"),
   amount: z.number().optional(),
   currency: z.string().default("USD"),

@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect } from "react";
-import { ArrowRight, MapPin, Play, Sparkles } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { Link } from "@/i18n/routing";
@@ -63,49 +63,40 @@ export const Hero = () => {
       </motion.div>
 
       {/* Clean gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/40 via-charcoal/20 to-charcoal/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/35 via-charcoal/18 to-charcoal/75 md:from-charcoal/40 md:via-charcoal/20 md:to-charcoal/60" />
+      <div className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/70 via-black/24 to-transparent md:hidden" />
 
       {/* Video content overlay - fades on scroll */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-10 flex min-h-screen flex-col justify-end px-6 pb-12 pt-32 sm:px-8 md:px-12 lg:px-16"
+        className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-36 pt-32 sm:px-8 md:min-h-screen md:px-12 md:pb-12 lg:px-16"
       >
         <div className="mx-auto w-full max-w-7xl">
-          {/* Location Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="mb-6"
-          >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-7 py-2.7 text-sm font-medium text-white backdrop-blur-sm">
-              <MapPin className="h-4 w-4 text-brand" />
-              <span>{t("location")}</span>
-              <span className="h-px w-4 bg-white/30" />
-              <Sparkles className="h-4 w-4 text-gold" />
-              <span>Yoga Alliance RYS</span>
-            </div>
-          </motion.div>
 
-          {/* Main Heading */}
+          {/* Main Heading - Two Lines */}
           <div className="max-w-7xl">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-serif text-[clamp(2.8rem,7vw,7.7rem)] font-bold leading-[1.02] tracking-tight text-white"
+              className="display-xl text-white"
             >
-              {t("title").split(" ").map((word, index) => (
-                <motion.span
-                  key={`${word}-${index}`}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.3 + index * 0.06 }}
-                  className="mr-[0.2em] inline-block"
-                >
-                  {word}
-                </motion.span>
-              ))}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="leading-[1.02]"
+              >
+                {t("titleLine1")}
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="leading-[1.02]"
+              >
+                {t("titleLine2")}
+              </motion.div>
             </motion.h1>
 
             {/* CTA Buttons */}
@@ -113,44 +104,26 @@ export const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center"
+              className="mt-7 flex w-full max-w-[310px] flex-col gap-3 sm:max-w-none sm:flex-row sm:items-center md:mt-10"
             >
               <ApplyModal
                 trigger={
-                  <button className="group inline-flex h-14 items-center justify-center gap-2.7 rounded-full bg-brand px-10 text-base font-bold text-white shadow-brand transition-all duration-300 hover:bg-brand-dark hover:shadow-xl hover:-translate-y-1">
+                  <button className="btn-primary group h-12 w-full px-6 text-[0.72rem] sm:h-14 sm:w-auto sm:px-10 sm:text-[0.8125rem]">
                     {t("applyBatch")}
-                    <ArrowRight className="h-7 w-7 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1 sm:h-7 sm:w-7" />
                   </button>
                 }
               />
               <Link
                 href="/courses/200hr"
-                className="group inline-flex h-14 items-center justify-center gap-2.7 rounded-full border-2 border-white/30 bg-white/10 px-10 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-charcoal"
+                className="btn-outline group h-12 w-full border-white/35 bg-black/20 px-6 text-[0.72rem] text-white backdrop-blur-sm hover:bg-white hover:text-charcoal sm:h-14 sm:w-auto sm:px-10 sm:text-[0.8125rem]"
               >
-                <Play className="h-7 w-7 fill-current" />
+                <Play className="h-5 w-5 fill-current sm:h-7 sm:w-7" />
                 {t("explorePrograms")}
               </Link>
             </motion.div>
           </div>
 
-          {/* Quick Tags */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="mt-10 flex flex-wrap gap-3"
-          >
-            {[
-              { label: "Ubud, Bali", bg: "bg-white/17" },
-            ].map((tag) => (
-              <span
-                key={tag.label}
-                className={`rounded-full ${tag.bg} px-7 py-2.7 text-sm font-semibold text-white shadow-lg`}
-              >
-                {tag.label}
-              </span>
-            ))}
-          </motion.div>
         </div>
       </motion.div>
 
@@ -159,7 +132,7 @@ export const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 md:block"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}

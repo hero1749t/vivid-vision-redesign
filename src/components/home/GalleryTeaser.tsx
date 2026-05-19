@@ -1,5 +1,5 @@
 "use client";
-import { GALLERY } from "@/data/site";
+import { HOME_GALLERY } from "@/data/site";
 import { Reveal } from "@/components/shared/Reveal";
 import { Link } from "@/i18n/routing";
 import { ArrowUpRight, Eye } from "lucide-react";
@@ -9,15 +9,13 @@ import { getHomeCopy } from "@/lib/home-localized";
 
 export const GalleryTeaser = () => {
   const copy = getHomeCopy(useLocale());
+  const marqueeGallery = [...HOME_GALLERY, ...HOME_GALLERY];
 
   return (
-  <section className="relative py-20 md:py-36 bg-gradient-to-b from-white via-white to-orange-50/30 overflow-hidden">
-    {/* Decorative Background */}
-    <div className="absolute -top-20 right-0 w-80 h-80 bg-gradient-to-br from-amber-100/20 to-orange-100/10 rounded-full blur-3xl opacity-40" />
-
+  <section className="relative overflow-hidden bg-gradient-to-b from-white via-white to-orange-50/30 py-10 md:py-14">
     <div className="container-wide relative z-10">
       {/* Header */}
-      <div className="container-edit flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-8 mb-12 md:mb-16 px-4 md:px-0">
+      <div className="container-edit mb-8 flex flex-col gap-5 px-4 md:mb-10 md:flex-row md:items-end md:justify-between md:gap-8 md:px-0">
         <div className="max-w-xl">
           <Reveal>
             <div className="inline-flex items-center gap-2 mb-5">
@@ -27,8 +25,7 @@ export const GalleryTeaser = () => {
           </Reveal>
           <Reveal delay={0.05}>
             <h2 
-              className="font-serif font-bold text-gray-900 leading-[1.1]"
-              style={{ fontSize: "clamp(1.8rem, 5vw, 3.4rem)" }}
+              className="display-lg text-gray-900"
             >
               {copy.common.galleryTitle}
               <br />
@@ -45,21 +42,19 @@ export const GalleryTeaser = () => {
         </Link>
       </div>
 
-      {/* Gallery Grid */}
-      <div className="px-4 md:px-0">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
-          {GALLERY.slice(0, 8).map((src, i) => (
-            <Reveal key={src} delay={i * 0.05}>
+      {/* Auto-moving gallery row */}
+      <div className="relative">
+        <div className="flex w-max animate-marquee-reverse gap-3 px-4 pb-3 [animation-duration:48s] hover:[animation-play-state:paused] md:gap-5 md:px-8">
+          {marqueeGallery.map((src, i) => (
               <motion.div
+                key={`${src}-${i}`}
                 whileHover={{ scale: 1.02 }}
-                className={`relative rounded-xl md:rounded-2xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 ${
-                  i === 0 || i === 5 ? "md:col-span-1 md:row-span-2 aspect-[3/4]" : "aspect-square"
-                }`}
+                className="group relative h-[170px] w-[205px] shrink-0 cursor-pointer overflow-hidden rounded-xl shadow-lg transition-all duration-500 hover:shadow-2xl md:h-[230px] md:w-[300px] md:rounded-2xl"
               >
                 <Link href="/gallery" className="block w-full h-full">
                   <img
                     src={src}
-                    alt={`Gallery ${i + 1}`}
+                    alt={`Gallery ${(i % 10) + 1}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                     decoding="async"
@@ -80,13 +75,12 @@ export const GalleryTeaser = () => {
                   </motion.div>
                 </Link>
               </motion.div>
-            </Reveal>
           ))}
         </div>
       </div>
 
       {/* Mobile CTA */}
-      <div className="mt-10 md:hidden px-4 text-center">
+      <div className="mt-7 px-4 text-center md:hidden">
         <Link href="/gallery"
           className="inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg"
         >

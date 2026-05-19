@@ -203,7 +203,7 @@ const Workshops = () => {
             <p className="eyebrow text-gold-light mb-5">Workshops & Experiences</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="font-serif font-bold text-cream leading-[1.04] heading-display" style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.4rem)" }}>
+            <h1 className="display-xl text-cream">
               Go Deeper. <em className="text-terra-light">Play Wider.</em>
             </h1>
           </Reveal>
@@ -222,7 +222,7 @@ const Workshops = () => {
                   </Button>
                 }
               />
-              <Button variant="outline" className="h-12 px-8 border-cream/30 text-cream hover:bg-cream/10">
+              <Button variant="outline" className="h-12 border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10 hover:text-cream">
                 View All Workshops
               </Button>
             </div>
@@ -248,7 +248,7 @@ const Workshops = () => {
                     <div className="lg:col-span-5 relative">
                       <div className={`aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br ${workshop.color} p-8 flex flex-col items-center justify-center text-center`}>
                         <IconComponent className="w-20 h-20 text-white/90 mb-4" />
-                        <h3 className="text-white text-2xl font-serif font-bold">{workshop.title}</h3>
+                        <h3 className="display-sm text-white">{workshop.title}</h3>
                         <p className="text-white/70 mt-2">{workshop.subtitle}</p>
                         <div className="mt-6 flex items-center gap-4 text-white/80 text-sm">
                           <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {workshop.duration}</span>
@@ -270,7 +270,7 @@ const Workshops = () => {
                         </span>
                       </div>
 
-                      <h2 className="font-serif text-3xl md:text-4xl text-warm-dark font-bold leading-tight">
+                      <h2 className="display-md text-warm-dark">
                         {workshop.title}
                       </h2>
                       <p className="mt-2 text-terra font-medium">{workshop.subtitle}</p>
@@ -336,7 +336,7 @@ const Workshops = () => {
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-warm-light uppercase tracking-wide">Per person</p>
-                          <p className="font-serif text-3xl text-terra-deep font-bold">€{workshop.price}</p>
+                          <p className="price-value text-terra-deep">EUR {workshop.price}</p>
                         </div>
                       </div>
                     </div>
@@ -365,11 +365,11 @@ const Workshops = () => {
                       Best Value
                     </div>
                   )}
-                  <h3 className="font-serif text-2xl font-bold">{pkg.title}</h3>
+                  <h3 className="display-sm">{pkg.title}</h3>
                   <p className={`mt-1 text-sm ${pkg.featured ? "text-cream/70" : "text-warm-light"}`}>{pkg.subtitle}</p>
                   <div className="mt-4 flex items-baseline gap-2">
-                    <span className={`font-serif text-4xl font-bold ${pkg.featured ? "text-cream" : "text-terra-deep"}`}>€{pkg.price}</span>
-                    <span className={`text-sm line-through ${pkg.featured ? "text-cream/50" : "text-warm-light"}`}>€{pkg.originalPrice}</span>
+                    <span className={`price-value ${pkg.featured ? "text-cream" : "text-terra-deep"}`}>EUR {pkg.price}</span>
+                    <span className={`text-sm line-through ${pkg.featured ? "text-cream/50" : "text-warm-light"}`}>EUR {pkg.originalPrice}</span>
                   </div>
                   <p className={`text-xs font-semibold mt-1 ${pkg.featured ? "text-cream/70" : "text-sage"}`}>{pkg.savings}</p>
 
@@ -413,7 +413,7 @@ const Workshops = () => {
                   <img src={teacher.img} alt={teacher.name} className="w-20 h-20 rounded-full object-cover shrink-0" />
                   <div>
                     <p className="text-xs text-terra-light font-bold uppercase tracking-widest">{teacher.role}</p>
-                    <h3 className="font-serif text-xl font-bold text-cream mt-1">{teacher.name}</h3>
+                    <h3 className="display-sm mt-1 text-cream">{teacher.name}</h3>
                     <p className="mt-2 text-cream/60 text-sm leading-relaxed">{teacher.text}</p>
                   </div>
                 </div>
@@ -480,7 +480,7 @@ const Workshops = () => {
       <section className="py-24 md:py-32 bg-warm-dark text-center">
         <div className="container-edit max-w-3xl mx-auto">
           <Reveal>
-            <h2 className="font-serif text-4xl md:text-5xl text-cream font-bold leading-tight">
+            <h2 className="display-lg text-cream">
               Ready to <em className="text-terra-light">explore?</em>
             </h2>
             <p className="mt-6 text-cream/70 text-lg">
@@ -496,7 +496,7 @@ const Workshops = () => {
                 }
               />
               <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline" className="h-14 px-10 border-cream/30 text-cream hover:bg-cream/10">
+                <Button size="lg" variant="outline" className="h-14 border-cream/30 bg-transparent px-10 text-cream hover:bg-cream/10 hover:text-cream">
                   Chat With Us on WhatsApp
                 </Button>
               </a>

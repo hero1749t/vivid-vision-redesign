@@ -18,12 +18,12 @@ const About = () => (
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-warm-dark via-warm-dark/85 to-warm-dark/40" />
       <div className="relative container-edit max-w-3xl">
-        <Reveal><p className="eyebrow text-gold-light mb-6">Our story</p></Reveal>
+        <Reveal><p className="label-caps mb-6 text-gold-light">Our story</p></Reveal>
         <Reveal delay={0.05}>
-          <h1 className="heading-display text-cream">A school built on <em className="text-terra-light">lineage,</em> love & Bali.</h1>
+          <h1 className="display-xl text-cream">A school built on <em className="text-terra-light">lineage,</em> love & Bali.</h1>
         </Reveal>
         <Reveal delay={0.1}>
-          <p className="mt-7 text-cream/75 text-lg leading-relaxed">
+          <p className="body-lg mt-7 text-cream/75">
             Since 2018, Bali Yoga Teacher Training Center has been guiding seekers from around the world into authentic, multi-style yoga teacher trainings — rooted in classical lineage and held in the gentle embrace of Ubud.
           </p>
         </Reveal>
@@ -56,8 +56,8 @@ const About = () => (
             <Reveal key={m.y} delay={i * 0.06}>
               <div className={`relative grid md:grid-cols-2 gap-6 mb-12 ${i % 2 === 0 ? "" : "md:[direction:rtl]"}`}>
                 <div className="pl-12 md:pl-0 md:px-12" style={{ direction: "ltr" }}>
-                  <p className="font-serif text-4xl text-terra-deep font-bold">{m.y}</p>
-                  <p className="font-serif text-xl text-warm-dark mt-2">{m.t}</p>
+                  <p className="number-value text-terra-deep">{m.y}</p>
+                  <p className="display-sm mt-2 text-warm-dark">{m.t}</p>
                   <p className="text-ink-soft mt-2 leading-relaxed">{m.d}</p>
                 </div>
                 <span className="absolute left-4 md:left-1/2 top-3 -translate-x-1/2 w-3 h-3 rounded-full bg-terra ring-4 ring-sand" />
@@ -80,8 +80,8 @@ const About = () => (
           ].map((s) => (
             <Reveal key={s.l}>
               <div>
-                <p className="font-serif text-5xl md:text-6xl text-terra-deep font-bold">{s.n}</p>
-                <p className="mt-3 text-xs tracking-[0.25em] uppercase text-warm-light">{s.l}</p>
+                <p className="number-value text-terra-deep">{s.n}</p>
+                <p className="label-caps mt-3 text-warm-light">{s.l}</p>
               </div>
             </Reveal>
           ))}

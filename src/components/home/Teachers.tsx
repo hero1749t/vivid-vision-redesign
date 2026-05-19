@@ -46,6 +46,14 @@ const TeacherCard = ({
   offset: number;
 }) => {
   const depth = Math.max(-2, Math.min(2, offset));
+  const imagePosition =
+    teacher.name === "Vivek Kalura"
+      ? "center 38%"
+      : teacher.name === "Sachin Rautela"
+        ? "center 34%"
+        : teacher.name === "Sandeep Ji"
+          ? "center 28%"
+          : "center 35%";
 
   return (
     <motion.article
@@ -71,26 +79,28 @@ const TeacherCard = ({
           <img
             src={teacher.img}
             alt={teacher.name}
-            className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+            className="h-full w-full object-cover brightness-[0.82] contrast-[1.08] saturate-[1.08] transition duration-700 group-hover:scale-105"
+            style={{ objectPosition: imagePosition }}
             loading="lazy"
             decoding="async"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/86 via-charcoal/18 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/12" />
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/70 to-transparent" />
           <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
 
           <div className="absolute right-4 top-4 rounded-full bg-white/95 px-4 py-2 text-[9px] font-bold uppercase tracking-wider text-charcoal shadow-lg backdrop-blur">
             {teacher.cred}
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 p-6">
-            <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.22em] text-sage-light">
+          <div className="absolute inset-x-4 bottom-4 rounded-2xl bg-black/35 p-4 shadow-[0_18px_40px_rgba(0,0,0,0.28)] ring-1 ring-white/10 backdrop-blur-[2px]">
+            <p className="label-caps mb-2 text-sage-mist drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
               {teacher.role}
             </p>
-            <h3 className="font-serif text-3xl font-bold leading-tight text-white">
+            <h3 className="display-md text-white drop-shadow-[0_3px_14px_rgba(0,0,0,0.85)]">
               {teacher.name}
             </h3>
-            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-white/78">
+            <p className="mt-3 line-clamp-2 text-sm font-medium leading-relaxed text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
               {teacher.bio}
             </p>
           </div>
@@ -141,13 +151,13 @@ export const Teachers = () => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-cream via-white to-white py-20 md:py-36">
+    <section className="relative overflow-hidden bg-gradient-to-b from-cream via-white to-white py-12 md:py-16">
       {/* Decorative elements */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-0 h-px bg-gray-100" />
 
       <div className="container-edit relative z-10">
         {/* Section Header */}
-        <div className="mb-14 grid items-end gap-8 md:mb-20 lg:grid-cols-12 lg:gap-16">
+        <div className="mb-10 grid items-end gap-8 md:mb-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-8">
             <SectionHeading
               eyebrow={copy.teachers.eyebrow}
@@ -193,7 +203,7 @@ export const Teachers = () => {
         <div
           ref={sliderRef}
           onScroll={() => updateActiveTeacher(sliderRef.current, setActiveIndex)}
-          className="-mx-4 flex snap-x snap-mandatory gap-7 overflow-x-auto px-4 pb-12 pt-4 [perspective:1500px] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-[max(2.5rem,calc((100vw-1180px)/2))] [&::-webkit-scrollbar]:hidden"
+          className="-mx-4 flex snap-x snap-mandatory gap-7 overflow-x-auto px-4 pb-8 pt-3 [perspective:1500px] [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-[max(2.5rem,calc((100vw-1180px)/2))] [&::-webkit-scrollbar]:hidden"
         >
           {teachers.map((teacher, index) => (
             <TeacherCard
@@ -207,7 +217,7 @@ export const Teachers = () => {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center">
+        <div className="mt-8 text-center">
           <p className="mb-6 text-base text-ink-muted md:text-lg">{copy.teachers.cta}</p>
         </div>
       </div>

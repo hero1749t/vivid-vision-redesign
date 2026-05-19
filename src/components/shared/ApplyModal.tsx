@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/hooks/use-toast";
 import { SITE } from "@/data/site";
-import { Check, CheckCircle, Zap, Shield, Loader2, Users, Home, Star } from "lucide-react";
+import { Check, CheckCircle, Zap, Shield, Loader2, Users, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { calculatePrice, formatCurrency } from "@/lib/payments/pricing";
 
@@ -89,7 +89,6 @@ declare global {
 const accommodationOptions = [
   { value: "SHARED", label: "Shared Twin Room", desc: "Included in course fee", icon: Users, price: 0 },
   { value: "PRIVATE", label: "Private Room", desc: "Private room upgrade", icon: Home, price: 400 },
-  { value: "LUXURY", label: "Luxury Villa", desc: "Premium accommodation", icon: Star, price: 900 },
 ];
 
 export const ApplyModal = ({ trigger, defaultCourse }: Props) => {

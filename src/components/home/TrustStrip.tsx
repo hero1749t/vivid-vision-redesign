@@ -1,63 +1,90 @@
 "use client";
 
+import { Star } from "lucide-react";
 import { IMG } from "@/data/site";
+import { Link } from "@/i18n/routing";
 
-const trustStats = [
-  { value: "Yoga Alliance", label: "RYS 200 & 300" },
-  { value: "2,500+", label: "Graduates" },
-  { value: "4.9 / 5", label: "Average Rating" },
-  { value: "Since 2018", label: "Years Teaching" },
-  { value: "70+", label: "Nationalities" },
-  { value: "98%", label: "Would Recommend" },
+const authorityCards = [
+  {
+    title: "Yoga Alliance",
+    subtitle: "RYS 200 Registry",
+    image: IMG.rys200,
+  },
+  {
+    title: "Yoga Alliance",
+    subtitle: "RYS 300 Registry",
+    image: IMG.yogaAlliance,
+  },
+  {
+    title: "Trustpilot",
+    subtitle: "4.9 / 5 - Excellent",
+    icon: "star",
+    tone: "text-emerald-500",
+  },
+  {
+    title: "TripAdvisor",
+    subtitle: "Travellers' Choice",
+    image: IMG.tripadvisor,
+  },
+  {
+    title: "Google Reviews",
+    subtitle: "4.9 - 600+ Reviews",
+    icon: "G",
+    tone: "text-[#4285F4]",
+  },
 ];
-
-const trustLogos = [
-  { src: IMG.yogaAlliance, label: "Yoga Alliance" },
-  { src: IMG.rys200, label: "RYS 200" },
-  { src: IMG.trustpilot, label: "Trustpilot" },
-  { src: IMG.tripadvisor, label: "TripAdvisor" },
-  { src: IMG.bookRetreat, label: "Book Yoga Retreats" },
-];
-
-const TrustItem = ({ value, label, mobile = false }: { value: string; label: string; mobile?: boolean }) => (
-  <div
-    className={`flex flex-col items-center justify-center gap-1 border-r border-stone-200 px-4 text-center last:border-r-0 ${
-      mobile ? "h-[60px] min-w-[142px]" : "h-[72px] flex-1"
-    }`}
-  >
-    <span className="font-serif text-lg font-medium leading-none text-sage md:text-xl">{value}</span>
-    <span className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-ink-muted md:text-[0.65rem]">{label}</span>
-  </div>
-);
 
 export const TrustStrip = () => {
-  const marqueeStats = [...trustStats, ...trustStats, ...trustStats];
-  const marqueeLogos = [...trustLogos, ...trustLogos, ...trustLogos];
+  const marqueeCards = [...authorityCards, ...authorityCards];
 
   return (
-    <section id="trust" className="overflow-hidden border-y border-stone-200 bg-white">
-      <div className="relative h-[60px] overflow-hidden border-b border-stone-100 md:h-[72px]">
-        <div className="flex h-full w-max animate-marquee items-center whitespace-nowrap">
-          {marqueeStats.map((item, index) => (
-            <TrustItem key={`${item.label}-${index}`} value={item.value} label={item.label} mobile />
-          ))}
+    <section id="trust" className="overflow-hidden border-y border-stone-200 bg-white py-5 md:py-6">
+      <div className="container-edit">
+        <div className="mb-4 text-center">
+          <p className="label-caps text-ink-muted">
+            Accreditations & Professional Authority
+          </p>
         </div>
-      </div>
 
-      <div className="relative overflow-hidden py-5">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white to-transparent md:w-24" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white to-transparent md:w-24" />
-        <div className="flex w-max animate-marquee items-center gap-12 whitespace-nowrap px-6 [animation-duration:55s] hover:[animation-play-state:paused] md:gap-16">
-          {marqueeLogos.map((item, index) => (
-            <img
-              key={`${item.label}-${index}`}
-              src={item.src}
-              alt={item.label}
-              className="h-9 w-auto shrink-0 object-contain opacity-75 grayscale transition duration-300 hover:scale-105 hover:opacity-100 hover:grayscale-0 md:h-11"
-              loading="lazy"
-              decoding="async"
-            />
-          ))}
+        <div className="-mx-4 overflow-hidden px-4">
+          <div className="flex w-max gap-4 animate-marquee hover:[animation-play-state:paused] md:gap-5">
+            {marqueeCards.map((card, index) => (
+              <div
+                key={`${card.title}-${card.subtitle}-${index}`}
+                className="flex min-h-[98px] w-[190px] shrink-0 flex-col items-center justify-center rounded-[10px] border border-stone-200 bg-[#fcfaf7] px-4 py-3 text-center shadow-[0_10px_24px_rgba(35,35,30,0.04)] transition hover:-translate-y-1 hover:border-brand/40 hover:shadow-[0_16px_34px_rgba(35,35,30,0.09)] md:min-h-[108px] md:w-[220px]"
+              >
+                <div className="mb-2 flex h-9 w-10 items-center justify-center">
+                  {card.image ? (
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="max-h-9 max-w-[86px] object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : card.icon === "G" ? (
+                    <span className="number-value text-[#4285F4]">G</span>
+                  ) : (
+                    <span className={`flex h-9 w-9 items-center justify-center rounded-full ${card.tone || "text-sage"}`}>
+                      <Star className="h-8 w-8 fill-current" />
+                    </span>
+                  )}
+                </div>
+                <h3 className="display-sm text-charcoal">{card.title}</h3>
+                <p className="mt-1 text-xs leading-5 text-ink-soft md:text-sm">{card.subtitle}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-4 text-center">
+          <Link
+            href="/yoga-alliance"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-sage transition-colors hover:text-brand"
+          >
+            What Yoga Alliance certification means
+            <span aria-hidden>&rarr;</span>
+          </Link>
         </div>
       </div>
     </section>

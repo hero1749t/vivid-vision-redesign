@@ -25,7 +25,7 @@ const footerLinks = [
     links: [
       { labelKey: "about", to: "/about" },
       { labelKey: "teachers", to: "/instructors" },
-      { labelKey: "testimonials", to: "/#testimonials" },
+      { labelKey: "testimonials", to: "/testimonials" },
       { labelKey: "contact", to: "/contact" },
     ],
   },

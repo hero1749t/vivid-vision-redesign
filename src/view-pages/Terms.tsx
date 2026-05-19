@@ -13,18 +13,18 @@ const Terms = () => {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+          <h1 className="display-lg mb-8 text-gray-900">
             Terms & <span className="text-[#F04E23]">Policy</span>
           </h1>
           <p className="text-gray-500 text-sm mb-12">Last updated: May 5, 2026</p>
 
           <div className="prose prose-gray max-w-none bg-white p-8 md:p-12 rounded-3xl border border-gray-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.02)]">
-            <h2 className="font-serif text-2xl text-gray-900 font-bold mb-4 mt-0">1. Booking and Payment</h2>
+            <h2 className="display-sm mb-4 mt-0 text-gray-900">1. Booking and Payment</h2>
             <p className="text-gray-600 leading-relaxed mb-8">
               A deposit is required to secure your spot in any Yoga Teacher Training program. The remaining balance must be paid 30 days prior to the course start date. If booking within 30 days of the start date, full payment is required. All payments are processed securely in USD.
             </p>
 
-            <h2 className="font-serif text-2xl text-gray-900 font-bold mb-4">2. Cancellation Policy</h2>
+            <h2 className="display-sm mb-4 text-gray-900">2. Cancellation Policy</h2>
             <p className="text-gray-600 leading-relaxed mb-4">
               We understand that unforeseen circumstances may arise. Our cancellation policy is designed to be fair to both our students and our faculty:
             </p>
@@ -34,17 +34,17 @@ const Terms = () => {
               <li>Cancellations made within 30 days: No refunds, but the balance (excluding deposit) can be transferred to a future course within 12 months.</li>
             </ul>
 
-            <h2 className="font-serif text-2xl text-gray-900 font-bold mb-4">3. Attendance and Certification</h2>
+            <h2 className="display-sm mb-4 text-gray-900">3. Attendance and Certification</h2>
             <p className="text-gray-600 leading-relaxed mb-8">
               To receive a Yoga Alliance certificate, 100% attendance is required. If a student misses classes due to illness, makeup sessions must be arranged with lead teachers. The faculty reserves the right to withhold certification if the student does not meet the necessary standards or fails to complete required hours.
             </p>
 
-            <h2 className="font-serif text-2xl text-gray-900 font-bold mb-4">4. Code of Conduct</h2>
+            <h2 className="display-sm mb-4 text-gray-900">4. Code of Conduct</h2>
             <p className="text-gray-600 leading-relaxed mb-8">
               Bali YTTC is a space of mutual respect, learning, and spiritual growth. We do not tolerate any form of harassment, discrimination, or disruptive behavior. We ask all students to observe silence during designated hours (such as morning meditation) and respect the local Balinese culture and customs.
             </p>
 
-            <h2 className="font-serif text-2xl text-gray-900 font-bold mb-4">5. Health and Liability</h2>
+            <h2 className="display-sm mb-4 text-gray-900">5. Health and Liability</h2>
             <p className="text-gray-600 leading-relaxed mb-0">
               Yoga involves physical exertion. It is the student's responsibility to consult a physician prior to participation. Bali YTTC is not liable for any injuries sustained during the course. Students are highly encouraged to purchase comprehensive travel and health insurance prior to arriving in Bali.
             </p>

@@ -91,6 +91,7 @@ const en: HomeCopy = {
     { title: "Philosophy", desc: "Yoga Sutras, Bhagavad Gita and the eight limbs." },
     { title: "Methodology", desc: "Cueing, sequencing and the art of holding space." },
     { title: "Adjustments", desc: "Hands-on assists with consent and clarity." },
+    { title: "Meditation & Balinese Wisdom", desc: "Guided meditation, inner stillness, Balinese ceremony and cultural wisdom." },
   ],
   experiences: {
     eyebrow: "Beyond the Mat",

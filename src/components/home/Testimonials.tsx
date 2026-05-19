@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { getHomeCopy } from "@/lib/home-localized";
+import { Link } from "@/i18n/routing";
 
 type PublicTestimonial = {
   name: string;
@@ -48,28 +49,23 @@ export const Testimonials = () => {
   }, []);
 
   return (
-    <section id="testimonials" className="relative overflow-hidden bg-gradient-to-b from-cream to-white py-20 md:py-32">
-      {/* Decorative */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, hsl(var(--brand)) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      <div className="absolute left-1/4 top-0 h-[400px] w-[400px] rounded-full bg-brand/5 blur-3xl" />
-      <div className="absolute bottom-0 right-1/4 h-[300px] w-[300px] rounded-full bg-sage/5 blur-3xl" />
-
+    <section id="testimonials" className="relative overflow-hidden bg-gradient-to-b from-cream to-white py-12 md:py-16">
       <div className="container-wide relative z-10">
         {/* Section Header */}
-        <div className="mb-12 flex flex-col gap-8 md:mb-20 md:flex-row md:items-end md:justify-between lg:container-edit">
+        <div className="mb-10 flex flex-col gap-8 md:mb-12 md:flex-row md:items-end md:justify-between lg:container-edit">
           <div>
             <Reveal>
               <p className="eyebrow mb-5">{copy.testimonials.eyebrow}</p>
             </Reveal>
             <Reveal delay={0.05}>
-              <h2 className="font-serif font-bold leading-[1.05] tracking-tight text-charcoal" style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}>
+              <h2 className="display-lg text-charcoal">
                 {copy.testimonials.title}
                 <br />
                 <span className="bg-gradient-to-r from-brand to-gold bg-clip-text text-transparent">{copy.testimonials.accent}</span>
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-4 max-w-xl text-base leading-7 text-ink-soft">{copy.testimonials.subtitle}</p>
+              <p className="body-lg mt-4 max-w-xl">{copy.testimonials.subtitle}</p>
             </Reveal>
           </div>
 
@@ -81,8 +77,8 @@ export const Testimonials = () => {
                   <Star key={n} className="h-6 w-6 fill-gold text-gold" />
                 ))}
               </div>
-              <p className="font-serif text-4xl font-bold text-charcoal text-center">{stats.averageRating.toFixed(1)}/5</p>
-              <p className="mt-3 text-center text-[10px] uppercase tracking-widest text-ink-muted">
+              <p className="number-value text-center text-charcoal">{stats.averageRating.toFixed(1)}/5</p>
+              <p className="price-label mt-3 text-center">
                 {stats.totalApproved}+ {copy.testimonials.verified}
               </p>
               <div className="mt-4 flex items-center justify-center gap-2">
@@ -113,7 +109,7 @@ export const Testimonials = () => {
                 </div>
 
                 {/* Quote */}
-                <p className="flex-1 font-serif text-lg italic leading-relaxed text-charcoal md:text-xl">
+                <p className="flex-1 font-serif text-lg italic leading-relaxed text-charcoal md:text-xl font-normal">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
 
@@ -123,8 +119,8 @@ export const Testimonials = () => {
                     {testimonial.name.split(" ").map((name) => name[0]).join("").slice(0, 2)}
                   </div>
                   <div>
-                    <p className="text-base font-bold text-charcoal">{testimonial.name}</p>
-                    <p className="mt-0.5 text-xs font-medium uppercase tracking-widest text-brand">
+                    <p className="text-base font-medium text-charcoal">{testimonial.name}</p>
+                    <p className="label-caps mt-0.5 text-brand">
                       {testimonial.course}
                     </p>
                   </div>
@@ -139,7 +135,7 @@ export const Testimonials = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-16 text-center md:mt-24 lg:container-edit"
+          className="mt-10 text-center md:mt-12 lg:container-edit"
         >
           <p className="mb-6 text-sm text-ink-muted">{copy.testimonials.readVerified}</p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -148,14 +144,12 @@ export const Testimonials = () => {
                 {copy.testimonials.startJourney}
               </Button>
             } />
-            <a
-              href="https://baliyttc.com/"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/testimonials"
               className="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 px-6 py-3 text-sm font-semibold text-charcoal transition-all duration-300 hover:border-brand hover:text-brand"
             >
               {copy.testimonials.viewAll} <ExternalLink className="h-4 w-4" />
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

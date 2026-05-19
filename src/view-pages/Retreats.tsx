@@ -182,7 +182,7 @@ const Retreats = () => {
             <p className="eyebrow text-gold-light mb-5">Yoga Retreats in Bali</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="font-serif font-bold text-cream leading-[1.04] heading-display" style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.4rem)" }}>
+            <h1 className="display-xl text-cream">
               Retreat. Restore. <em className="text-terra-light">Revitalise.</em>
             </h1>
           </Reveal>
@@ -196,7 +196,7 @@ const Retreats = () => {
               <Button className="bg-terra hover:bg-terra-deep text-cream h-12 px-8">
                 Book Your Retreat
               </Button>
-              <Button variant="outline" className="h-12 px-8 border-cream/30 text-cream hover:bg-cream/10">
+              <Button variant="outline" className="h-12 border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10 hover:text-cream">
                 View All Retreats
               </Button>
             </div>
@@ -260,7 +260,7 @@ const Retreats = () => {
                       <span className="text-xs text-warm-light">{retreat.tagline}</span>
                     </div>
 
-                    <h2 className="font-serif text-3xl md:text-4xl text-warm-dark font-bold leading-tight">
+                    <h2 className="display-md text-warm-dark">
                       {retreat.title}
                     </h2>
                     <p className="mt-2 text-terra font-medium">{retreat.subtitle}</p>
@@ -292,7 +292,7 @@ const Retreats = () => {
                     <div className="mt-6 flex items-end justify-between gap-4">
                       <div>
                         <p className="text-xs text-warm-light uppercase tracking-wide">Starting from</p>
-                        <p className="font-serif text-4xl text-terra-deep font-bold">€{retreat.price}</p>
+                        <p className="price-value text-terra-deep">EUR {retreat.price}</p>
                         <p className="text-xs text-warm-light">per person</p>
                       </div>
                       <ApplyModal
@@ -329,7 +329,7 @@ const Retreats = () => {
               <Reveal key={slot.title}>
                 <div className="bg-sand rounded-xl p-7">
                   <slot.icon className="w-8 h-8 text-terra mb-4" />
-                  <h3 className="font-serif text-xl text-warm-dark font-bold">{slot.title}</h3>
+                  <h3 className="display-sm text-warm-dark">{slot.title}</h3>
                   <p className="text-xs text-terra font-medium mt-1">{slot.time}</p>
                   <ul className="mt-4 space-y-2">
                     {slot.items.map((item) => (
@@ -357,7 +357,7 @@ const Retreats = () => {
                   <div className="p-2 bg-sage rounded-lg">
                     <Check className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-serif text-xl text-cream font-bold">Included in Your Retreat</h3>
+                  <h3 className="display-sm text-cream">Included in Your Retreat</h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -384,7 +384,7 @@ const Retreats = () => {
                   <div className="p-2 bg-terra/30 rounded-lg">
                     <Heart className="w-5 h-5 text-terra-light" />
                   </div>
-                  <h3 className="font-serif text-xl text-cream font-bold">Not Included</h3>
+                  <h3 className="display-sm text-cream">Not Included</h3>
                 </div>
                 <ul className="space-y-3">
                   {[
@@ -465,7 +465,7 @@ const Retreats = () => {
       <section className="py-24 md:py-32 bg-warm-dark text-center">
         <div className="container-edit max-w-3xl mx-auto">
           <Reveal>
-            <h2 className="font-serif text-4xl md:text-5xl text-cream font-bold leading-tight">
+            <h2 className="display-lg text-cream">
               Ready to begin your <em className="text-terra-light">transformation?</em>
             </h2>
             <p className="mt-6 text-cream/70 text-lg">
@@ -481,7 +481,7 @@ const Retreats = () => {
                 }
               />
               <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline" className="h-14 px-10 border-cream/30 text-cream hover:bg-cream/10">
+                <Button size="lg" variant="outline" className="h-14 border-cream/30 bg-transparent px-10 text-cream hover:bg-cream/10 hover:text-cream">
                   Chat With Us on WhatsApp
                 </Button>
               </a>

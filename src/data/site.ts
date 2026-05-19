@@ -32,23 +32,21 @@ export const IMG = {
   course300:
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Yoga-Retreat-in-Bali.jpg",
   templePurification:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Yoga-Teacher-Training-in-Bali-Temple-purification.jpg",
+    "https://baliyttc.com/wp-content/uploads/2025/08/Yoga-Teacher-Training-in-Bali-Temple-purification.jpg",
   armBalance:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Arm-balancing-workshop-200-hour-YTT.jpg",
+    "https://baliyttc.com/wp-content/uploads/2025/08/Arm-balancing-workshop-200-hour-YTT.jpg",
   soundHealing:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Sound-Healing-during-our-Yoga-Teacher-Training-in-bali.jpg",
+    "https://baliyttc.com/wp-content/uploads/2025/08/Sound-Healing-during-our-Yoga-Teacher-Training-in-bali.jpg",
   acroYoga:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Acro-Yoga-Workssop-at-bali-YTTC.jpg",
+    "https://baliyttc.com/wp-content/uploads/2025/08/Acro-Yoga-Workssop-at-bali-YTTC.jpg",
   beachYoga:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Beach-Yoga-at-bali-Yoga-Teacher-Training-Center.jpg",
+    "https://baliyttc.com/wp-content/uploads/2025/08/Beach-Yoga-at-bali-Yoga-Teacher-Training-Center.jpg",
   mandala:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Mandala-Meditation-Yoga-Teacher-Training-Bali.png",
-  vivek:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Vivek-kalura-Yoga-teacher-in-bali.jpg",
-  sachin:
-    "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Sachin-Rautela-Yoga-Teacher-in-Bali.jpg",
-  yuli: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Yuli-Yoga-teacher-in-bali.jpg",
-  sandeep: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:700/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Sandeep-Yoga-teacher-in-bali.jpg",
+    "https://baliyttc.com/wp-content/uploads/2025/08/Mandala-Meditation-Yoga-Teacher-Training-Bali.png",
+  vivek: "/images/teachers/vivek-kalura.jpg",
+  sachin: "/images/teachers/sachin-rautela.jpg",
+  yuli: "/images/teachers/yuli-hanurawati.jpg",
+  sandeep: "/images/teachers/sandeep-yoga-teacher.webp",
   schedule100:
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:600/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/100-hour-Yoga-teacher-training-schedule.jpg",
   evaReview:
@@ -71,6 +69,21 @@ export const IMG = {
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:240/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Trip-advisor-logo.png",
   bookRetreat:
     "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:240/q:mauto/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/Book-Yoga-Retreat-logo.png",
+  campusDrone: "/images/campus/drone-view-bali-yttc.jpg",
+  privateVillaRoom: "/images/campus/private-villa-room-1.jpg",
+  privateVillaRoomAlt: "/images/campus/private-villa-room-2.jpg",
+  privateVillaOutside: "/images/campus/private-villa-outside.jpg",
+  privateVillaPool: "/images/campus/private-villa-pool.jpg",
+  reception: "/images/campus/reception-bali-yttc.jpg",
+  roomView: "/images/campus/room-view-bali-yttc.jpg",
+  sharedVilla: "/images/campus/shared-villa-room-1.jpg",
+  sharedVillaAlt: "/images/campus/shared-villa-room-2.jpg",
+  swimmingPool: "/images/campus/swimming-pool-1.jpg",
+  swimmingPoolAlt: "/images/campus/swimming-pool-2.jpg",
+  washroom: "/images/campus/washroom-bali-yttc.jpg",
+  mobileHeroReference: "/images/campus/mobile-hero-reference.jpeg",
+  yogaStudio: "/images/campus/yoga-studio-bali-yttc.jpg",
+  studioPoolDrone: "/images/campus/yoga-studio-pool-drone.jpg",
 };
 
 export const COURSES = [
@@ -79,20 +92,20 @@ export const COURSES = [
     href: "/courses/50hr",
     duration: "50 Hours",
     days: "6 Days",
-    title: "50-Hour Hatha-Vinyasa Yoga Teacher Training",
+    title: "50-Hour Hatha-Vinyasa YTT in Bali",
     style: "Hatha / Vinyasa / Short Course",
     summary:
-      "A focused short course in Bali for students who want a practical foundation in Hatha and Vinyasa without committing to a full 100hr or 200hr training.",
+      "A focused 6-day short yoga teacher training in Ubud for beginners who want a practical foundation in traditional Hatha, Vinyasa flow, breathwork, alignment and teaching basics.",
     priceFrom: 499,
-    image: IMG.course100,
+    image: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:1080/h:1080/q:eco/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/09/50-hour-hatha-vinyasa-yoga-teacher-training-1.jpg",
     next: "Jan 12 - Jan 17, 2026",
     seats: "Open",
     highlights: ["Hatha fundamentals", "Vinyasa flow basics", "Breathwork", "Teaching foundations"],
     modules: [
-      { title: "Hatha Foundations", desc: "Core postures, alignment principles, breath awareness and safe practice." },
-      { title: "Vinyasa Flow", desc: "Linking movement and breath through accessible flow sequencing." },
-      { title: "Pranayama & Meditation", desc: "Daily breathwork, concentration and grounding practices." },
-      { title: "Teaching Basics", desc: "Cueing, class structure and confidence-building practice teaching." }
+      { title: "Hatha & Vinyasa Practice", desc: "Warm-ups, sun salutations, foundational postures and simple Vinyasa flow structure." },
+      { title: "Alignment & Modification", desc: "Basic posture anatomy, alignment principles, modifications and props." },
+      { title: "Pranayama & Meditation", desc: "Daily breathwork, meditation basics and mantra practice." },
+      { title: "Teaching Basics", desc: "Cueing, short class structure and confidence-building practice teaching." }
     ]
   },
   {
@@ -100,20 +113,20 @@ export const COURSES = [
     href: "/courses/100hr",
     duration: "100 Hours",
     days: "11 Days",
-    title: "100-Hour Yoga Teacher Training",
+    title: "100-Hour Multi-Style Yoga Teacher Training",
     style: "Multi-style / Beginner",
     summary:
-      "An 11-day multi-style Yoga Teacher Training course for beginner yogis, accredited by Yoga Alliance. A focused first immersion into authentic yoga.",
-    priceFrom: 999,
-    image: IMG.course100,
+      "An 11-day beginner-friendly foundation in Hatha, Ashtanga and Vinyasa practice, designed as a compact immersion or first step toward a 200-hour certification path.",
+    priceFrom: 699,
+    image: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:1080/h:1080/q:eco/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/09/100-hour-Yoga-Teacher-Training-Vinyasa-class-in-Bali.jpg",
     next: "Feb 5 - Feb 15, 2026",
     seats: "6 seats left",
-    highlights: ["Foundations of Asana", "Pranayama basics", "Daily meditation", "Ubud immersion"],
+    highlights: ["Hatha, Ashtanga and Vinyasa", "Beginner-friendly structure", "Daily meditation", "Balinese cultural activities"],
     modules: [
-      { title: "Yoga Philosophy", desc: "Introduction to the 8 limbs of yoga and Patanjali's Sutras." },
-      { title: "Hatha & Vinyasa", desc: "Learning the primary series and foundational alignment." },
-      { title: "Art of Adjustment", desc: "Safely adjusting students in basic poses." },
-      { title: "Anatomy 101", desc: "Understanding the skeletal and muscular system in yoga." }
+      { title: "Asana & Sequencing", desc: "Sun salutations, standing postures, seated work, Vinyasa structure and Ashtanga basics." },
+      { title: "Alignment & Adjustment", desc: "Safe entry, exit, modification, props and beginner-level hands-on support." },
+      { title: "Philosophy & Lifestyle", desc: "Practical foundations from yogic texts and daily lifestyle integration." },
+      { title: "Pranayama & Anatomy", desc: "Breathwork, meditation, mantra and basic anatomy for safer practice." }
     ]
   },
   {
@@ -121,12 +134,12 @@ export const COURSES = [
     href: "/courses/200hr",
     duration: "200 Hours",
     days: "21 Days",
-    title: "200-Hour Yoga Teacher Training",
+    title: "200-Hour Hatha Ashtanga Vinyasa YTT",
     style: "Hatha / Ashtanga / Vinyasa",
     summary:
-      "Our flagship 21-day immersion for beginner and intermediate yogis. Become a Yoga Alliance certified teacher and teach worldwide.",
+      "A 21-day Yoga Alliance certified teacher training in Ubud for beginners and committed practitioners, covering Hatha, Ashtanga, Vinyasa, anatomy, philosophy and teaching methodology.",
     priceFrom: 1499,
-    image: IMG.course200,
+    image: "https://ml4wp2nfx5ts.i.optimole.com/cb:JBht.f40/w:1080/h:1080/q:eco/g:sm/f:best/https://baliyttc.com/wp-content/uploads/2025/08/200-hour-Yoga-Teacher-Training-for-Beginners.jpg",
     next: "Mar 2 - Mar 22, 2026",
     seats: "Only 4 seats left",
     featured: true,
@@ -137,11 +150,11 @@ export const COURSES = [
       "Hands-on adjustments",
     ],
     modules: [
-      { title: "Asana Practice", desc: "Deep dive into Hatha, Ashtanga Vinyasa, and Yin Yoga styles." },
-      { title: "Teaching Methodology", desc: "Art of sequencing, cueing, and classroom management." },
-      { title: "Applied Anatomy", desc: "Detailed study of physiology as it relates to yoga practice." },
-      { title: "Ayurveda Intro", desc: "Foundations of Ayurvedic nutrition and lifestyle." },
-      { title: "Ethics & Business", desc: "How to launch your career and teach ethically worldwide." }
+      { title: "Hatha, Ashtanga & Vinyasa", desc: "Daily practice across classical Hatha, Ashtanga Primary Series foundations and creative Vinyasa sequencing." },
+      { title: "Teaching Methodology", desc: "Cueing, sequencing, class planning and supervised teaching practice from early in the course." },
+      { title: "Applied Anatomy", desc: "Body systems, posture anatomy and therapeutic applications for safer teaching." },
+      { title: "Pranayama, Meditation & Mantra", desc: "Breathwork, meditation methods and mantra chanting as part of the daily training rhythm." },
+      { title: "Philosophy & Ayurveda", desc: "Yoga Sutras, Bhagavad Gita, yogic lifestyle and a practical introduction to Ayurveda." }
     ]
   },
   {
@@ -149,20 +162,21 @@ export const COURSES = [
     href: "/courses/300hr",
     duration: "300 Hours",
     days: "28 Days",
-    title: "300-Hour Advanced Teacher Training",
+    title: "300-Hour Advanced Yoga Teacher Training",
     style: "Advanced / RYT-500 path",
     summary:
-      "For certified 200-hour teachers ready to deepen practice and teaching through advanced asana, philosophy and mentorship.",
+      "A 28-day advanced Yoga Alliance pathway for 200-hour graduates ready to deepen practice, refine teaching, study yoga therapy and move toward RYT-500 level training.",
     priceFrom: 1899,
     image: IMG.course300,
     next: "Apr 6 - May 3, 2026",
     seats: "Enrolment open",
     highlights: ["Advanced asana", "Sequencing mastery", "Yoga therapy", "Mentorship modules"],
     modules: [
-      { title: "Advanced Asana", desc: "Mastering inversions, arm balances, and advanced transitions." },
-      { title: "Yoga Therapy", desc: "Adapting yoga for injuries and specific health conditions." },
-      { title: "Deep Philosophy", desc: "Bhagavad Gita study and advanced yogic psychology." },
-      { title: "Mentorship", desc: "One-on-one guidance to find your unique voice as a senior teacher." }
+      { title: "Advanced Asana", desc: "Deeper posture work, safe progressions, arm balances and advanced practice refinement." },
+      { title: "Advanced Sequencing", desc: "Peak-pose sequencing, thematic class planning and energetic class structure." },
+      { title: "Yoga Therapy Foundations", desc: "Adapt yoga tools responsibly for student needs, limitations and wellbeing." },
+      { title: "Meditation, Pranayama & Energy", desc: "Advanced breathwork, meditation progression and subtle body awareness." },
+      { title: "Teaching Mentorship", desc: "Advanced cueing, observation, feedback and mentored teaching practice." }
     ]
   },
 ];
@@ -289,6 +303,19 @@ export const FAQS = [
 ];
 
 export const GALLERY = [
+  IMG.campusDrone,
+  IMG.yogaStudio,
+  IMG.studioPoolDrone,
+  IMG.privateVillaPool,
+  IMG.swimmingPool,
+  IMG.swimmingPoolAlt,
+  IMG.privateVillaOutside,
+  IMG.reception,
+  IMG.sharedVilla,
+  IMG.privateVillaRoom,
+  IMG.sharedVillaAlt,
+  IMG.roomView,
+  IMG.washroom,
   IMG.ceremony200,
   IMG.classMain,
   IMG.templePurification,
@@ -311,7 +338,21 @@ export const GALLERY = [
   IMG.course300,
 ];
 
+export const HOME_GALLERY = [
+  IMG.ceremony200,
+  IMG.classMain,
+  IMG.templePurification,
+  IMG.armBalance,
+  IMG.soundHealing,
+  IMG.acroYoga,
+  IMG.beachYoga,
+  IMG.mandala,
+  IMG.vivek,
+  IMG.sachin,
+];
+
 export const BATCHES = [
+  { course: "50-Hour Hatha-Vinyasa YTT", start: "Jan 12, 2026", end: "Jan 17, 2026", price: "$499", status: "Open" },
   { course: "100-Hour YTT", start: "Feb 5, 2026", end: "Feb 15, 2026", price: "$999", status: "6 seats left" },
   { course: "200-Hour YTT", start: "Mar 2, 2026", end: "Mar 22, 2026", price: "$1,499", status: "Only 4 seats left", urgent: true },
   { course: "300-Hour YTT", start: "Apr 6, 2026", end: "May 3, 2026", price: "$1,899", status: "Enrolment open" },

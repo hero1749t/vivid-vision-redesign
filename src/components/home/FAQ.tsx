@@ -70,11 +70,7 @@ export const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="bg-gradient-to-b from-cream to-white py-20 md:py-32">
-      {/* Decorative elements */}
-      <div className="absolute left-0 top-1/2 h-96 w-96 rounded-full bg-sage-mist blur-3xl opacity-40" />
-      <div className="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-brand-muted blur-3xl opacity-30" />
-
+    <section id="faq" className="relative scroll-mt-28 overflow-hidden bg-gradient-to-b from-cream to-white py-10 md:py-12">
       <div className="container-edit relative z-10 grid gap-10 lg:grid-cols-12 lg:gap-20">
         {/* Left Column */}
         <div className="lg:col-span-5">

@@ -62,7 +62,7 @@ export default function BlogPostPage() {
     <NextLayoutWrapper>
       <main className="min-h-screen bg-[#FAFAFA] pb-24 pt-32">
         <article className="container-wide max-w-4xl">
-          <Link href="/blog" className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 transition-colors hover:text-[#F04E23]">
+          <Link href="/blog" className="label-caps mb-8 inline-flex items-center gap-2 text-gray-500 transition-colors hover:text-[#F04E23]">
             <ArrowLeft className="h-4 w-4" />
             Back to Blog
           </Link>
@@ -73,7 +73,7 @@ export default function BlogPostPage() {
             </div>
           ) : error || !post ? (
             <div className="rounded-2xl bg-white p-10 text-center shadow-sm">
-              <h1 className="font-serif text-3xl font-bold text-gray-900">Post not found</h1>
+              <h1 className="display-md text-gray-900">Post not found</h1>
               <p className="mt-3 text-gray-500">{error || "This article is not available."}</p>
             </div>
           ) : (
@@ -81,7 +81,7 @@ export default function BlogPostPage() {
               <div className="mb-8">
                 <div className="mb-5 flex flex-wrap items-center gap-3 text-sm text-gray-500">
                   {post.category ? (
-                    <span className="rounded-full bg-[#F04E23]/10 px-3 py-1 font-semibold text-[#F04E23]">
+                    <span className="label-caps rounded-full bg-[#F04E23]/10 px-3 py-1 text-[#F04E23]">
                       {post.category}
                     </span>
                   ) : null}
@@ -102,10 +102,10 @@ export default function BlogPostPage() {
                     </span>
                   ) : null}
                 </div>
-                <h1 className="font-serif text-4xl font-bold leading-tight text-gray-950 md:text-6xl">
+                <h1 className="display-xl text-gray-950">
                   {post.title}
                 </h1>
-                {post.excerpt ? <p className="mt-5 text-xl leading-8 text-gray-600">{post.excerpt}</p> : null}
+                {post.excerpt ? <p className="body-lg mt-5 text-gray-600">{post.excerpt}</p> : null}
               </div>
 
               <div className="mb-10 overflow-hidden rounded-2xl bg-gray-100">

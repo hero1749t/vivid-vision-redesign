@@ -11,6 +11,7 @@ const staticRoutes = [
   '/visa',
   '/gallery',
   '/instructors',
+  '/yoga-alliance',
   '/blog',
   '/contact',
   '/terms',

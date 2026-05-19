@@ -168,7 +168,7 @@ const VisaInfo = () => {
             <p className="eyebrow text-gold-light mb-5">Bali Travel Guide</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="font-serif font-bold text-cream leading-[1.04] heading-display" style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.4rem)" }}>
+            <h1 className="display-xl text-cream">
               Visa & Travel <em className="text-terra-light">Guide</em>
             </h1>
           </Reveal>
@@ -185,7 +185,7 @@ const VisaInfo = () => {
                 </Button>
               </a>
               <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" className="h-12 px-8 border-cream/30 text-cream hover:bg-cream/10">
+                <Button variant="outline" className="h-12 border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10 hover:text-cream">
                   Ask About Your Visa
                 </Button>
               </a>
@@ -207,7 +207,7 @@ const VisaInfo = () => {
               <Reveal key={stat.label}>
                 <div className="bg-sand rounded-xl p-5 text-center">
                   <stat.icon className="w-8 h-8 text-terra mx-auto mb-3" />
-                  <p className="font-serif text-2xl text-warm-dark font-bold">{stat.value}</p>
+                  <p className="number-value text-warm-dark">{stat.value}</p>
                   <p className="text-xs text-warm-light mt-1">{stat.label}</p>
                 </div>
               </Reveal>
@@ -250,7 +250,7 @@ const VisaInfo = () => {
                           <IconComponent className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                          <h3 className="font-serif text-2xl text-cream font-bold">{visa.name}</h3>
+                          <h3 className="display-sm text-cream">{visa.name}</h3>
                           <p className="text-cream/70 mt-1">{visa.subtitle}</p>
                         </div>
                       </div>
@@ -364,7 +364,7 @@ const VisaInfo = () => {
                 <div className="bg-sand rounded-xl p-6 md:p-8">
                   <div className="flex items-center gap-3 mb-4">
                     <span className="text-2xl">{guide.flag}</span>
-                    <h3 className="font-serif text-xl text-warm-dark font-bold">{guide.region}</h3>
+                    <h3 className="display-sm text-warm-dark">{guide.region}</h3>
                   </div>
                   <p className="text-sm text-warm-mid mb-3"><strong className="text-warm-dark">Countries:</strong> {guide.countries}</p>
                   <div className="grid md:grid-cols-3 gap-4">
@@ -439,7 +439,7 @@ const VisaInfo = () => {
               <Reveal key={item.title}>
                 <div className="bg-sand rounded-xl p-6">
                   <item.icon className="w-8 h-8 text-terra mb-4" />
-                  <h3 className="font-serif text-lg text-warm-dark font-bold">{item.title}</h3>
+                  <h3 className="display-sm text-warm-dark">{item.title}</h3>
                   <p className="mt-2 text-sm text-warm-mid leading-relaxed">{item.desc}</p>
                 </div>
               </Reveal>
@@ -474,7 +474,7 @@ const VisaInfo = () => {
       <section className="py-24 md:py-32 bg-warm-dark text-center">
         <div className="container-edit max-w-3xl mx-auto">
           <Reveal>
-            <h2 className="font-serif text-4xl md:text-5xl text-cream font-bold leading-tight">
+            <h2 className="display-lg text-cream">
               Still have visa <em className="text-terra-light">questions?</em>
             </h2>
             <p className="mt-6 text-cream/70 text-lg">
@@ -489,7 +489,7 @@ const VisaInfo = () => {
               <ApplyModal
                 defaultCourse="visa-inquiry"
                 trigger={
-                  <Button size="lg" variant="outline" className="h-14 px-10 border-cream/30 text-cream hover:bg-cream/10">
+                  <Button size="lg" variant="outline" className="h-14 border-cream/30 bg-transparent px-10 text-cream hover:bg-cream/10 hover:text-cream">
                     Apply for a Course
                   </Button>
                 }

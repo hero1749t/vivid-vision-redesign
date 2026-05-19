@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { COURSES as STATIC_COURSES } from "@/data/site";
+import { BATCHES, COURSES as STATIC_COURSES } from "@/data/site";
 import { applyCourseTranslation, normalizeLocale } from "@/lib/localized-content";
 import type { Locale } from "@/i18n/routing";
 
@@ -23,7 +23,18 @@ function getStaticCourses() {
       order: moduleIndex,
       hours: null,
     })),
-    batches: [],
+    batches: BATCHES
+      .filter((batch) => batch.course.toLowerCase().includes(course.slug.replace("hr", "-hour")))
+      .map((batch, batchIndex) => ({
+        id: `static-batch-${course.slug}-${batchIndex + 1}`,
+        name: `${batch.course} - ${batch.start}`,
+        startDate: new Date(batch.start).toISOString(),
+        endDate: new Date(batch.end).toISOString(),
+        priceRegular: Number(batch.price.replace(/[^0-9]/g, "")) || course.priceFrom,
+        enrolled: batch.status.toLowerCase().includes("4 seats") ? 16 : batch.status.toLowerCase().includes("6 seats") ? 14 : 0,
+        capacity: 20,
+        accommodation: [],
+      })),
   }));
 }
 

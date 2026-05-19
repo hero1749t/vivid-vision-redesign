@@ -59,22 +59,22 @@ export const Manifesto = () => {
   };
 
   return (
-    <section id="why-us" className="relative overflow-hidden border-y border-stone-200 bg-white py-16 md:py-24">
+    <section id="why-us" className="relative overflow-hidden border-y border-stone-200 bg-white py-8 md:py-10">
       <div className="container-edit">
         <Reveal>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-sage">Why Choose Us</p>
+            <p className="label-caps text-sage">Why Choose Us</p>
             <div className="mx-auto my-5 h-px w-16 bg-brand" />
-            <h2 className="font-serif text-4xl font-bold leading-tight text-charcoal md:text-6xl">
+            <h2 className="display-lg text-charcoal">
               More Than a <em className="font-serif italic text-brand">Certification</em>
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-ink-soft md:text-base md:leading-8">
+            <p className="body-lg mx-auto mt-5 max-w-xl">
               Bali YTTC is a sanctuary of deep learning. We merge authentic Vedic philosophy with modern alignment in Ubud's most healing environment.
             </p>
           </div>
         </Reveal>
 
-        <div className="relative mt-12">
+        <div className="relative mt-8 md:mt-10">
           <button
             type="button"
             onClick={() => scrollSlider("prev")}
@@ -95,22 +95,24 @@ export const Manifesto = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.45, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative h-[330px] w-[268px] shrink-0 snap-center overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 shadow-[0_18px_50px_rgba(35,35,30,0.13)] md:h-[360px] md:w-[280px]"
+                className="group relative flex h-[382px] w-[268px] shrink-0 snap-center flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-[0_18px_50px_rgba(35,35,30,0.13)] md:h-[356px] md:w-[280px]"
               >
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/92 via-charcoal/20 to-charcoal/35" />
-                <span className="absolute left-4 top-4 rounded bg-white/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md">
-                  {card.eyebrow}
-                </span>
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <h3 className="font-serif text-[1.35rem] leading-tight text-white">{card.title}</h3>
-                  <p className="mt-3 text-xs leading-6 text-white/75">{card.desc}</p>
+                <div className="relative h-[176px] shrink-0 overflow-hidden md:h-[168px]">
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+                  <span className="label-caps absolute left-4 top-4 rounded-[7px] bg-sage px-3 py-1.5 text-white shadow-lg">
+                    {card.eyebrow}
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-4 md:p-5">
+                  <h3 className="display-sm text-charcoal">{card.title}</h3>
+                  <p className="mt-3 text-xs leading-6 text-ink-soft">{card.desc}</p>
                 </div>
               </motion.article>
             ))}

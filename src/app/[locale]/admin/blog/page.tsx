@@ -70,6 +70,9 @@ const defaultForm: PostForm = {
 };
 
 const categories = [
+  "Teacher Training",
+  "Certification",
+  "Bali Experience",
   "Yoga Philosophy",
   "Asana Practice",
   "Meditation",

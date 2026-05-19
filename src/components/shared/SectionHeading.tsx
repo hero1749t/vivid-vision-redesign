@@ -17,19 +17,19 @@ export const SectionHeading = ({ eyebrow, title, sub, align = "left", light, cla
   >
     {eyebrow && (
       <Reveal>
-        <p className={`eyebrow mb-5 ${light ? "text-sage-light" : "text-sage"}`}>
+        <p className={`label-caps mb-5 inline-flex items-center gap-3 ${light ? "text-sage-light" : "text-sage"}`}>
           {eyebrow}
         </p>
       </Reveal>
     )}
     <Reveal delay={0.05}>
-      <h2 className={`heading-xl ${light ? "text-cream" : "text-charcoal"}`}>
+      <h2 className={`display-lg ${light ? "text-cream" : "text-charcoal"}`}>
         {title}
       </h2>
     </Reveal>
     {sub && (
       <Reveal delay={0.1}>
-        <p className={`mt-5 text-base leading-relaxed ${light ? "text-cream/70" : "text-ink-soft"}`}>
+        <p className={`body-lg mt-5 ${light ? "text-cream/70" : "text-ink-soft"}`}>
           {sub}
         </p>
       </Reveal>

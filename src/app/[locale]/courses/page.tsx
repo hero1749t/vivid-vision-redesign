@@ -52,7 +52,7 @@ export default async function CoursesPage({ params }: { params: { locale: string
                       </div>
                     </div>
                     <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="font-serif text-xl font-bold text-warm-dark mb-2">
+                      <h3 className="display-sm mb-2 text-warm-dark">
                         {course.name}
                       </h3>
                       <p className="text-warm-mid text-sm mb-4 line-clamp-2 flex-1">
@@ -70,8 +70,8 @@ export default async function CoursesPage({ params }: { params: { locale: string
                       </div>
                       <div className="flex items-center justify-between pt-4 border-t border-warm-light/20">
                         <div>
-                          <p className="text-xs text-warm-mid">Starting from</p>
-                          <p className="font-bold text-xl text-warm-dark">EUR {course.priceFrom}</p>
+                          <p className="price-label">Starting from</p>
+                          <p className="price-value text-warm-dark">EUR {course.priceFrom}</p>
                         </div>
                         <div className="flex gap-2">
                           <Link href={`/courses/${course.slug}`}>
@@ -101,7 +101,7 @@ export default async function CoursesPage({ params }: { params: { locale: string
           {/* CTA */}
           <Reveal delay={0.3}>
             <div className="mt-16 bg-gradient-to-r from-terra to-terra-deep rounded-2xl p-8 md:p-12 text-center text-white">
-              <h3 className="font-serif text-2xl md:text-3xl font-bold mb-4">
+              <h3 className="display-md mb-4">
                 Not Sure Which Program is Right for You?
               </h3>
               <p className="text-white/80 mb-6 max-w-2xl mx-auto">

@@ -153,12 +153,6 @@ const accommodationOptions = [
     desc: "Private room with premium amenities, daily housekeeping",
     popular: true,
   },
-  {
-    name: "Luxury Villa",
-    price: "+ €900",
-    desc: "Deluxe villa with garden view, bathtub, premium everything",
-    popular: false,
-  },
 ];
 
 const earlyBirdBenefits = [
@@ -193,7 +187,7 @@ const paymentOptions = [
 const pricingFaqs = [
   { q: "What's included in the course fee?", a: "Everything: accommodation (shared villa), 3 sattvic vegetarian meals daily, all yoga sessions, workshops, ceremonies, excursions, course manual, and your Yoga Alliance certification. Flights, visa, and travel insurance are not included." },
   { q: "Is the deposit refundable?", a: "Deposits are partially refundable up to 30 days before the course start date (minus a €50 admin fee). Within 30 days, deposits are non-refundable but can be transferred to a future batch. Full payments can be cancelled up to 30 days before for a full refund." },
-  { q: "Can I upgrade my accommodation?", a: "Yes! Private and luxury villa upgrades are available for an additional fee. Simply let us know when booking and we'll arrange everything. Private upgrades are subject to availability." },
+  { q: "Can I upgrade my accommodation?", a: "Yes. Private room upgrades are available for an additional fee and subject to availability. Simply let us know when booking and we'll arrange everything." },
   { q: "Are there any hidden costs?", a: "No hidden costs. Your course fee covers accommodation, meals, training, materials, and certification. Optional extras: private yoga sessions (€50/hr), spa treatments, additional excursions, and personal expenses." },
   { q: "What payment methods do you accept?", a: "We accept Razorpay, PayPal, and bank transfer (EUR preferred). All payments are processed securely. Currency is auto-detected but you can manually switch EUR/USD." },
   { q: "When do I need to pay the full amount?", a: "For deposit bookings, the balance is due 30 days before your course start date. You'll receive payment reminders at 45, 30, 14, and 7 days before. Installment plans are available for longer programs." },
@@ -218,7 +212,7 @@ const Pricing = () => {
             <p className="eyebrow text-gold-light mb-5">Investment in Your Transformation</p>
           </Reveal>
           <Reveal delay={0.1}>
-            <h1 className="font-serif font-bold text-cream leading-[1.04] heading-display" style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.4rem)" }}>
+            <h1 className="display-xl text-cream">
               Transparent <em className="text-terra-light">Pricing</em>
             </h1>
           </Reveal>
@@ -234,7 +228,7 @@ const Pricing = () => {
                   View Course Pricing
                 </Button>
               </a>
-              <Button variant="outline" className="h-12 px-8 border-cream/30 text-cream hover:bg-cream/10">
+              <Button variant="outline" className="h-12 border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10 hover:text-cream">
                 Download Price Guide (PDF)
               </Button>
             </div>
@@ -293,7 +287,7 @@ const Pricing = () => {
                         <span className="text-xs font-bold tracking-widest uppercase text-terra bg-terra/10 px-3 py-1 rounded-full">{course.level}</span>
                         <span className="text-xs text-warm-light">{course.duration}</span>
                       </div>
-                      <h2 className="font-serif text-3xl text-warm-dark font-bold">{course.course}</h2>
+                      <h2 className="display-md text-warm-dark">{course.course}</h2>
                       <p className="mt-2 text-ink-soft leading-relaxed">{course.description}</p>
 
                       {/* Includes */}
@@ -317,18 +311,18 @@ const Pricing = () => {
                     <div className="bg-warm-dark rounded-2xl p-6 md:p-8 text-cream mb-6">
                       <div className="flex items-end justify-between gap-4">
                         <div>
-                          <p className="text-xs text-cream/60 uppercase tracking-wide">Investment from</p>
+                          <p className="price-label text-cream/60">Investment from</p>
                           <div className="flex items-baseline gap-3 mt-1">
-                            <span className="font-serif text-5xl font-bold text-cream">€{course.priceFrom}</span>
+                            <span className="price-value text-cream">EUR {course.priceFrom}</span>
                             {course.priceFrom < course.regularPrice && (
-                              <span className="text-cream/50 line-through text-2xl">€{course.regularPrice}</span>
+                              <span className="text-cream/50 line-through text-lg">EUR {course.regularPrice}</span>
                             )}
                           </div>
                           <p className="text-xs text-cream/60 mt-1">All-inclusive per person</p>
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-cream/60">Or from</p>
-                          <p className="font-serif text-2xl font-bold text-terra-light">€{course.deposit}</p>
+                          <p className="price-value text-terra-light">EUR {course.deposit}</p>
                           <p className="text-xs text-cream/60">deposit to secure your spot</p>
                         </div>
                       </div>
@@ -394,9 +388,9 @@ const Pricing = () => {
                                 </span>
                               )}
                               <div className="text-right">
-                                <p className="font-serif text-xl font-bold text-terra-deep">€{batch.price}</p>
+                                <p className="price-value text-terra-deep">EUR {batch.price}</p>
                                 {batch.earlyBird && (
-                                  <p className="text-xs text-warm-light line-through">€{course.regularPrice}</p>
+                                  <p className="text-xs text-warm-light line-through">EUR {course.regularPrice}</p>
                                 )}
                               </div>
                               <ApplyModal
@@ -412,7 +406,7 @@ const Pricing = () => {
                           {batch.earlyBird && batch.earlyBirdDeadline && (
                             <p className="mt-2 text-xs text-amber-700 bg-amber-100 rounded-lg px-3 py-2 inline-flex items-center gap-1">
                               <Percent className="w-3 h-3" />
-                              Early bird ends {batch.earlyBirdDeadline} — save €{course.regularPrice - batch.price}
+                              Early bird ends {batch.earlyBirdDeadline} — save EUR {course.regularPrice - batch.price}
                             </p>
                           )}
                         </div>
@@ -441,8 +435,8 @@ const Pricing = () => {
                       <p className="text-xs text-warm-light">{retreat.location} · {retreat.includes}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-serif text-2xl font-bold text-terra-deep">€{retreat.price}</p>
-                      <p className="text-xs text-warm-light">from €{retreat.deposit} deposit</p>
+                      <p className="price-value text-terra-deep">EUR {retreat.price}</p>
+                      <p className="text-xs text-warm-light">from EUR {retreat.deposit} deposit</p>
                     </div>
                   </div>
                 ))}
@@ -460,7 +454,7 @@ const Pricing = () => {
                       <p className="text-xs text-warm-light">{workshop.duration}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-serif text-2xl font-bold text-terra-deep">€{workshop.price}</p>
+                      <p className="price-value text-terra-deep">EUR {workshop.price}</p>
                       {workshop.duration.includes("Save") && (
                         <p className="text-xs text-sage font-semibold">{workshop.duration}</p>
                       )}
@@ -479,7 +473,7 @@ const Pricing = () => {
           <SectionHeading
             eyebrow="Accommodation"
             title={<>Your home in <em className="text-terra">Ubud</em></>}
-            sub="All courses include shared villa accommodation. Upgrade to a private or luxury villa for added comfort."
+            sub="All courses include shared accommodation. Private room upgrades are available for added comfort, subject to availability."
           />
           <div className="mt-14 grid md:grid-cols-3 gap-6">
             {accommodationOptions.map((room) => (
@@ -492,10 +486,10 @@ const Pricing = () => {
                   {room.popular && (
                     <span className="bg-cream text-terra text-xs font-bold px-3 py-1 rounded-full">Most Chosen</span>
                   )}
-                  <h3 className={`font-serif text-2xl font-bold mt-4 ${room.popular ? "text-cream" : "text-warm-dark"}`}>
+                  <h3 className={`display-sm mt-4 ${room.popular ? "text-cream" : "text-warm-dark"}`}>
                     {room.name}
                   </h3>
-                  <p className={`font-serif text-3xl font-bold mt-2 ${room.popular ? "text-cream" : "text-terra-deep"}`}>
+                  <p className={`price-value mt-2 ${room.popular ? "text-cream" : "text-terra-deep"}`}>
                     {room.price}
                   </p>
                   <p className={`text-sm mt-3 leading-relaxed ${room.popular ? "text-cream/70" : "text-warm-mid"}`}>
@@ -523,7 +517,7 @@ const Pricing = () => {
             <div>
               <Reveal>
                 <p className="eyebrow text-gold-light mb-5">Limited Time Offer</p>
-                <h2 className="font-serif text-4xl md:text-5xl font-bold leading-tight">
+                <h2 className="display-lg">
                   Early Bird <em className="text-terra-light">Benefits</em>
                 </h2>
                 <p className="mt-6 text-cream/70 leading-relaxed">
@@ -572,7 +566,7 @@ const Pricing = () => {
                   <div className={`${option.color} w-12 h-12 rounded-xl flex items-center justify-center mb-5`}>
                     <option.icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-serif text-xl text-warm-dark font-bold">{option.title}</h3>
+                  <h3 className="display-sm text-warm-dark">{option.title}</h3>
                   <ul className="mt-4 space-y-2">
                     {option.benefits.map((b) => (
                       <li key={b} className="flex items-start gap-2 text-sm text-warm-mid">
@@ -631,7 +625,7 @@ const Pricing = () => {
       <section className="py-24 md:py-32 bg-warm-dark text-center">
         <div className="container-edit max-w-3xl mx-auto">
           <Reveal>
-            <h2 className="font-serif text-4xl md:text-5xl text-cream font-bold leading-tight">
+            <h2 className="display-lg text-cream">
               Ready to invest in your <em className="text-terra-light">transformation?</em>
             </h2>
             <p className="mt-6 text-cream/70 text-lg">
@@ -647,7 +641,7 @@ const Pricing = () => {
                 }
               />
               <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline" className="h-14 px-10 border-cream/30 text-cream hover:bg-cream/10">
+                <Button size="lg" variant="outline" className="h-14 border-cream/30 bg-transparent px-10 text-cream hover:bg-cream/10 hover:text-cream">
                   Chat on WhatsApp
                 </Button>
               </a>

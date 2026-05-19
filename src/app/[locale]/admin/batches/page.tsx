@@ -19,7 +19,7 @@ interface CourseOption {
 }
 
 interface Accommodation {
-  type: "SHARED" | "PRIVATE" | "LUXURY";
+  type: "SHARED" | "PRIVATE";
   price: string;
   mandatory: boolean;
 }
@@ -73,7 +73,6 @@ const defaultBatchForm: BatchForm = {
   accommodation: [
     { type: "SHARED", price: "0", mandatory: false },
     { type: "PRIVATE", price: "0", mandatory: false },
-    { type: "LUXURY", price: "0", mandatory: false },
   ],
 };
 

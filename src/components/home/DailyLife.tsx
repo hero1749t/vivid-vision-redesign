@@ -5,12 +5,8 @@ import { Reveal } from "@/components/shared/Reveal";
 import { motion } from "framer-motion";
 
 export const DailyLife = () => (
-  <section id="daily-life" className="relative py-20 md:py-36 bg-gradient-to-b from-white via-orange-50/20 to-white overflow-hidden">
-    {/* Decorative Background */}
-    <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-to-br from-amber-100/20 to-orange-100/10 rounded-full blur-3xl opacity-40" />
-    <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-amber-50/20 to-orange-50/10 rounded-full blur-3xl opacity-30" />
-
-    <div className="container-edit relative z-10 mb-12 md:mb-16 px-4 md:px-0">
+  <section id="daily-life" className="relative overflow-hidden border-y border-stone-100 bg-white py-12 md:py-16">
+    <div className="container-edit relative z-10 mb-8 md:mb-10">
       <SectionHeading
         eyebrow="A day in training"
         title={
@@ -22,20 +18,19 @@ export const DailyLife = () => (
             </span>
           </>
         }
-        sub="Experience a holistic rhythm of practice, study, mindfulness, and ceremony. Each day is thoughtfully designed to deepen your yoga journey through balanced living."
+        sub="A steady rhythm of practice, study, mindfulness, and ceremony through each training day."
       />
     </div>
 
-    {/* Horizontal Scrollable Cards */}
     <div className="container-wide relative z-10">
-      <div className="flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:px-0 md:mx-0">
+      <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-5 [scrollbar-width:none] md:gap-5 md:px-0 md:mx-0 [&::-webkit-scrollbar]:hidden">
         {DAILY_LIFE.map((d, i) => (
           <Reveal key={d.title} delay={i * 0.05}>
             <motion.article
-              whileHover={{ y: -8, scale: 1.02 }}
-              className="snap-start shrink-0 w-[280px] md:w-[340px] lg:w-[380px] group cursor-pointer"
+              whileHover={{ y: -6 }}
+              className="group w-[265px] shrink-0 snap-start cursor-pointer md:w-[320px]"
             >
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-gray-200 to-gray-300">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[14px] bg-stone-200 shadow-[0_12px_28px_rgba(35,35,30,0.08)] transition-all duration-500 hover:shadow-[0_18px_40px_rgba(35,35,30,0.13)]">
                 <img
                   src={d.img}
                   alt={d.title}
@@ -44,33 +39,19 @@ export const DailyLife = () => (
                   decoding="async"
                 />
 
-                {/* Multiple Gradient Overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/25 to-black/5" />
 
-                {/* Time Badge */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  className="absolute top-4 left-4 bg-white/95 backdrop-blur text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow-lg font-mono tracking-wider"
+                  className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1.5 text-[11px] font-semibold tracking-[0.08em] text-charcoal shadow-sm backdrop-blur"
                 >
                   {d.time}
                 </motion.div>
 
-                {/* Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-white">
-                  <h3 className="font-serif text-2xl md:text-3xl leading-tight font-bold mb-2">{d.title}</h3>
-                  <p className="text-sm md:text-base text-white/85 leading-relaxed font-light">{d.desc}</p>
-
-                  {/* Decorative element */}
-                  <motion.div
-                    className="mt-4 flex items-center gap-2"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                  >
-                    <div className="w-1 h-1 rounded-full bg-amber-300" />
-                    <span className="text-[10px] uppercase tracking-widest text-amber-300">Experience it</span>
-                  </motion.div>
+                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                  <h3 className="display-sm mb-2">{d.title}</h3>
+                  <p className="line-clamp-3 text-sm font-medium leading-relaxed text-white/86">{d.desc}</p>
                 </div>
               </div>
             </motion.article>
@@ -78,8 +59,7 @@ export const DailyLife = () => (
         ))}
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="mt-6 md:mt-8 flex items-center justify-center gap-2 text-gray-500 text-xs">
+      <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500 md:hidden">
         <span>Swipe to explore</span>
       </div>
     </div>

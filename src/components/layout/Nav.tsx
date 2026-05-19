@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname as useLocation } from "@/i18n/routing";
 import { ApplyModal } from "@/components/shared/ApplyModal";
 import { BalieytcLogo } from "@/components/shared/BalieytcLogo";
@@ -27,10 +27,9 @@ const menuColumns = [
     links: [
       { label: "Activities", to: "/activities", strong: true },
       { label: "Gallery", to: "/gallery" },
-      { label: "Testimonials", to: "/#testimonials" },
-      { label: "Youtube Videos", to: "/#campus-video" },
+      { label: "Testimonials", to: "/testimonials" },
+      { label: "Youtube Videos", to: "/videos" },
       { label: "Blog", to: "/blog" },
-      { label: "FAQ", to: "/#faq" },
     ],
   },
   {
@@ -48,8 +47,8 @@ const menuColumns = [
     links: [
       { label: "About Bali YTTC", to: "/about", strong: true },
       { label: "Teachers", to: "/instructors" },
-      { label: "Yoga Alliance", to: "/#trust" },
-      { label: "Student Reviews", to: "/#testimonials" },
+      { label: "Yoga Alliance", to: "/yoga-alliance" },
+      { label: "Student Reviews", to: "/testimonials" },
       { label: "Terms & Policy", to: "/terms" },
     ],
   },
@@ -57,6 +56,7 @@ const menuColumns = [
 
 export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
   const t = useTranslations("Navigation");
+  const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = useLocation();
@@ -83,9 +83,8 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
 
   const isLightMode = scrolled || !onHome || menuOpen;
   const textClass = isLightMode ? "text-gray-900" : "text-white";
-  const subTextClass = isLightMode ? "text-gray-500" : "text-white/60";
   const iconClass = isLightMode ? "text-gray-900 hover:bg-gray-100" : "text-white hover:bg-white/10";
-  const desktopLinkClass = isLightMode ? "text-gray-700 hover:text-brand" : "text-white/90 hover:text-white";
+  const desktopLinkClass = isLightMode ? "text-gray-800 hover:text-brand" : "text-white hover:text-white";
   const desktopPanelClass = isLightMode
     ? "border-gray-100 bg-white text-gray-900 shadow-premium-lg"
     : "border-white/20 bg-neutral-950/95 text-white shadow-[0_24px_70px_rgba(0,0,0,0.55)] ring-1 ring-white/10";
@@ -104,9 +103,11 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
   const experienceLinks = [
     { label: t("activities"), description: "Workshops, ceremonies and Bali culture", to: "/activities" },
     { label: t("gallery"), description: "Student moments and campus life", to: "/gallery" },
-    { label: t("testimonials"), description: "Real student reviews", to: "/#testimonials" },
-    { label: t("videos"), description: "Campus and alumni video journals", to: "/#campus-video" },
+    { label: t("testimonials"), description: "Real student reviews", to: "/testimonials" },
+    { label: t("videos"), description: "Campus and alumni video journals", to: "/videos" },
   ];
+
+  const localizedMenuHref = (to = "/") => (to.startsWith("/") ? `/${locale}${to}` : to);
 
   return (
     <>
@@ -132,12 +133,14 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
 
         <div className="container-wide" style={{ height: `${NAV_H}px` }}>
           <div className="relative flex h-full items-center justify-between gap-4">
-            <Link href="/" className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-2.5 transition-opacity hover:opacity-90">
-              <BalieytcLogo className="h-10 w-10 flex-shrink-0" showText={false} />
-              <div className="hidden flex-col leading-none sm:flex">
-                <span className={`text-sm font-bold tracking-[0.04em] transition-colors ${textClass}`}>Bali YTTC</span>
-                <span className={`mt-[3px] text-[9px] font-semibold uppercase tracking-[0.16em] transition-colors ${subTextClass}`}>
-                  Yoga Teacher Training
+            <Link href="/" className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-3 transition-opacity hover:opacity-95">
+              <BalieytcLogo
+                className="h-[48px] w-[48px] flex-shrink-0 rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.18)] sm:h-[52px] sm:w-[52px]"
+                showText={false}
+              />
+              <div className="hidden items-center sm:flex">
+                <span className={`font-serif text-[22px] font-semibold leading-none tracking-[0.015em] drop-shadow-[0_1px_5px_rgba(0,0,0,0.22)] transition-colors ${textClass}`}>
+                  Bali YTTC
                 </span>
               </div>
             </Link>
@@ -146,7 +149,7 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
               <div className="group relative">
                 <button
                   type="button"
-                  className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}
+                  className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-xs font-extrabold uppercase tracking-[0.12em] transition-colors ${desktopLinkClass}`}
                 >
                   {t("trainings")}
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
@@ -172,7 +175,7 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
               <div className="group relative">
                 <button
                   type="button"
-                  className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors ${desktopLinkClass}`}
+                  className={`inline-flex h-9 items-center gap-1 rounded-lg px-3 text-xs font-extrabold uppercase tracking-[0.12em] transition-colors ${desktopLinkClass}`}
                 >
                   {t("experience")}
                   <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
@@ -268,9 +271,9 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
                         );
                       }
                       return (
-                        <Link key={link.label} href={link.to ?? "/"} onClick={() => setMenuOpen(false)} className={cls}>
+                        <a key={link.label} href={localizedMenuHref(link.to)} onClick={() => setMenuOpen(false)} className={cls}>
                           {link.label}
-                        </Link>
+                        </a>
                       );
                     })}
                   </div>
