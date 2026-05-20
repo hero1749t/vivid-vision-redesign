@@ -6,7 +6,6 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname as useLocation } from "@/i18n/routing";
 import { ApplyModal } from "@/components/shared/ApplyModal";
-import { BalieytcLogo } from "@/components/shared/BalieytcLogo";
 import { SITE } from "@/data/site";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
@@ -134,15 +133,13 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
         <div className="container-wide" style={{ height: `${NAV_H}px` }}>
           <div className="relative flex h-full items-center justify-between gap-4">
             <Link href="/" className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-3 transition-opacity hover:opacity-95">
-              <BalieytcLogo
-                className="h-[48px] w-[48px] flex-shrink-0 rounded-full shadow-[0_8px_22px_rgba(0,0,0,0.18)] sm:h-[52px] sm:w-[52px]"
-                showText={false}
+              <img
+                src="/logo-full.png"
+                alt="Bali YTTC"
+                className="h-auto w-[120px] flex-shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)] sm:w-[140px]"
+                loading="eager"
+                decoding="async"
               />
-              <div className="hidden items-center sm:flex">
-                <span className={`font-serif text-[22px] font-semibold leading-none tracking-[0.015em] drop-shadow-[0_1px_5px_rgba(0,0,0,0.22)] transition-colors ${textClass}`}>
-                  Bali YTTC
-                </span>
-              </div>
             </Link>
 
             <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
