@@ -1,9 +1,11 @@
 # PRD v2.0 vs Current Implementation — GAP ANALYSIS
 
-**Date:** May 11, 2026  
+**Date:** May 21, 2026  
 **Project:** Bali YTTC Digital Ecosystem  
 **PRD Version:** v2.0 Final Discovery  
-**Analysis Mode:** Architecture Review
+**Analysis Mode:** Current implementation review
+
+> Status update: this file originally captured the early May gap analysis. The current implementation has since moved to a Next.js App Router app with Prisma, PostgreSQL-ready data model, Firebase/session auth, admin dashboard, student PWA routes, Razorpay/PayPal/bank transfer payment paths, 8 locale message files, and organized docs/assets folders. Historical gap notes below are kept for traceability where useful.
 
 ---
 
@@ -61,7 +63,7 @@
 | French | fr | ❌ Missing | MEDIUM — EU market |
 | Russian | ru | ❌ Missing | LOW — Small market |
 
-**Note:** Need to create src/i18n/messages/es.json, src/i18n/messages/de.json, src/i18n/messages/ko.json, src/i18n/messages/ja.json, src/i18n/messages/fr.json, src/i18n/messages/ru.json
+**Note:** Locale message files now live under `src/i18n/messages/`. Remaining work is translation QA and route/content review, not file creation.
 
 ### 3. PAYMENT & ENROLLMENT FLOW — Completely Missing
 

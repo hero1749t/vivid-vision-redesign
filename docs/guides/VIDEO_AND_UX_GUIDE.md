@@ -1,5 +1,7 @@
 # Balieytc - Video System & UX Implementation Guide
 
+Current status (May 21, 2026): the hero background video now lives at `public/videos/hero-yoga-1080.mp4`, and review videos live under `public/reviews/`. Use this guide when replacing existing assets or adding new campus/course videos.
+
 ## 🎬 Video Integration Instructions
 
 ### Option 1: YouTube (Recommended)

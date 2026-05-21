@@ -158,12 +158,12 @@ npx tailwindcss -i ./src/app/globals.css -o ./src/output.css --minify
 const Heavy = lazy(() => import('./HeavyComponent'));
 
 // Route-based splitting
-const CourseDetail = lazy(() => import('@/pages/CourseDetail'));
+const CourseDetail = lazy(() => import('@/views/CoursePage'));
 ```
 
-✅ **Minification** (Vite automatic)
+✅ **Minification** (Next.js production build)
 ```
-Production build automatically:
+Next.js production build automatically:
 - Minifies all JS/CSS
 - Tree-shakes unused code
 - Creates source maps (optional)
@@ -171,11 +171,11 @@ Production build automatically:
 
 ✅ **Bundle Analysis**
 ```bash
-# Install vite-plugin-visualizer
-npm install -D vite-plugin-visualizer
+# Install a Next.js bundle analyzer when needed
+npm install -D @next/bundle-analyzer
 
 # Check bundle size
-npm run build  # Check dist/ folder
+npm run build  # Check .next/ output and analyzer report if configured
 ```
 
 ### **React Performance**
@@ -248,23 +248,14 @@ animate={{ color: '#fff' }}
 
 ## 🔧 Build Optimization
 
-### **Vite Configuration**
+### **Next.js Configuration**
 ```javascript
-// vite.config.ts
-export default defineConfig({
-  build: {
-    target: 'esnext',
-    minify: 'terser',
-    sourcemap: false,  // Disable in production
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-        },
-      },
-    },
+// next.config.mjs
+const nextConfig = {
+  images: {
+    domains: ['images.unsplash.com', 'firebasestorage.googleapis.com'],
   },
-});
+};
 ```
 
 ### **Production Build**
@@ -272,11 +263,11 @@ export default defineConfig({
 # Build optimized production version
 npm run build
 
-# Analyze bundle
-npm run build -- --stats
+# Analyze bundle after adding a Next.js bundle analyzer
+npm run build
 
-# Preview production build
-npm run preview
+# Run production server locally
+npm run start
 ```
 
 ---
@@ -427,7 +418,7 @@ Benefits:
    - Time: 30 minutes
 
 3. **Minification** (+8% speed)
-   - Already done by Vite in production
+   - Already done by Next.js in production
    - Ensure source maps off in production
    - Time: Already implemented
 
@@ -463,7 +454,7 @@ Benefits:
 
 - [Web.dev - Performance](https://web.dev/performance/)
 - [Google Lighthouse](https://developers.google.com/web/tools/lighthouse)
-- [Vite Performance Guide](https://vitejs.dev/guide/ssr.html)
+- [Next.js Performance Docs](https://nextjs.org/docs/app/building-your-application/optimizing)
 - [React Performance](https://react.dev/reference/react/memo)
 - [Framer Motion Performance](https://www.framer.com/motion/animation-performance/)
 

@@ -250,7 +250,7 @@ Mobile-first approach:
 ✅ Tailwind CSS purges unused styles
 ✅ Code splitting for routes
 ✅ Dynamic imports for heavy components
-✅ Minified in production (Vite)
+✅ Minified in production (Next.js)
 ✅ No unused dependencies
 
 ### **Caching Strategy**
@@ -354,8 +354,8 @@ Complete performance guide:
 ## 🚀 Next Immediate Steps
 
 ### **Priority 1: Video Integration** 🎥
-- [ ] Add actual campus tour video (YouTube/Vimeo/MP4)
-- [ ] Update VideoShowcase.tsx with real video ID
+- [ ] Verify or replace current VideoShowcase review videos
+- [ ] Update VideoShowcase.tsx only if new video assets are added
 - [ ] Test video playback on all devices
 - [ ] Verify mute/fullscreen buttons work
 
@@ -373,7 +373,7 @@ Complete performance guide:
 
 ### **Priority 4: Deployment** 🚀
 - [ ] Run production build: `npm run build`
-- [ ] Test production version locally: `npm run preview`
+- [ ] Test production version locally: `npm run start`
 - [ ] Deploy to hosting (Vercel/Netlify)
 - [ ] Setup domain and SSL
 
@@ -393,7 +393,7 @@ Complete performance guide:
 - ✅ `docs/guides/MOBILE_OPTIMIZATION_GUIDE.md`
 - ✅ `docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md`
 - ✅ `docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md`
-- ✅ `PHASE_5_ENHANCEMENTS_SUMMARY.md` (this file)
+- ✅ `docs/project/PHASE_5_COMPLETE_SUMMARY.md` (this file)
 
 ---
 
@@ -466,7 +466,7 @@ Complete performance guide:
 🌟 Performance-focused
 
 **Next Focus:**
-1. Add actual video to VideoShowcase
+1. Verify or replace current VideoShowcase videos
 2. Test on real devices
 3. Deploy to production
 4. Monitor analytics

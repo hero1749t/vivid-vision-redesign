@@ -1,5 +1,7 @@
 # Gmail Setup Guide for Bali YTTC
 
+Current status (May 21, 2026): Resend is the preferred production transactional provider. Gmail SMTP remains documented as a fallback/testing option, and EmailJS remains relevant only for client-side contact-form style integrations if the team chooses to keep it.
+
 ## Prerequisites
 - Client's Gmail account (with 2-Factor Authentication enabled)
 - Access to Google Account settings

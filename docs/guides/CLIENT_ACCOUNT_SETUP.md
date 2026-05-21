@@ -28,7 +28,7 @@ Use this checklist when moving from the current staging setup to client-owned ac
 
 4. Database
    - Testing: Railway/Neon/Supabase Postgres is acceptable.
-   - Final VPS: use the `postgres` service from `docker-compose.vps.yml`, or use managed Postgres if the client prefers lower maintenance.
+   - Final VPS: use the `postgres` service from root `docker-compose.vps.yml`, or use managed Postgres if the client prefers lower maintenance.
    - Do not use laptop Postgres for production.
 
 5. Email

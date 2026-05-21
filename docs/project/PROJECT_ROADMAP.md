@@ -1,5 +1,7 @@
 # Bali YTTC Production Roadmap
 
+Current update (May 21, 2026): Phase 0 through major parts of Phase 5 are implemented in the Next.js codebase. The repo has also been reorganized into `docs/`, `design/`, `assets/source/`, `src/views/`, and `src/i18n/messages/`. Remaining roadmap work is mostly final credentials, live provider smoke tests, production VPS handoff, observability, backups, and manual QA.
+
 ## Locked Decisions
 
 - Brand: Bali YTTC
@@ -23,12 +25,11 @@
 
 ## Phase 0: Foundation
 
-- Fix locale list and add Russian routing/messages.
-- Repair language switcher display text.
-- Add browser/IP language detection for first visit.
-- Fix middleware for locale-prefixed `/admin`, `/app`, and `/staff` routes.
-- Replace stale static sitemap/robots with production-safe dynamic files.
-- Create admin-config foundation for URLs, payment toggles, assets, and global site settings.
+- Status: mostly complete in the current Next.js app.
+- Locale routing/messages exist under `src/i18n`.
+- Middleware supports locale-prefixed protected areas.
+- Dynamic sitemap/robots exist under `src/app`.
+- Admin/settings foundations and environment examples are in place.
 
 ## Phase 1: Website Production Flow
 

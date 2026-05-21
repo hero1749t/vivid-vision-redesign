@@ -1,5 +1,7 @@
 # Balieytc Website Transformation - Complete Changelog
 
+Current status (May 21, 2026): the repo has been reorganized into `docs/`, `design/`, `assets/source/`, `src/views/`, `src/i18n/messages/`, and cleaner `public/images` / `public/videos` asset folders. This changelog is historical plus current path references.
+
 ## Project Overview
 This document outlines all the modifications made to transform the Bali YTTC website into a modern, professional Balieytc (Yoga & Wellness Center) website with advanced features, improved branding, and comprehensive SEO optimization.
 

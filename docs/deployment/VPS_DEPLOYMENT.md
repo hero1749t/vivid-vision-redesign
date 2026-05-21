@@ -5,7 +5,7 @@ This is the target production deployment flow after staging is complete.
 ## VPS Requirements
 
 - Ubuntu 22.04 or 24.04
-- 2 GB RAM minimum, 4 GB preferred
+- 4 GB RAM minimum, 8 GB preferred for production builds
 - Docker + Docker Compose
 - Nginx or Caddy as the public reverse proxy
 - Cloudflare DNS in front of the VPS

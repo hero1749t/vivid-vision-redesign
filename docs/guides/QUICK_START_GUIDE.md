@@ -3,6 +3,7 @@
 ## 📍 Current Status: Phase 5 Complete ✅
 
 Your Balieytc website now has:
+Current implementation update: Next.js App Router, admin panel, student PWA, payments, i18n, video assets, and docs cleanup are now in place.
 - ✅ Premium Schedule section with urgency badges
 - ✅ Enhanced Experiences with animations
 - ✅ Expanded Trust metrics
@@ -16,7 +17,7 @@ Your Balieytc website now has:
 
 ## 🎯 Immediate Actions (Do These Next)
 
-### **Step 1: Add Your Video** (30 minutes)
+### **Step 1: Verify Videos** (30 minutes)
 
 **Choose one option:**
 
@@ -58,7 +59,7 @@ Your Balieytc website now has:
 ### **Step 2: Test Everything** (30 minutes)
 
 **On Desktop:**
-1. Open http://localhost:5173
+1. Open http://localhost:3000
 2. Scroll through all sections
 3. Click all buttons/CTAs
 4. Test form (don't submit)
@@ -101,7 +102,7 @@ netlify deploy
 **If using custom hosting:**
 ```bash
 npm run build
-# Upload dist/ folder to your hosting
+# Run the Next.js app with npm run start on your Node host
 ```
 
 ---
@@ -154,15 +155,14 @@ ReactGA.event('form_start', {
 ```bash
 # Start development server
 npm run dev
-# Visit http://localhost:5173
+# Visit http://localhost:3000
 
 # Build for production
 npm run build
-# Creates dist/ folder
+# Creates .next/ production output
 
-# Preview production build
-npm run preview
-# Test production locally
+# Test production build locally
+npm run start
 
 # Check for errors
 npm run lint
@@ -237,7 +237,7 @@ A: Edit `src/data/site.ts` → SITE object, or search component for hardcoded te
 
 | Feature | Status | Location |
 |---------|--------|----------|
-| Video Integration | 🟡 Needs your video | VideoShowcase |
+| Video Integration | ✅ Base assets present | VideoShowcase, Hero |
 | Form with validation | ✅ Done | ApplyModal |
 | Urgency messaging | ✅ Done | Schedule section |
 | Trust badges | ✅ Done | TrustStrip |
@@ -301,7 +301,7 @@ Check:
 - **React Docs:** https://react.dev
 - **Tailwind CSS:** https://tailwindcss.com
 - **Framer Motion:** https://www.framer.com/motion
-- **Vite Docs:** https://vitejs.dev
+- **Next.js Docs:** https://nextjs.org/docs
 
 ---
 
@@ -338,18 +338,18 @@ Your Balieytc website is:
 
 | Task | Time | Status |
 |------|------|--------|
-| Add video | 30 min | 🟡 TODO |
-| Test all features | 30 min | 🟡 TODO |
-| Deploy to production | 15 min | 🟡 TODO |
+| Verify/replace videos | 30 min | ✅ Base assets present |
+| Test all features | 30 min | 🟡 Pending manual QA |
+| Deploy to production | 15 min | 🟡 Pending final target |
 | Setup analytics | 20 min | 🟡 OPTIONAL |
-| Launch! | 5 min | 🟡 TODO |
+| Launch! | 5 min | 🟡 Pending final QA |
 | **TOTAL** | **~2 hours** | 🟡 |
 
 ---
 
 **Good luck! Your website is amazing! 🧘‍♀️✨**
 
-Questions? Check the guides in the project root:
+Questions? Check the guides in `docs/guides/`:
 - docs/guides/MOBILE_OPTIMIZATION_GUIDE.md
 - docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md
 - docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md

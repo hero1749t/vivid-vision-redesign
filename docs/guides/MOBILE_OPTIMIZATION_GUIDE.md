@@ -1,5 +1,7 @@
 # Mobile Optimization & Performance Guide
 
+Current status (May 21, 2026): the site is now a Next.js App Router app. Mobile QA should be run against `npm run dev` on `http://localhost:3000` after dependencies are installed, then repeated on the production/staging URL.
+
 ## 📱 Mobile-First Design Principles Applied
 
 ### **1. Responsive Typography**

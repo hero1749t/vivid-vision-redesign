@@ -1,5 +1,7 @@
 # Conversion Optimization & Urgency Strategy
 
+Current status (May 21, 2026): the major conversion surfaces are implemented across the marketing pages, ApplyModal, pricing/enrollment flow, payment options, urgency messaging, review videos, and admin communications. Remaining conversion work is manual funnel QA, analytics/event tracking, and live provider credential smoke tests.
+
 ## 🎯 Conversion Funnel Architecture
 
 The website is structured as a conversion funnel with strategic urgency messaging and trust signals at each stage:

@@ -12,7 +12,7 @@ npm install
 ```bash
 npm run dev
 ```
-Visit `http://localhost:5173` in your browser.
+Visit `http://localhost:3000` in your browser.
 
 ### 3. **Edit Content**
 Edit course details, teacher info, and testimonials in:
@@ -30,7 +30,7 @@ src/components/layout/
 ### 5. **Build for Production**
 ```bash
 npm run build
-npm run preview
+npm run start
 ```
 
 ---
@@ -142,10 +142,10 @@ vercel
 2. Connect repo to Netlify
 3. Auto-deploys on push
 
-### Traditional Hosting
+### Traditional Node Hosting
 ```bash
 npm run build
-# Upload 'dist' folder to your server
+# Run the Next.js server with npm run start
 ```
 
 ---
@@ -178,7 +178,7 @@ Check image URLs in `src/data/site.ts` - IMG object
 - [React Docs](https://react.dev)
 - [Tailwind CSS](https://tailwindcss.com)
 - [Framer Motion](https://www.framer.com/motion)
-- [Vite Docs](https://vitejs.dev)
+- [Next.js Docs](https://nextjs.org/docs)
 
 ---
 

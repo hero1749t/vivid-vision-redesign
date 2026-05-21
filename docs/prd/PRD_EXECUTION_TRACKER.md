@@ -4,6 +4,8 @@ Source PRD: `docs/prd/Adruva_BaliYTTC_PRD_Final.pdf` v2.0, May 2026.
 
 Working rule: finish one module end-to-end before moving to the next. A module is only `DONE` when code, data model, env setup, tests, build, and manual flow verification are complete.
 
+Current repo note (May 21, 2026): docs, design previews, source media, locale messages, public assets, legacy Vite files, and view components have been reorganized into the current professional folder structure. Local verification is currently blocked until dependencies are installed because `node_modules` is absent and `tsc` is unavailable in this workspace.
+
 ## Global Status
 
 | Module | Status | Notes |
@@ -51,8 +53,8 @@ Working rule: finish one module end-to-end before moving to the next. A module i
 | --- | --- | --- |
 | Identify intended Vercel project and Git remote | DONE | Existing Vercel link points to `baliyytc`; git has `origin` as `vivid-vision-redesign` and `origin2` as `baliyttc`. |
 | Stop shipping `.env` to Vercel | DONE | `.vercelignore` excludes `.env` and `.env.*`; `.gitignore` includes `.env`. |
-| Remove/ignore generated `.next` artifacts | IN_PROGRESS | `.next`, `.env`, and `tsconfig.tsbuildinfo` are now ignored and removed from git tracking; staged deletion is expected. |
-| Restore clean package/test baseline | IN_PROGRESS | `npm run typecheck` passes. Local `npm run build` currently reaches Next optimized build and then fails with a machine memory allocation error, not a TypeScript error. |
+| Remove/ignore generated `.next` artifacts | DONE | `.next`, `.env`, `tsconfig.tsbuildinfo`, and generated build artifacts are ignored. |
+| Restore clean package/test baseline | IN_PROGRESS | Current workspace has no `node_modules`, so `npm run typecheck` cannot start because `tsc` is unavailable. Run `npm install` before re-verifying typecheck/build. |
 | Production database plan | DONE | Railway production Postgres is linked and Prisma production schema is up to date. |
 | Firebase admin key validation | IN_PROGRESS | Firebase-backed auth flow is wired, but hosted smoke verification with real auth sessions is still pending under M10. |
 | Environment variable matrix | IN_PROGRESS | `.env.example` documents required local/preview/production keys without secrets. Core hosted envs exist; provider-level live credential verification is still pending. |

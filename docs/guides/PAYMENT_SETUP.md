@@ -2,6 +2,8 @@
 
 This project uses Razorpay, PayPal, and optional bank transfer. Stripe is intentionally removed.
 
+Current status (May 21, 2026): Razorpay, PayPal, bank transfer, coupon validation, webhook routes, and admin payment actions are wired in code. Razorpay/PayPal should remain disabled or pending until live/sandbox client credentials are supplied and smoke-tested.
+
 ## Current Testing Mode
 
 Razorpay and PayPal can remain unconfigured during the internal testing phase. When their credentials are missing, checkout keeps bank transfer available and shows Razorpay/PayPal as pending instead of failing with a broken payment flow.
