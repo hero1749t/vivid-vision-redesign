@@ -1,5 +1,5 @@
 "use client";
-import About from "@/view-pages/About";
+import About from "@/views/About";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function AboutPage() {

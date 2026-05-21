@@ -1,4 +1,4 @@
-import Retreats from "@/view-pages/Retreats";
+import Retreats from "@/views/Retreats";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export const metadata = {

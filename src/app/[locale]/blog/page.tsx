@@ -1,5 +1,5 @@
 "use client";
-import Blog from "@/view-pages/Blog";
+import Blog from "@/views/Blog";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function BlogPage() {

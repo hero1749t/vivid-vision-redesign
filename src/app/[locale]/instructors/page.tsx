@@ -1,5 +1,5 @@
 "use client";
-import Instructors from "@/view-pages/Instructors";
+import Instructors from "@/views/Instructors";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function InstructorsPage() {

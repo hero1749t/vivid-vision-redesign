@@ -221,12 +221,12 @@ Status: ✅ Professional
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| **VIDEO_AND_UX_GUIDE.md** | Video integration instructions | ✅ |
-| **MOBILE_OPTIMIZATION_GUIDE.md** | Mobile design & testing | ✅ |
-| **CONVERSION_OPTIMIZATION_GUIDE.md** | CRO framework & psychology | ✅ |
-| **PERFORMANCE_OPTIMIZATION_GUIDE.md** | Speed & optimization tips | ✅ |
-| **PHASE_5_COMPLETE_SUMMARY.md** | This phase summary | ✅ |
-| **QUICK_START_GUIDE.md** | Next steps & quick reference | ✅ |
+| **docs/guides/VIDEO_AND_UX_GUIDE.md** | Video integration instructions | ✅ |
+| **docs/guides/MOBILE_OPTIMIZATION_GUIDE.md** | Mobile design & testing | ✅ |
+| **docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md** | CRO framework & psychology | ✅ |
+| **docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md** | Speed & optimization tips | ✅ |
+| **docs/project/PHASE_5_COMPLETE_SUMMARY.md** | This phase summary | ✅ |
+| **docs/guides/QUICK_START_GUIDE.md** | Next steps & quick reference | ✅ |
 
 ---
 
@@ -446,11 +446,11 @@ Before launching:
 
 ## 🎓 Learning Resources Included
 
-- **MOBILE_OPTIMIZATION_GUIDE.md** - Mobile best practices
-- **CONVERSION_OPTIMIZATION_GUIDE.md** - CRO strategies
-- **PERFORMANCE_OPTIMIZATION_GUIDE.md** - Speed optimization
-- **VIDEO_AND_UX_GUIDE.md** - Video integration
-- **QUICK_START_GUIDE.md** - Immediate next steps
+- **docs/guides/MOBILE_OPTIMIZATION_GUIDE.md** - Mobile best practices
+- **docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md** - CRO strategies
+- **docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md** - Speed optimization
+- **docs/guides/VIDEO_AND_UX_GUIDE.md** - Video integration
+- **docs/guides/QUICK_START_GUIDE.md** - Immediate next steps
 
 All guides include code examples, best practices, and actionable steps!
 
@@ -473,16 +473,16 @@ You now have a **world-class yoga website** that:
 ## 📞 Quick Help
 
 ### **Issue: Video not playing?**
-→ Check QUICK_START_GUIDE.md → Step 1
+→ Check docs/guides/QUICK_START_GUIDE.md → Step 1
 
 ### **Issue: Mobile looks broken?**
-→ Check MOBILE_OPTIMIZATION_GUIDE.md
+→ Check docs/guides/MOBILE_OPTIMIZATION_GUIDE.md
 
 ### **Want to improve conversions further?**
-→ Read CONVERSION_OPTIMIZATION_GUIDE.md
+→ Read docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md
 
 ### **Performance issues?**
-→ Check PERFORMANCE_OPTIMIZATION_GUIDE.md
+→ Check docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md
 
 ---
 

@@ -1,5 +1,5 @@
 "use client";
-import Activities from "@/view-pages/Activities";
+import Activities from "@/views/Activities";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function ActivitiesPage() {

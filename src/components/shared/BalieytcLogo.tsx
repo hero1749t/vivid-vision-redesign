@@ -10,7 +10,7 @@ export const BalieytcLogo = ({
   showText = true,
   textClassName = "",
 }: BalieytcLogoProps) => {
-  const logoUrl = "/logo-512.png";
+  const logoUrl = "/images/brand/logo-512.png";
   const siteName = "Bali YTTC";
 
   return (

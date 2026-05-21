@@ -1,5 +1,5 @@
 "use client";
-import Gallery from "@/view-pages/Gallery";
+import Gallery from "@/views/Gallery";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function GalleryPage() {

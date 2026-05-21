@@ -102,7 +102,7 @@ Systematically updated all UI components from terra/brown tones to amber/orange:
 
 ### 4. **SEO Optimization** ✅
 
-#### Meta Tags & Headers (index.html)
+#### Meta Tags & Headers (src/app/layout.tsx)
 - Updated title to "Balieytc – Yoga Training & Wellness Center in Bali"
 - Enhanced meta description with keywords
 - Added comprehensive meta tags:
@@ -113,14 +113,14 @@ Systematically updated all UI components from terra/brown tones to amber/orange:
 - Updated theme color to amber (#d97706)
 
 #### SEO Files Created
-1. **sitemap.xml** (public/sitemap.xml)
+1. **sitemap.xml** (src/app/sitemap.ts)
    - Added all main pages
    - Course pages included
    - Proper priority levels
    - Last modified dates
    - Change frequency settings
 
-2. **robots.txt** (public/robots.txt)
+2. **robots.txt** (src/app/robots.ts)
    - Configured for search engine crawling
    - Disallow admin and private pages
    - Added sitemap reference
@@ -213,9 +213,9 @@ Systematically updated all UI components from terra/brown tones to amber/orange:
 8. ✅ src/components/shared/ApplyModal.tsx - Modal branding & colors
 
 ### Configuration & Public Files
-1. ✅ index.html - Meta tags & SEO optimization
-2. ✅ public/robots.txt - Search engine configuration
-3. ✅ public/sitemap.xml - XML sitemap created
+1. ✅ src/app/layout.tsx - Meta tags & SEO optimization
+2. ✅ src/app/robots.ts - Search engine configuration
+3. ✅ src/app/sitemap.ts - XML sitemap created
 4. ✅ README.md - Comprehensive documentation
 
 ---

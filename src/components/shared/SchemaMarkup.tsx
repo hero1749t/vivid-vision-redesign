@@ -15,7 +15,7 @@ export const OrganizationSchema = () => (
         description: SITE.philosophy,
         url: "https://baliyttc.com",
         logo: "https://baliyttc.com/logo.png",
-        image: "https://baliyttc.com/bali-hero-bg.png",
+        image: "https://baliyttc.com/images/hero/bali-hero-bg.png",
         telephone: SITE.phone,
         email: SITE.email,
         address: {

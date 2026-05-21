@@ -35,11 +35,11 @@
 ### Option 3: Self-Hosted (Full Control)
 **Best for:** Maximum control, no platform restrictions
 
-1. Place your MP4 file in `public/` folder (e.g., `public/balieytc-tour.mp4`)
+1. Place your MP4 file in `public/videos/` folder (e.g., `public/videos/balieytc-tour.mp4`)
 2. Edit `src/components/home/VideoShowcase.tsx`:
 ```typescript
 <VideoPlayer
-  src="/balieytc-tour.mp4"
+  src="/videos/balieytc-tour.mp4"
   poster={IMG.heroCeremony}
   title="Balieytc Campus Tour"
   autoPlay={false}

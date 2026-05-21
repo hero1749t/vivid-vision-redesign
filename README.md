@@ -1,33 +1,33 @@
-# Balieytc - Premium Yoga & Wellness Center
+﻿# Balieytc - Premium Yoga & Wellness Center
 
 A modern, high-performance website for Balieytc, a premier yoga and wellness center in Ubud, Bali. This site features professional yoga teacher trainings, wellness retreats, and meditation programs.
 
 ## Features
 
-✨ **Modern Design**
+âœ¨ **Modern Design**
 - Responsive, mobile-first design
 - Smooth animations and transitions
 - Professional color scheme (Amber/Orange accent colors)
 - High-performance image optimization
 
-🧘 **Yoga Training Programs**
+ðŸ§˜ **Yoga Training Programs**
 - 100-Hour Yoga Intensive
 - 200-Hour Teacher Training (Most Popular)
 - 300-Hour Advanced Training
 - Detailed course information with pricing and schedules
 
-🌍 **Yoga Alliance Certified**
+ðŸŒ **Yoga Alliance Certified**
 - RYS (Registered Yoga School) certified programs
 - Internationally recognized certifications
 - Authentic, multi-style yoga training
 
-📱 **Responsive Navigation**
+ðŸ“± **Responsive Navigation**
 - Hamburger menu for mobile devices
 - Dropdown navigation for courses
 - Sticky header with scroll animations
 - WhatsApp integration for quick contact
 
-💼 **Advanced Features**
+ðŸ’¼ **Advanced Features**
 - Application modal with multi-step form
 - Course scheduling and booking system
 - Testimonials section from real students
@@ -35,7 +35,7 @@ A modern, high-performance website for Balieytc, a premier yoga and wellness cen
 - Contact integration with Google Maps
 - Newsletter subscription
 
-🔍 **SEO Optimized**
+ðŸ” **SEO Optimized**
 - Comprehensive meta tags
 - Sitemap.xml for search engines
 - Robots.txt configuration
@@ -58,16 +58,17 @@ A modern, high-performance website for Balieytc, a premier yoga and wellness cen
 
 ```
 src/
+├── app/               # Next.js routes, layouts, API handlers
 ├── components/
 │   ├── home/          # Homepage sections (Hero, Courses, etc.)
 │   ├── layout/        # Navigation, Footer, Layout
+│   ├── navigation/    # Navigation link components
 │   └── shared/        # Reusable components (Modal, Button, etc.)
-├── pages/             # Page components (About, Courses, etc.)
+├── views/             # Page view components (About, Courses, etc.)
 ├── data/              # Static data (site config, courses, teachers)
 ├── hooks/             # Custom React hooks
-├── lib/               # Utility functions
-├── main.tsx           # App entry point
-└── index.css          # Global styles
+├── i18n/              # Locale routing, request config, messages
+└── lib/               # Utility functions and services
 ```
 
 ## Getting Started
@@ -114,8 +115,8 @@ The main brand color is Amber (used throughout):
 - Update in components as needed
 
 ### Add New Pages
-1. Create a new file in `src/pages/`
-2. Add route in `src/App.tsx`
+1. Create a new file in `src/views/`
+2. Add route in `src/app/[locale]/<route>/page.tsx`
 3. Add navigation link in `src/data/site.ts`
 
 ## Branding & Design
@@ -126,7 +127,7 @@ The main brand color is Amber (used throughout):
 - **Dark**: Warm-dark background
 
 ### Logo
-The logo uses the Om (ॐ) symbol in a gradient amber/orange circle. Update in:
+The logo uses the Om (à¥) symbol in a gradient amber/orange circle. Update in:
 - `src/components/layout/Nav.tsx`
 - `src/components/layout/Footer.tsx`
 
@@ -136,14 +137,14 @@ The logo uses the Om (ॐ) symbol in a gradient amber/orange circle. Update in:
 
 ## SEO Improvements
 
-✅ Meta tags optimization
-✅ Open Graph tags for social sharing
-✅ XML Sitemap at `/sitemap.xml`
-✅ Robots.txt configuration
-✅ Mobile-responsive design
-✅ Fast loading with image optimization
-✅ Structured data ready
-✅ Internal linking strategy
+âœ… Meta tags optimization
+âœ… Open Graph tags for social sharing
+âœ… XML Sitemap at `/sitemap.xml`
+âœ… Robots.txt configuration
+âœ… Mobile-responsive design
+âœ… Fast loading with image optimization
+âœ… Structured data ready
+âœ… Internal linking strategy
 
 ## Performance Optimizations
 
@@ -196,7 +197,7 @@ npm run build
 
 ## License
 
-Copyright © 2026 Balieytc. All rights reserved.
+Copyright Â© 2026 Balieytc. All rights reserved.
 
 ## Contact
 
@@ -211,4 +212,4 @@ For support, email us at hello@balieytc.com or contact us via WhatsApp.
 
 ---
 
-**Built with ❤️ for yoga enthusiasts worldwide**
+**Built with â¤ï¸ for yoga enthusiasts worldwide**

@@ -55,9 +55,9 @@ export const Hero = () => {
           loop
           playsInline
           controls={false}
-          poster="/bali-hero-bg.png"
+          poster="/images/hero/bali-hero-bg.png"
         >
-          <source src="/hero-yoga-1080.mp4" type="video/mp4" />
+          <source src="/videos/hero-yoga-1080.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </motion.div>

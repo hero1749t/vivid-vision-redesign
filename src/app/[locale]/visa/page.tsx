@@ -1,4 +1,4 @@
-import VisaInfo from "@/view-pages/VisaInfo";
+import VisaInfo from "@/views/VisaInfo";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export const metadata = {

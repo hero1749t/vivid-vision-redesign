@@ -41,14 +41,14 @@ Your Balieytc website now has:
    ```
 
 #### **Option C: Self-Hosted MP4** (Full Control ⭐)
-1. Place MP4 in `public/balieytc-tour.mp4`
+1. Place MP4 in `public/videos/balieytc-tour.mp4`
 2. In `VideoShowcase.tsx`, change:
    ```
    youtubeId="dQw4w9WgXcQ"
    ```
    to:
    ```
-   src="/balieytc-tour.mp4"
+   src="/videos/balieytc-tour.mp4"
    ```
 
 **Recommendation:** YouTube is easiest, use that! ✅
@@ -113,7 +113,7 @@ npm run build
 # Install
 npm install @react-google-analytics/core
 
-# Setup in src/main.tsx
+# Setup in src/app/layout.tsx
 import ReactGA from 'react-ga4';
 ReactGA.initialize('YOUR_GA_ID');
 
@@ -136,16 +136,16 @@ ReactGA.event('form_start', {
 ## 📚 Documentation Guide
 
 ### **For Mobile Issues:**
-→ Read: `MOBILE_OPTIMIZATION_GUIDE.md`
+→ Read: `docs/guides/MOBILE_OPTIMIZATION_GUIDE.md`
 
 ### **To Improve Conversions:**
-→ Read: `CONVERSION_OPTIMIZATION_GUIDE.md`
+→ Read: `docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md`
 
 ### **For Performance:**
-→ Read: `PERFORMANCE_OPTIMIZATION_GUIDE.md`
+→ Read: `docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md`
 
 ### **For Video Integration:**
-→ Read: `VIDEO_AND_UX_GUIDE.md`
+→ Read: `docs/guides/VIDEO_AND_UX_GUIDE.md`
 
 ---
 
@@ -191,7 +191,7 @@ npm run lint
 ## ❓ FAQ - Quick Answers
 
 ### **Q: Video not playing?**
-A: Check YouTube video is public, or MP4 file is in public/ folder, or Vimeo link is correct
+A: Check YouTube video is public, or MP4 file is in public/videos/ folder, or Vimeo link is correct
 
 ### **Q: Form not working?**
 A: Check console for errors (F12), verify data/site.ts has COURSES array
@@ -245,7 +245,7 @@ A: Edit `src/data/site.ts` → SITE object, or search component for hardcoded te
 | Mobile responsive | ✅ Done | All sections |
 | Premium design | ✅ Done | All sections |
 | Animations | ✅ Done | Interactive elements |
-| SEO optimized | ✅ Done | index.html, sitemap |
+| SEO optimized | ✅ Done | src/app/layout.tsx, src/app/sitemap.ts |
 | Performance | ✅ Done | Build optimized |
 
 ---
@@ -350,7 +350,7 @@ Your Balieytc website is:
 **Good luck! Your website is amazing! 🧘‍♀️✨**
 
 Questions? Check the guides in the project root:
-- MOBILE_OPTIMIZATION_GUIDE.md
-- CONVERSION_OPTIMIZATION_GUIDE.md
-- PERFORMANCE_OPTIMIZATION_GUIDE.md
-- VIDEO_AND_UX_GUIDE.md
+- docs/guides/MOBILE_OPTIMIZATION_GUIDE.md
+- docs/guides/CONVERSION_OPTIMIZATION_GUIDE.md
+- docs/guides/PERFORMANCE_OPTIMIZATION_GUIDE.md
+- docs/guides/VIDEO_AND_UX_GUIDE.md

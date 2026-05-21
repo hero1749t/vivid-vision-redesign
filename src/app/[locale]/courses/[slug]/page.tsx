@@ -1,5 +1,5 @@
 "use client";
-import CoursePage from "@/view-pages/CoursePage";
+import CoursePage from "@/views/CoursePage";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function CourseDynamicPage() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
-import YogaAlliance from "@/view-pages/YogaAlliance";
+import YogaAlliance from "@/views/YogaAlliance";
 
 export default function YogaAlliancePage() {
   return (

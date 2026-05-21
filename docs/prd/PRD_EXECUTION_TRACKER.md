@@ -1,6 +1,6 @@
 # Bali YTTC PRD Execution Tracker
 
-Source PRD: `Adruva_BaliYTTC_PRD_Final.pdf` v2.0, May 2026.
+Source PRD: `docs/prd/Adruva_BaliYTTC_PRD_Final.pdf` v2.0, May 2026.
 
 Working rule: finish one module end-to-end before moving to the next. A module is only `DONE` when code, data model, env setup, tests, build, and manual flow verification are complete.
 

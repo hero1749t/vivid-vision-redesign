@@ -34,7 +34,7 @@ const reviewVideos = [
   },
 ];
 
-const CAMPUS_IMAGE = "/images/firefly-sanctuary.jpg";
+const CAMPUS_IMAGE = "/images/campus/firefly-sanctuary.jpg";
 
 export const VideoShowcase = () => {
   const copy = getHomeCopy(useLocale());

@@ -76,7 +76,7 @@ md:hidden
 - Suspense boundaries
 
 ### **6. Viewport & Meta Tags**
-✅ In index.html:
+✅ In src/app/layout.tsx:
 ```html
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#d97706">

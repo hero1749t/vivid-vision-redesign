@@ -40,12 +40,12 @@ npm run preview
 | File | Purpose | Edit For |
 |------|---------|----------|
 | `src/data/site.ts` | All site content | Courses, Teachers, FAQs, Prices |
-| `index.html` | Meta tags & SEO | Page titles, descriptions |
+| `src/app/layout.tsx` | Meta tags & SEO | Page titles, descriptions |
 | `src/components/layout/Nav.tsx` | Header & Navigation | Logo, menu items, colors |
 | `src/components/layout/Footer.tsx` | Footer | Contact info, social links |
 | `src/components/home/Hero.tsx` | Hero section | Main headline, CTA text |
-| `public/robots.txt` | SEO configuration | Search engine rules |
-| `public/sitemap.xml` | XML sitemap | Page URLs for search engines |
+| `src/app/robots.ts` | SEO configuration | Search engine rules |
+| `src/app/sitemap.ts` | XML sitemap | Page URLs for search engines |
 
 ---
 
@@ -62,7 +62,7 @@ Deep:       #b45309 (text-amber-700)
 1. Find all `bg-amber-600` → replace with your color
 2. Find all `text-amber-600` → replace with your color
 3. Find all `border-amber-500` → replace with your color
-4. Update theme-color in `index.html`
+4. Update theme-color in `src/app/layout.tsx`
 
 ---
 
@@ -117,15 +117,15 @@ Edit `src/data/site.ts` - FAQS array:
 ## 🔍 SEO Essentials
 
 ### Meta Tags
-Edit `index.html`:
+Edit `src/app/layout.tsx`:
 - `<title>` - Page title (60 chars max)
 - `<meta name="description">` - Page description (160 chars max)
 
 ### Sitemap
-Auto-generated in `public/sitemap.xml` - Update URLs manually if changing routes.
+Auto-generated in `src/app/sitemap.ts` - Update URLs manually if changing routes.
 
 ### Robots.txt
-Edit `public/robots.txt` to control search engine crawling.
+Edit `src/app/robots.ts` to control search engine crawling.
 
 ---
 
@@ -206,15 +206,15 @@ Before going live:
 4. **Navigation**: Edit in `src/data/site.ts` - NAV array
 5. **Component Colors**: Search for old color name, replace globally
 6. **Add New Page**: 
-   - Create file in `src/pages/`
-   - Add route in `src/App.tsx`
+   - Create file in `src/views/`
+   - Add route in `src/app/[locale]/<route>/page.tsx`
    - Add nav link in `src/data/site.ts`
 
 ---
 
 ## 🆘 Need Help?
 
-- Check TRANSFORMATION_CHANGELOG.md for detailed changes
+- Check docs/project/TRANSFORMATION_CHANGELOG.md for detailed changes
 - Review README.md for project overview
 - Check component files for implementation details
 - Visit component files to understand structure

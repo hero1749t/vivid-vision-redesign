@@ -134,7 +134,7 @@ export const Nav = ({ bannerHeight = 0 }: { bannerHeight?: number }) => {
           <div className="relative flex h-full items-center justify-between gap-4">
             <Link href="/" className="group absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 shrink-0 items-center gap-3 transition-opacity hover:opacity-95">
               <img
-                src="/logo-full.png"
+                src="/images/brand/logo-full.png"
                 alt="Bali YTTC"
                 className="h-auto w-[120px] flex-shrink-0 drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)] sm:w-[140px]"
                 loading="eager"

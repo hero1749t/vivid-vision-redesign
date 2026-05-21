@@ -137,7 +137,7 @@ useEffect(() => {
 ✅ **Tailwind CSS** (Automatic unused CSS removal)
 ```tailwind
 /* Build process automatically removes unused styles */
-npx tailwindcss -i ./src/index.css -o ./src/output.css --minify
+npx tailwindcss -i ./src/app/globals.css -o ./src/output.css --minify
 ```
 
 ✅ **Critical CSS** (Inline above-the-fold)

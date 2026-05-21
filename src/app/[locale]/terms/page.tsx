@@ -1,5 +1,5 @@
 "use client";
-import Terms from "@/view-pages/Terms";
+import Terms from "@/views/Terms";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export default function TermsPage() {

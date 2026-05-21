@@ -1,4 +1,4 @@
-import Pricing from "@/view-pages/Pricing";
+import Pricing from "@/views/Pricing";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export const metadata = {

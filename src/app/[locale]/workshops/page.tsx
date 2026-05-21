@@ -1,4 +1,4 @@
-import Workshops from "@/view-pages/Workshops";
+import Workshops from "@/views/Workshops";
 import { NextLayoutWrapper } from "@/components/layout/NextLayoutWrapper";
 
 export const metadata = {

@@ -31,8 +31,8 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const locale = await requestLocale;
 
   if (!locale || !locales.includes(locale as any)) notFound();
-  const fallbackMessages = (await import('../../messages/en.json')).default;
-  const localeMessages = (await import(`../../messages/${locale}.json`)).default;
+  const fallbackMessages = (await import('./messages/en.json')).default;
+  const localeMessages = (await import(`./messages/${locale}.json`)).default;
 
   return {
     locale,

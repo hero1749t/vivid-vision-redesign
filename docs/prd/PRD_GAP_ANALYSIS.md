@@ -61,7 +61,7 @@
 | French | fr | ❌ Missing | MEDIUM — EU market |
 | Russian | ru | ❌ Missing | LOW — Small market |
 
-**Note:** Need to create messages/es.json, messages/de.json, messages/ko.json, messages/ja.json, messages/fr.json, messages/ru.json
+**Note:** Need to create src/i18n/messages/es.json, src/i18n/messages/de.json, src/i18n/messages/ko.json, src/i18n/messages/ja.json, src/i18n/messages/fr.json, src/i18n/messages/ru.json
 
 ### 3. PAYMENT & ENROLLMENT FLOW — Completely Missing
 
